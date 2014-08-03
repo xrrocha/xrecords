@@ -63,7 +63,7 @@ class Copier<E> extends SafeCopierListener<E> {
         ]
     }
     
-    def transform(E element) {
+    private def transform(E element) {
         try {
             val transformedElement = transformer?.transform(element) ?: element
             onTransform(element, transformedElement)
@@ -74,7 +74,7 @@ class Copier<E> extends SafeCopierListener<E> {
         }
     }
     
-    def matches(E element) {
+    private def matches(E element) {
         try {
             val matches = filter?.matches(element) ?: true
             onFilter(element, matches)
