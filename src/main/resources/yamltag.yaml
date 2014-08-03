@@ -1,0 +1,3 @@
+xrrocha.io.FileInputStreamSource: { tagName: fileInput }
+xrrocha.io.FileOutputStreamSource: {tagName: fileOutput }
+
