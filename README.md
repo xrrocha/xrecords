@@ -20,24 +20,22 @@ in any JVM language supported by
 [JSR-223](https://jcp.org/en/jsr/detail?id=223).
 
 The following ```xrecords``` application populates a Postgres table from a
-fixed-length file:
+delimited file:
 
 ```yaml
-source: !fixedLengthSource
+source: !delimitedSource
     input:  !fromFile [people.txt]
-    length: 55
-    trim:   true
-    fixedFields: &fields
-        - { name: code,                   offset:  0, length:  3 }
-        - { name: fname,                  offset:  3, length: 16 }
-        - { name: lname,                  offset: 19, length: 16 }
-        - { name: salary,   type: NUMBER, offset: 35, length:  9, formatString: '$###,###.##' }
-        - { name: hiredate, type: DATE,   offset: 44, length: 10, formatString: MM/dd/yyyy }
+    separator: '\t'
+    fields:
+        - { name: code }
+        - { name: fname }
+        - { name: lname, type: STRING } # STRING is the default type
+        - { name: salary,   type: NUMBER, formatString: '$###,###.##' }
+        - { name: hiredate, type: DATE, formatString: MM/dd/yyyy }
 
 filter: !scriptFilter [salary > 1500]
 
-destination: !jdbcDestination
-  batchSize: 16384
+destination: !databaseDestination
   tableName: person
   columnNames: [id, first_name, last_name, salary, hiredate]
   dataSource: !!org.postgresql.ds.PGSimpleDataSource
