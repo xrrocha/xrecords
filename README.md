@@ -30,8 +30,8 @@ source: !delimitedSource
         - { name: code }
         - { name: fname }
         - { name: lname, type: STRING } # STRING is the default type
-        - { name: salary,   type: NUMBER, formatString: '$###,###.##' }
-        - { name: hiredate, type: DATE, formatString: MM/dd/yyyy }
+        - { name: salary,   type: NUMBER, format: '$###,###.##' }
+        - { name: hiredate, type: DATE, format: MM/dd/yyyy }
 
 filter: !scriptFilter [salary > 1500]
 
