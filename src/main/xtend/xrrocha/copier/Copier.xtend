@@ -2,124 +2,151 @@ package xrrocha.copier
 
 import java.util.ArrayList
 import java.util.Iterator
-import java.util.List
 
-interface CopierComponent {
+interface Lifecycle {
     def void open()
     def void close()
 }
 
-interface Source<E> extends CopierComponent, Iterator<E> {}
+interface Source<E> extends Iterator<E> {}
 
-interface Filter<E> { def Boolean matches(E element) }
+interface Filter<E> { def boolean matches(E element) }
 
 interface Transformer<E> { def E transform(E element) }
 
-interface Destination<E> extends CopierComponent { def void put(E element) }
+interface Destination<E> { def void put(E element) }
 
 class Copier<E> extends SafeCopierListener<E> {
     @Property Source<E> source
     @Property Filter<E> filter
     @Property Transformer<E> transformer
     @Property Destination<E> destination
+    
     @Property boolean stopOnError = true
     @Property CopierListener<E> listener = new LoggingCopierListener
 
     final def copy() {
         open()
         
+        var recno = 0
+        
         try {
-            source.forEach [
-                try {
-                    val element = transform(it)
-                    if (matches(element)) {
-                        put(element)
-                    }
-                } catch (Exception e) {
-                    if (stopOnError) {
-                        throw e
-                    }
+            while (hasNext(recno)) {
+                val nextElement = next(recno)
+                
+                val element = transform(nextElement, recno)
+                
+                if (matches(element, recno)) {
+                    put(element, recno)
                 }
-            ]
+                
+                recno = recno + 1
+            }
+        } catch (Exception e) {
+            if (stopOnError) {
+                onStop(recno)
+                throw e
+            }
         } finally {
-            close()
+            close(recno)
         }
     }
 
     private def open() {
         val openedSoFar = new ArrayList
 
-        components.forEach [
+        lifecycleComponents.forEach [ component |
             try {
-                it.open()
-                onOpen(it)
+                component.open()
+                onOpen(component)
             } catch (Exception e) {
-                openedSoFar.forEach[safeClose]
-                onOpenError(it, e)
+                openedSoFar.forEach[safeClose(it, 0)]
+                onOpenError(component, e)
                 throw e
             }
 
-            openedSoFar.add(it)
+            openedSoFar.add(component)
         ]
     }
     
-    private def transform(E element) {
+    private def hasNext(int recno) {
         try {
-            val transformedElement = transformer?.transform(element) ?: element
-            onTransform(element, transformedElement)
-            transformedElement
+            source.hasNext
         } catch (Exception e) {
-            onTransformError(element, e)
+            onNextError(recno, e)
+            throw e
+        }
+    }
+
+    private def next(int recno) {
+        try {
+            val element = source.next
+            onNext(element, recno)
+            element
+        } catch (Exception e) {
+            onNextError(recno, e)
             throw e
         }
     }
     
-    private def matches(E element) {
-        try {
-            val matches = filter?.matches(element) ?: true
-            onFilter(element, matches)
-            matches
-        } catch (Exception e) {
-            onFilterError(element, e)
-            throw e
+    private def transform(E element, int recno) {
+        if (transformer == null) {
+            element
+        } else {
+            try {
+                val transformedElement = transformer.transform(element)
+                onTransform(element, transformedElement, recno)
+                transformedElement
+            } catch (Exception e) {
+                onTransformError(element, recno, e)
+                throw e
+            }
         }
     }
     
-    private def put(E element) {
+    private def matches(E element, int recno) {
+        if (filter == null) {
+            true
+        } else {
+            try {
+                val matches = filter.matches(element)
+                onFilter(element, matches, recno)
+                matches
+            } catch (Exception e) {
+                onFilterError(element, recno, e)
+                throw e
+            }
+        }
+    }
+    
+    private def put(E element, int recno) {
         try {
             destination.put(element)
-            onPut(element)
+            onPut(element,recno)
         } catch (Exception e) {
-            onPutError(element, e)
+            onPutError(element, recno, e)
             throw e
         }
     }
 
-    private def close() {
-        components.forEach[safeClose]
+    private def close(int count) {
+        lifecycleComponents.forEach[safeClose(it, count)]
+        onClose(count)
     }
     
-    def safeClose(CopierComponent component) {
+    def safeClose(Lifecycle component, int count) {
         try {
             component.close()
-            onClose(component)
+            onCloseComponent(component, count)
         } catch (Exception e) {
-            onCloseError(component, e)
+            onCloseComponentError(component, count, e)
         }
     }
     
-    private def components() {
-        val List<CopierComponent> components = newArrayList(source)
-        
-        if (transformer instanceof CopierComponent)
-            components.add(transformer as CopierComponent)
-        
-        if (filter instanceof CopierComponent)
-            components.add(filter as CopierComponent)
-
-        components.add(destination)
-        
-        components
+    private def lifecycleComponents() {
+        #[source, filter, transformer, destination].
+            filter [it instanceof Lifecycle].
+            map[it as Lifecycle]
     }
 }
 
