@@ -34,9 +34,7 @@ source: !fixedLengthSource
         - { name: salary,   type: NUMBER, offset: 35, length:  9, formatString: '$###,###.##' }
         - { name: hiredate, type: DATE,   offset: 44, length: 10, formatString: MM/dd/yyyy }
 
-filter: !scriptFilter [javascript,
-    salary > 1500
-]
+filter: !scriptFilter [salary > 1500]
 
 destination: !jdbcDestination
   batchSize: 16384
