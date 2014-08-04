@@ -25,7 +25,7 @@ delimited file:
 ```yaml
 source: !delimitedSource
     input:  !fromFile [people.txt]
-    separator: '\t'
+    delimiter: '\t'
     fields:
         - { name: code }
         - { name: fname }
