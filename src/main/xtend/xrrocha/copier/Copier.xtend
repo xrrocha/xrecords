@@ -31,21 +31,24 @@ class Copier<E> extends SafeCopierListener<E> {
         var recno = 0
         
         try {
+            // TODO Revise hasNext failure handling
             while (hasNext(recno)) {
-                val nextElement = next(recno)
-                
-                val element = transform(nextElement, recno)
-                
-                if (matches(element, recno)) {
-                    put(element, recno)
+                try {
+                    val nextElement = next(recno)
+                    
+                    val element = transform(nextElement, recno)
+                    
+                    if (matches(element, recno)) {
+                        put(element, recno)
+                    }
+                } catch (Exception e) {
+                    if (stopOnError) {
+                        onStop(recno)
+                        throw e
+                    }
                 }
                 
                 recno = recno + 1
-            }
-        } catch (Exception e) {
-            if (stopOnError) {
-                onStop(recno)
-                throw e
             }
         } finally {
             close(recno)
@@ -74,6 +77,9 @@ class Copier<E> extends SafeCopierListener<E> {
             source.hasNext
         } catch (Exception e) {
             onNextError(recno, e)
+            if (stopOnError) {
+                onStop(recno)
+            }
             throw e
         }
     }
@@ -143,6 +149,7 @@ class Copier<E> extends SafeCopierListener<E> {
         }
     }
     
+
     private def lifecycleComponents() {
         #[source, filter, transformer, destination].
             filter [it instanceof Lifecycle].

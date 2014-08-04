@@ -39,6 +39,25 @@ public class CopierInteractionTest {
         inOrder.verify(transformerMock as Lifecycle).close()
         inOrder.verify(destinationMock as Lifecycle).close()
     }
+    
+    @Test
+    def honorsNoStopOnError() {
+        val sourceMock = mock(Source)
+        when(sourceMock.hasNext).thenReturn(true, true, false)
+        when(sourceMock.next).thenReturn("one", "two")
+        
+        val destinationMock = mock(Destination)
+        doThrow(new RuntimeException).when(destinationMock).put("one")
+        
+        val copier = new Copier<Object> => [
+            source = sourceMock
+            destination = destinationMock
+            stopOnError = false
+        ]
+        copier.copy()
+        verify(destinationMock).put("one")
+        verify(destinationMock).put("two")
+    }
 
     @Test
     def void appliesFilterWhenSupplied() {
