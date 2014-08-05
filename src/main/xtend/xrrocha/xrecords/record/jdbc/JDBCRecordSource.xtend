@@ -1,10 +1,10 @@
 package xrrocha.xrecords.record.jdbc
 
 import java.sql.ResultSet
-import java.util.Iterator
+import xrrocha.xrecords.copier.Source
 import xrrocha.xrecords.record.Record
 
-class JDBCRecordSource extends JDBCBase implements Iterator<Record> {
+class JDBCRecordSource extends JDBCBase implements Source<Record> {
     @Property String sqlText
     
     private ResultSet resultSet
