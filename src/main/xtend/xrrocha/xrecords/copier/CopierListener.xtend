@@ -1,4 +1,4 @@
-package xrrocha.copier
+package xrrocha.xrecords.copier
 
 import java.util.List
 import org.slf4j.LoggerFactory

@@ -8,7 +8,7 @@
 			<param name="ConversionPattern" value="%-5p %c{1} - %m%n" />
 		</layout>
 	</appender>
-	<logger name="xrrocha.copier" additivity="false">
+	<logger name="xrrocha.xrecords.copier" additivity="false">
 		<level value="debug" />
 		<appender-ref ref="console" />
 	</logger>

@@ -1,4 +1,4 @@
-package xrrocha.copier
+package xrrocha.xrecords.copier
 
 import org.junit.Test
 
