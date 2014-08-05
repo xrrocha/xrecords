@@ -48,6 +48,19 @@ class Record {
         other.copyTo(this)
     }
     
+    // TODO Test Record.equals, hashCode & toString
+    override boolean equals(Object other) {
+        if (!(other instanceof Record && other != null)) {
+            false
+        } else {
+            (other as Record).fields.equals(fields)
+        }
+    }
+    
+    override int hashCode() {
+        fields.hashCode()
+    }
+    
     override toString() {
         fields.toString
     }
