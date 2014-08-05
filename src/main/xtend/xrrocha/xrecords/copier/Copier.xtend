@@ -10,15 +10,16 @@ interface Lifecycle {
 
 interface Source<E> extends Iterator<E> {}
 
-interface Filter<E> { def boolean matches(E element) }
+interface Matcher<E> { def boolean matches(E element) }
 
 interface Transformer<E> { def E transform(E element) }
 
 interface Destination<E> { def void put(E element) }
 
+// FIXME Does Copier need a generic type?
 class Copier<E> extends SafeCopierListener<E> {
     @Property Source<E> source
-    @Property Filter<E> filter
+    @Property Matcher<E> matcher
     @Property Transformer<E> transformer
     @Property Destination<E> destination
     
@@ -28,30 +29,25 @@ class Copier<E> extends SafeCopierListener<E> {
     final def copy() {
         open()
         
-        var recno = 0
+        val delegate = new CopierDelegate<E>(this)
         
         try {
-            // TODO Revise hasNext failure handling
-            while (hasNext(recno)) {
+            delegate.forEach [
                 try {
-                    val nextElement = next(recno)
+                    val element = delegate.transform(it)
                     
-                    val element = transform(nextElement, recno)
-                    
-                    if (matches(element, recno)) {
-                        put(element, recno)
+                    if (delegate.matches(element)) {
+                        delegate.put(element)
                     }
                 } catch (Exception e) {
                     if (stopOnError) {
-                        onStop(recno)
+                        onStop(delegate.recno)
                         throw e
                     }
                 }
-                
-                recno = recno + 1
-            }
+            ]
         } finally {
-            close(recno)
+            close(delegate.recno)
         }
     }
 
@@ -71,69 +67,6 @@ class Copier<E> extends SafeCopierListener<E> {
             openedSoFar.add(component)
         ]
     }
-    
-    private def hasNext(int recno) {
-        try {
-            source.hasNext
-        } catch (Exception e) {
-            onNextError(recno, e)
-            if (stopOnError) {
-                onStop(recno)
-            }
-            throw e
-        }
-    }
-
-    private def next(int recno) {
-        try {
-            val element = source.next
-            onNext(element, recno)
-            element
-        } catch (Exception e) {
-            onNextError(recno, e)
-            throw e
-        }
-    }
-    
-    private def transform(E element, int recno) {
-        if (transformer == null) {
-            element
-        } else {
-            try {
-                val transformedElement = transformer.transform(element)
-                onTransform(element, transformedElement, recno)
-                transformedElement
-            } catch (Exception e) {
-                onTransformError(element, recno, e)
-                throw e
-            }
-        }
-    }
-    
-    private def matches(E element, int recno) {
-        if (filter == null) {
-            true
-        } else {
-            try {
-                val matches = filter.matches(element)
-                onFilter(element, matches, recno)
-                matches
-            } catch (Exception e) {
-                onFilterError(element, recno, e)
-                throw e
-            }
-        }
-    }
-    
-    private def put(E element, int recno) {
-        try {
-            destination.put(element)
-            onPut(element,recno)
-        } catch (Exception e) {
-            onPutError(element, recno, e)
-            throw e
-        }
-    }
 
     private def close(int count) {
         lifecycleComponents.forEach[safeClose(it, count)]
@@ -148,12 +81,99 @@ class Copier<E> extends SafeCopierListener<E> {
             onCloseComponentError(component, count, e)
         }
     }
-    
 
+    private var Iterable<Lifecycle> components 
     private def lifecycleComponents() {
-        #[source, filter, transformer, destination].
-            filter [it instanceof Lifecycle].
-            map[it as Lifecycle]
+        if (components == null) {
+            components = #[source, matcher, transformer, destination].
+                filter [it instanceof Lifecycle].
+                map[it as Lifecycle]
+        }
+        components
     }
 }
 
+class CopierDelegate<E> implements Source<E>, Matcher<E>, Transformer<E>, Destination<E> {
+    Source<E> source
+    Matcher<E> matcher
+    Transformer<E> transformer
+    Destination<E> destination
+    CopierListener<E> listener
+    
+    @Property int recno = 0
+    
+    new(Copier<E> copier) {
+        this.source = copier.source
+        this.matcher = copier.matcher
+        this.transformer = copier.transformer
+        this.destination = copier.destination
+        this.listener = copier        
+    }
+ 
+    override hasNext() {
+        try {
+            source.hasNext
+        } catch (Exception e) {
+            listener.onNextError(recno, e)
+            listener.onStop(recno)
+            throw e
+        }
+    }
+    
+    override next() {
+        try {
+            val result = source.next
+            listener.onNext(result, recno)
+            result
+        } catch (Exception e) {
+            listener.onNextError(recno, e)
+            listener.onStop(recno)
+            throw e
+        }
+    }
+    
+    override boolean matches(E element) {
+        if (matcher == null) {
+            true
+        } else {
+            try {
+                val matches = matcher.matches(element)
+                listener.onFilter(element, matches, recno)
+                matches
+            } catch (Exception e) {
+                listener.onFilterError(element, recno, e)
+                throw e
+            }
+        }
+    }
+    
+    override E transform(E element) {
+        if (transformer == null) {
+            element
+        } else {
+            try {
+                val transformedElement = transformer.transform(element)
+                listener.onTransform(element, transformedElement, recno)
+                transformedElement
+            } catch (Exception e) {
+                listener.onTransformError(element, recno, e)
+                throw e
+            }
+        }
+    }
+    
+    override void put(E element) {
+        try {
+            destination.put(element)
+            listener.onPut(element,recno)
+            recno = recno + 1
+        } catch (Exception e) {
+            listener.onPutError(element, recno, e)
+            throw e
+        }
+    }
+    
+    override remove() {
+        throw new UnsupportedOperationException("CopierDelegate.remove: unimplemented")
+    }
+}

@@ -14,7 +14,7 @@ public class CopierInteractionTest {
         val sourceMock = mock(Source, lifecycleMockSettings)
         when(sourceMock.hasNext).thenReturn(false)
         
-        val filterMock = mock(Filter, lifecycleMockSettings)
+        val matcherMock = mock(Matcher, lifecycleMockSettings)
         
         val transformerMock = mock(Transformer, lifecycleMockSettings)
         
@@ -22,20 +22,20 @@ public class CopierInteractionTest {
         
         val copier = new Copier<Object> => [
             source = sourceMock
-            filter = filterMock
+            matcher = matcherMock
             transformer = transformerMock
             destination = destinationMock
         ]
         copier.copy()
 
-        val inOrder = inOrder(sourceMock, filterMock, transformerMock, destinationMock)
+        val inOrder = inOrder(sourceMock, matcherMock, transformerMock, destinationMock)
         inOrder.verify(sourceMock as Lifecycle).open()
-        inOrder.verify(filterMock as Lifecycle).open()
+        inOrder.verify(matcherMock as Lifecycle).open()
         inOrder.verify(transformerMock as Lifecycle).open()
         inOrder.verify(destinationMock as Lifecycle).open()
         inOrder.verify(sourceMock).hasNext
         inOrder.verify(sourceMock as Lifecycle).close()
-        inOrder.verify(filterMock as Lifecycle).close()
+        inOrder.verify(matcherMock as Lifecycle).close()
         inOrder.verify(transformerMock as Lifecycle).close()
         inOrder.verify(destinationMock as Lifecycle).close()
     }
@@ -65,24 +65,24 @@ public class CopierInteractionTest {
         when(sourceMock.hasNext).thenReturn(true, true, false)
         when(sourceMock.next).thenReturn("one", "two")
         
-        val filterMock = mock(Filter)
-        when(filterMock.matches("one")).thenReturn(false)
-        when(filterMock.matches("two")).thenReturn(true)
+        val matcherMock = mock(Matcher)
+        when(matcherMock.matches("one")).thenReturn(false)
+        when(matcherMock.matches("two")).thenReturn(true)
         
         val destinationMock = mock(Destination)
         
         val copier = new Copier<Object> => [
             source = sourceMock
-            filter = filterMock
+            matcher = matcherMock
             destination = destinationMock
         ]
         copier.copy()
 
-        val inOrder = inOrder(sourceMock, filterMock, destinationMock)
+        val inOrder = inOrder(sourceMock, matcherMock, destinationMock)
         inOrder.verify(sourceMock).hasNext
-        inOrder.verify(filterMock).matches("one")
+        inOrder.verify(matcherMock).matches("one")
         inOrder.verify(sourceMock).hasNext
-        inOrder.verify(filterMock).matches("two")
+        inOrder.verify(matcherMock).matches("two")
         inOrder.verify(destinationMock).put("two")
         inOrder.verify(sourceMock).hasNext
     }
@@ -137,7 +137,7 @@ public class CopierInteractionTest {
         val sourceMock = mock(Source, lifecycleMockSettings)
         when(sourceMock.hasNext).thenReturn(false)
         
-        val filterMock = mock(Filter, lifecycleMockSettings)
+        val matcherMock = mock(Matcher, lifecycleMockSettings)
         
         val transformerMock = mock(Transformer, lifecycleMockSettings)
         
@@ -147,7 +147,7 @@ public class CopierInteractionTest {
 
         val copier = new Copier<Object> => [
             source = sourceMock
-            filter = filterMock
+            matcher = matcherMock
             transformer = transformerMock
             destination = destinationMock
         ]
@@ -156,14 +156,14 @@ public class CopierInteractionTest {
             copier.copy()
             fail("copy() should have failed")
         } catch (RuntimeException e) {
-            val order = inOrder(sourceMock, filterMock, transformerMock, destinationMock)
+            val order = inOrder(sourceMock, matcherMock, transformerMock, destinationMock)
             order.verify(sourceMock as Lifecycle).open()
-            order.verify(filterMock as Lifecycle).open()
+            order.verify(matcherMock as Lifecycle).open()
             order.verify(transformerMock as Lifecycle).open()
             order.verify(destinationMock as Lifecycle).open()
             
             order.verify(sourceMock as Lifecycle).close()
-            order.verify(filterMock as Lifecycle).close()
+            order.verify(matcherMock as Lifecycle).close()
             order.verify(transformerMock as Lifecycle).close()
 
             verify(destinationMock as Lifecycle, never).close()
@@ -176,8 +176,8 @@ public class CopierInteractionTest {
         when(sourceMock.hasNext).thenReturn(false)
         doThrow(new RuntimeException).when(sourceMock as Lifecycle).close()
         
-        val filterMock = mock(Filter, lifecycleMockSettings)
-        doThrow(new RuntimeException).when(filterMock as Lifecycle).close()
+        val matcherMock = mock(Matcher, lifecycleMockSettings)
+        doThrow(new RuntimeException).when(matcherMock as Lifecycle).close()
         
         val transformerMock = mock(Transformer, lifecycleMockSettings)
         doThrow(new RuntimeException).when(transformerMock as Lifecycle).close()
@@ -187,20 +187,20 @@ public class CopierInteractionTest {
 
         val copier = new Copier<Object> => [
             source = sourceMock
-            filter = filterMock
+            matcher = matcherMock
             transformer = transformerMock
             destination = destinationMock
         ]
         copier.copy()
         
-        val order = inOrder(sourceMock, filterMock, transformerMock, destinationMock)
+        val order = inOrder(sourceMock, matcherMock, transformerMock, destinationMock)
         order.verify(sourceMock as Lifecycle).open()
-        order.verify(filterMock as Lifecycle).open()
+        order.verify(matcherMock as Lifecycle).open()
         order.verify(transformerMock as Lifecycle).open()
         order.verify(destinationMock as Lifecycle).open()
         
         order.verify(sourceMock as Lifecycle).close()
-        order.verify(filterMock as Lifecycle).close()
+        order.verify(matcherMock as Lifecycle).close()
         order.verify(transformerMock as Lifecycle).close()
         order.verify(destinationMock as Lifecycle).close()
     }
@@ -214,7 +214,7 @@ public class CopierListenerTest {
         val sourceMock = mock(Source, lifecycleMockSettings)
         when(sourceMock.hasNext).thenReturn(false)
         
-        val filterMock = mock(Filter, lifecycleMockSettings)
+        val matcherMock = mock(Matcher, lifecycleMockSettings)
         
         val transformerMock = mock(Transformer, lifecycleMockSettings)
         
@@ -224,7 +224,7 @@ public class CopierListenerTest {
         
         val copier = new Copier<Object> => [
             source = sourceMock
-            filter = filterMock
+            matcher = matcherMock
             transformer = transformerMock
             destination = destinationMock
             listener = listenerMock
@@ -233,11 +233,11 @@ public class CopierListenerTest {
 
         val inOrder = inOrder(listenerMock)
         inOrder.verify(listenerMock).onOpen(sourceMock as Lifecycle)
-        inOrder.verify(listenerMock).onOpen(filterMock as Lifecycle)
+        inOrder.verify(listenerMock).onOpen(matcherMock as Lifecycle)
         inOrder.verify(listenerMock).onOpen(transformerMock as Lifecycle)
         inOrder.verify(listenerMock).onOpen(destinationMock as Lifecycle)
         inOrder.verify(listenerMock).onCloseComponent(sourceMock as Lifecycle, 0)
-        inOrder.verify(listenerMock).onCloseComponent(filterMock as Lifecycle, 0)
+        inOrder.verify(listenerMock).onCloseComponent(matcherMock as Lifecycle, 0)
         inOrder.verify(listenerMock).onCloseComponent(transformerMock as Lifecycle, 0)
         inOrder.verify(listenerMock).onCloseComponent(destinationMock as Lifecycle, 0)
         inOrder.verify(listenerMock).onClose(0)
@@ -289,8 +289,8 @@ public class CopierListenerTest {
         when(sourceMock.hasNext).thenReturn(true, false)
         when(sourceMock.next).thenReturn("one")
         
-        val filterMock = mock(Filter)
-        when(filterMock.matches("one")).thenReturn(true)
+        val matcherMock = mock(Matcher)
+        when(matcherMock.matches("one")).thenReturn(true)
         
         val destinationMock = mock(Destination)
         
@@ -298,7 +298,7 @@ public class CopierListenerTest {
         
         val copier = new Copier<Object> => [
             source = sourceMock
-            filter = filterMock
+            matcher = matcherMock
             destination = destinationMock
             listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
         ]
@@ -480,8 +480,8 @@ public class CopierListenerTest {
         when(sourceMock.hasNext).thenReturn(true, false)
         when(sourceMock.next).thenReturn("one")
         
-        val filterMock = mock(Filter)
-        when(filterMock.matches("one")).thenThrow(new RuntimeException)
+        val matcherMock = mock(Matcher)
+        when(matcherMock.matches("one")).thenThrow(new RuntimeException)
         
         val destinationMock = mock(Destination)
         
@@ -489,7 +489,7 @@ public class CopierListenerTest {
         
         val copier = new Copier<Object> => [
             source = sourceMock
-            filter = filterMock
+            matcher = matcherMock
             destination = destinationMock
             listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
         ]
