@@ -1,8 +1,8 @@
 # XRecords: Tabular Record File Conversion Framework #
 
-```xrecords``` is a [framework](http://en.wikipedia.org/wiki/Software_framework)
-for converting tabular data files between a wide variety of formats including
-(but not limited to):
+```xrecords``` is a small [framework](http://en.wikipedia.org/wiki/Software_framework)
+for converting a wide variety of tabular data file formats including (but not
+limited to):
 
 - Relational database tables
 - Comma-separated values (CSV)
@@ -44,8 +44,6 @@ destination: !databaseDestination
     serverName: localhost
     databaseName: hr
 ```
-
-:
 
 ```xrecords``` is written in the [Xtend](http://www.eclipse.org/xtend)
 programming language and uses the [SnakeYAML](https://code.google.com/p/snakeyaml/)
