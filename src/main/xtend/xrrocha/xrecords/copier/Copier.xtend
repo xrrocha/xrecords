@@ -30,6 +30,23 @@ class Copier extends SafeCopierListener {
         
         val delegate = new CopierDelegate(this)
         
+        val xxx = delegate.fold(0)[recno, item |
+                try {
+                    val element = delegate.transform(item)
+                    
+                    if (delegate.matches(element)) {
+                        delegate.put(element)
+                    }
+                    recno + 1
+                } catch (Exception e) {
+                    if (stopOnError) {
+                        onStop(recno)
+                        throw e
+                    }
+                }
+        ]
+        println(xxx)
+        
         try {
             delegate.forEach [
                 try {
@@ -92,7 +109,7 @@ class Copier extends SafeCopierListener {
     }
 }
 
-class CopierDelegate<E> implements Iterator<Object> {
+class CopierDelegate implements Iterator<Object> {
     Copier copier
     
     @Property int recno = 0
