@@ -94,7 +94,9 @@
 					<execution>
 						<goals>
 							<goal>compile</goal>
-							<goal>testCompile</goal>
+                            <goal>testCompile</goal>
+                            <goal>xtend-install-debug-info</goal>
+                            <goal>xtend-test-install-debug-info</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -121,6 +123,25 @@
 							<addClasspath>true</addClasspath>
 						</manifest>
 					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+                        <fileset>
+                            <directory>src/main/xtend-gen</directory>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>src/test/xtend-gen</directory>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </fileset>
+					</filesets>
 				</configuration>
 			</plugin>
 		</plugins>
