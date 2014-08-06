@@ -73,6 +73,57 @@ class SQLRecordDestinationTest {
         assertEquals(expectedString, actualString)
     }
     
+    @Test
+    def void outputsPrologAndEpilog() {
+        val outputProlog = '''
+            SET ECHO ON
+            SET FEED ON
+            SET AUTOCOMMIT ON
+            SPOOL load.log
+        '''
+        val outputEpilog = '''
+            SPOOL OFF
+        '''
+        val provider = new Provider<OutputStream> {
+            val baos = new ByteArrayOutputStream
+            override provide() { baos }
+        }
+        
+        val destination = new SQLRecordDestination => [
+            tableName = 'person'
+            output = provider
+            prolog = outputProlog
+            epilog = outputEpilog
+            fields = #[
+                new FormattedField<String> => [
+                    name = 'name'
+                    format = new StringParser
+                ],
+                new FormattedField<Integer> => [
+                    name = 'count'
+                    format = new IntegerParser
+                ],
+                new FormattedField<Date> => [
+                    name = 'birthdate'
+                    format = new DateParser('dd-MMM-yyy')
+                ]
+            ].map[it as Object].map[it as FormattedField<Object>] // uff!
+        ]
+        
+        destination.open()
+        destination.close(0)
+        
+        val expectedString = normalize(outputProlog + outputEpilog)
+
+        val actualString = normalize(provider.baos.toString)
+        
+        assertEquals(expectedString, actualString)
+    }
+    
+    def normalize(String string) {
+        string.replaceAll('\\s+', ' ').trim
+    }
+    
     def date(int year, int month, int day) {
         new GregorianCalendar(year, month, day).time
     }

@@ -14,11 +14,17 @@ class SQLRecordDestination implements Destination<Record>, Lifecycle {
     @Property String tableName
     @Property List<FormattedField<Object>> fields
     
+    @Property String prolog
+    @Property String epilog
+    
     @Property Provider<OutputStream> output
     
     private var PrintWriter out
     override open() {
         out = new PrintWriter(new OutputStreamWriter(output.provide()), true)
+        if (prolog != null) {
+            out.println(prolog)
+        }
     }
     
     override put(Record record, int index) {
@@ -47,6 +53,9 @@ class SQLRecordDestination implements Destination<Record>, Lifecycle {
     }
     
     override close(int count) {
+         if (epilog != null) {
+            out.println(epilog)
+        }
         out.close()
     }
     
