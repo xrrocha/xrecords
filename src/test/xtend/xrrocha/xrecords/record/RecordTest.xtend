@@ -23,12 +23,9 @@ class RecordTest {
     }
     
     @Test
-    def void rejectsNullValue() {
+    def void acceptsNullValue() {
         val record = new Record
-        try {
             record.setField("name", null)
-            fail("Failed to reject null field value")
-        } catch (NullPointerException npe) {}
     }
     
     @Test

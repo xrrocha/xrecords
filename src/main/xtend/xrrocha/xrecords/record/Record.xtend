@@ -10,8 +10,6 @@ class Record {
             throw new NullPointerException('Record field name cannot be null')
         if (name.trim.length == 0)
             throw new IllegalArgumentException('Record field name cannot be blank')
-        if (value == null)
-            throw new NullPointerException('Record value cannot be null. Remove field instead')
         
         fields.put(name, value)
     }
