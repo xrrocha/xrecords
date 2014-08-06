@@ -101,21 +101,17 @@ class DateParser implements Parser<Date> {
 }
 
 class StringParser implements Parser<String> {
-    val MessageFormat format
-    
     new() {
-        this('{0}')
     }
     
     new(String pattern) {
-        format = new MessageFormat(pattern)
     }
 
     override String parse(String string) {
-        format.parse(string).get(0).toString
+        string
     }
     
-    override String format(String value) {
-        format.format(#[value].toArray)
+    override String format(String string) {
+        string
     }
 }

@@ -71,8 +71,8 @@ public class ParserTest {
     }
     @Test
     def void parsesFormattedString() {
-        val parser = new StringParser('My name is {0}!')
-        assertEquals('Neo', parser.parse('My name is Neo!'))
-        assertEquals('My name is Neo!', parser.format('Neo'))
+        val parser = new StringParser('uselessFormat')
+        assertEquals('someString', parser.parse('someString'))
+        assertEquals('someString', parser.format('someString'))
     }
 }
