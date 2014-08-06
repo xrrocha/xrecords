@@ -14,7 +14,7 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
     @Property List<String> fieldNames
     
     @Property int batchSize = 1
-    @Property boolean commitOnBatch = true
+    @Property boolean commitOnBatch = false
     
     private var String sqlText
     private var PreparedStatement statement
@@ -24,7 +24,7 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
     
     override open() {
         if (sqlText == null) {
-            sqlText = buildInsertSql(tableName, fieldNames)
+            sqlText = JDBCUtils.buildInsertSql(tableName, fieldNames)
         }
         
         val connection = dataSource.getConnection()
@@ -50,10 +50,12 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
 
             statement.addBatch()
             
-            if (index % batchSize == 0) {
-                if (logger.debugEnabled)
-                    logger.debug('''Batch execution point reached: «index»''')
+            if ((index + 1) % batchSize == 0) {
+                if (batchSize > 1 && logger.debugEnabled)
+                    logger.debug('''Batch execution point reached: «index + 1»''')
+
                 statement.executeBatch()
+
                 if (commitOnBatch) {
                     statement.getConnection().commit()
                 }
@@ -61,21 +63,17 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
         } catch (SQLException e) {
             val exception = e?.getNextException ?: e
             logger.warn('''Error inserting batch: «exception.getMessage»''', exception)
+            throw e
         }
     }
 
-    override close() {
-        statement.executeBatch()
+    override close(int count) {
+        if (count % batchSize != 0) {
+            statement.executeBatch()
+        }
         val connection = statement.getConnection()
         connection.commit()
         statement.close()
         connection.close()
-    }
-    
-    static def String buildInsertSql(String tableName, List<String> fieldNames) {
-        '''
-            INSERT INTO "«tableName»"(«fieldNames.map['''"«it»"'''].join(', ')»)
-            VALUES(«(0 ..< fieldNames.size).map['?'].join(', ')»)
-        '''
     }
 }

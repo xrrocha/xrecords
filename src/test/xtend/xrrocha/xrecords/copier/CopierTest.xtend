@@ -34,10 +34,10 @@ public class CopierInteractionTest {
         inOrder.verify(transformerMock as Lifecycle).open()
         inOrder.verify(destinationMock as Lifecycle).open()
         inOrder.verify(sourceMock).hasNext
-        inOrder.verify(sourceMock as Lifecycle).close()
-        inOrder.verify(matcherMock as Lifecycle).close()
-        inOrder.verify(transformerMock as Lifecycle).close()
-        inOrder.verify(destinationMock as Lifecycle).close()
+        inOrder.verify(sourceMock as Lifecycle).close(0)
+        inOrder.verify(matcherMock as Lifecycle).close(0)
+        inOrder.verify(transformerMock as Lifecycle).close(0)
+        inOrder.verify(destinationMock as Lifecycle).close(0)
     }
     
     @Test
@@ -162,11 +162,11 @@ public class CopierInteractionTest {
             order.verify(transformerMock as Lifecycle).open()
             order.verify(destinationMock as Lifecycle).open()
             
-            order.verify(sourceMock as Lifecycle).close()
-            order.verify(matcherMock as Lifecycle).close()
-            order.verify(transformerMock as Lifecycle).close()
+            order.verify(sourceMock as Lifecycle).close(0)
+            order.verify(matcherMock as Lifecycle).close(0)
+            order.verify(transformerMock as Lifecycle).close(0)
 
-            verify(destinationMock as Lifecycle, never).close()
+            verify(destinationMock as Lifecycle, never).close(0)
         }
     }
 
@@ -174,16 +174,16 @@ public class CopierInteractionTest {
     def ignoresErrorsOnClosingComponents() {
         val sourceMock = mock(Source, lifecycleMockSettings)
         when(sourceMock.hasNext).thenReturn(false)
-        doThrow(new RuntimeException).when(sourceMock as Lifecycle).close()
+        doThrow(new RuntimeException).when(sourceMock as Lifecycle).close(0)
         
         val matcherMock = mock(Matcher, lifecycleMockSettings)
-        doThrow(new RuntimeException).when(matcherMock as Lifecycle).close()
+        doThrow(new RuntimeException).when(matcherMock as Lifecycle).close(0)
         
         val transformerMock = mock(Transformer, lifecycleMockSettings)
-        doThrow(new RuntimeException).when(transformerMock as Lifecycle).close()
+        doThrow(new RuntimeException).when(transformerMock as Lifecycle).close(0)
         
         val destinationMock = mock(Destination, lifecycleMockSettings)
-        doThrow(new RuntimeException).when(destinationMock as Lifecycle).close()
+        doThrow(new RuntimeException).when(destinationMock as Lifecycle).close(0)
 
         val copier = new Copier => [
             source = sourceMock
@@ -199,10 +199,10 @@ public class CopierInteractionTest {
         order.verify(transformerMock as Lifecycle).open()
         order.verify(destinationMock as Lifecycle).open()
         
-        order.verify(sourceMock as Lifecycle).close()
-        order.verify(matcherMock as Lifecycle).close()
-        order.verify(transformerMock as Lifecycle).close()
-        order.verify(destinationMock as Lifecycle).close()
+        order.verify(sourceMock as Lifecycle).close(0)
+        order.verify(matcherMock as Lifecycle).close(0)
+        order.verify(transformerMock as Lifecycle).close(0)
+        order.verify(destinationMock as Lifecycle).close(0)
     }
 }
 
@@ -406,7 +406,7 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination, lifecycleMockSettings)
         val exception = new RuntimeException
-        doThrow(exception).when(destinationMock as Lifecycle).close()
+        doThrow(exception).when(destinationMock as Lifecycle).close(0)
         
         val CopierListener listenerMock = mock(CopierListener)
         

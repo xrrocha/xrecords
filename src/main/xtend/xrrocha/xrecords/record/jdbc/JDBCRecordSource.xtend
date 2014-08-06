@@ -32,7 +32,7 @@ class JDBCRecordSource extends JDBCBase implements Source<Record> {
         record
     }
     
-    override close() {
+    override close(int count) {
         val statement = resultSet.getStatement()
         val connection = statement.getConnection()
         resultSet.close()

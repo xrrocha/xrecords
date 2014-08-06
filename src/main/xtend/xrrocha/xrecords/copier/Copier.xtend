@@ -5,7 +5,7 @@ import java.util.Iterator
 
 interface Lifecycle {
     def void open()
-    def void close()
+    def void close(int count)
 }
 
 interface Source<E> extends Iterator<E> {}
@@ -141,7 +141,7 @@ class Copier extends SafeCopierListener {
     
     def safeClose(Lifecycle component, int count) {
         try {
-            component.close()
+            component.close(count)
             onCloseComponent(component, count)
         } catch (Exception e) {
             onCloseComponentError(component, count, e)
