@@ -28,42 +28,29 @@ class Copier extends SafeCopierListener {
     final def copy() {
         open()
         
-        val delegate = new CopierDelegate(this)
-        
-        val xxx = delegate.fold(0)[recno, item |
-                try {
-                    val element = delegate.transform(item)
-                    
-                    if (delegate.matches(element)) {
-                        delegate.put(element)
-                    }
-                    recno + 1
-                } catch (Exception e) {
-                    if (stopOnError) {
-                        onStop(recno)
-                        throw e
-                    }
-                }
-        ]
-        println(xxx)
+        var count = 0
         
         try {
-            delegate.forEach [
+            while (hasNext(count)) {
                 try {
-                    val element = delegate.transform(it)
+                    val nextElement = next(count)
                     
-                    if (delegate.matches(element)) {
-                        delegate.put(element)
+                    val element = transform(nextElement, count)
+                    
+                    if (matches(element, count)) {
+                        put(element, count)
                     }
                 } catch (Exception e) {
                     if (stopOnError) {
-                        onStop(delegate.recno)
+                        onStop(count)
                         throw e
                     }
                 }
-            ]
+                
+                count = count + 1
+            }
         } finally {
-            close(delegate.recno)
+            close(count)
         }
     }
 
@@ -82,6 +69,69 @@ class Copier extends SafeCopierListener {
 
             openedSoFar.add(component)
         ]
+    }
+    
+    private def hasNext(int recno) {
+        try {
+            source.hasNext
+        } catch (Exception e) {
+            onNextError(recno, e)
+            if (stopOnError) {
+                onStop(recno)
+            }
+            throw e
+        }
+    }
+
+    private def next(int recno) {
+        try {
+            val element = source.next
+            onNext(element, recno)
+            element
+        } catch (Exception e) {
+            onNextError(recno, e)
+            throw e
+        }
+    }
+    
+    private def transform(Object element, int recno) {
+        if (transformer == null) {
+            element
+        } else {
+            try {
+                val transformedElement = transformer.transform(element)
+                onTransform(element, transformedElement, recno)
+                transformedElement
+            } catch (Exception e) {
+                onTransformError(element, recno, e)
+                throw e
+            }
+        }
+    }
+    
+    private def matches(Object element, int recno) {
+        if (matcher == null) {
+            true
+        } else {
+            try {
+                val matches = matcher.matches(element)
+                onFilter(element, matches, recno)
+                matches
+            } catch (Exception e) {
+                onFilterError(element, recno, e)
+                throw e
+            }
+        }
+    }
+    
+    private def put(Object element, int recno) {
+        try {
+            destination.put(element)
+            onPut(element,recno)
+        } catch (Exception e) {
+            onPutError(element, recno, e)
+            throw e
+        }
     }
 
     private def close(int count) {
@@ -106,82 +156,5 @@ class Copier extends SafeCopierListener {
                 map[it as Lifecycle]
         }
         components
-    }
-}
-
-class CopierDelegate implements Iterator<Object> {
-    Copier copier
-    
-    @Property int recno = 0
-    
-    new(Copier copier) {
-        this.copier = copier        
-    }
- 
-    override hasNext() {
-        try {
-            copier.source.hasNext
-        } catch (Exception e) {
-            copier.onNextError(recno, e)
-            copier.onStop(recno)
-            throw e
-        }
-    }
-    
-    override next() {
-        try {
-            val result = copier.source.next
-            copier.onNext(result, recno)
-            result
-        } catch (Exception e) {
-            copier.onNextError(recno, e)
-            copier.onStop(recno)
-            throw e
-        }
-    }
-    
-    def boolean matches(Object element) {
-        if (copier.matcher == null) {
-            true
-        } else {
-            try {
-                val matches = copier.matcher.matches(element)
-                copier.onFilter(element, matches, recno)
-                matches
-            } catch (Exception e) {
-                copier.onFilterError(element, recno, e)
-                throw e
-            }
-        }
-    }
-    
-    def Object transform(Object element) {
-        if (copier.transformer == null) {
-            element
-        } else {
-            try {
-                val transformedElement = copier.transformer.transform(element)
-                copier.onTransform(element, transformedElement, recno)
-                transformedElement
-            } catch (Exception e) {
-                copier.onTransformError(element, recno, e)
-                throw e
-            }
-        }
-    }
-    
-    def void put(Object element) {
-        try {
-            copier.destination.put(element)
-            copier.onPut(element,recno)
-            recno = recno + 1
-        } catch (Exception e) {
-            copier.onPutError(element, recno, e)
-            throw e
-        }
-    }
-    
-    override remove() {
-        throw new UnsupportedOperationException("CopierDelegate.remove: unimplemented")
     }
 }
