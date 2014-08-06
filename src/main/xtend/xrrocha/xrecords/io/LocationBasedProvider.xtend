@@ -17,8 +17,8 @@ class LocationInputStreamProvider implements Provider<InputStream> {
 class FtpOutputStreamProvider implements Provider<OutputStream> {
     @Property String host
     @Property int port = 21
-    @Property String user = "anonymous"
-    @Property String password = "someone@somewhere.net"
+    @Property String user = 'anonymous'
+    @Property String password = 'someone@somewhere.net'
     @Property String path
     
     private String location
@@ -33,13 +33,13 @@ class FtpOutputStreamProvider implements Provider<OutputStream> {
     
     static def String buildFtpUri(String host, int port, String user, String password, String path) {
         val credentialsFragment = {
-            if (user == null) ""
+            if (user == null) ''
             else if (password == null) '''«user»@'''
             else '''«user»:«password»@'''
         }
         
         val portFragment = {
-            if (port == 21) ""
+            if (port == 21) ''
             else ''':«port»'''
         }
         

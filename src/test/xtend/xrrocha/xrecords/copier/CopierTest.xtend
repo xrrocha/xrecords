@@ -44,10 +44,10 @@ public class CopierInteractionTest {
     def honorsNoStopOnError() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, true, false)
-        when(sourceMock.next).thenReturn("one", "two")
+        when(sourceMock.next).thenReturn('one', 'two')
         
         val destinationMock = mock(Destination)
-        doThrow(new RuntimeException).when(destinationMock).put("one", 0)
+        doThrow(new RuntimeException).when(destinationMock).put('one', 0)
         
         val copier = new Copier => [
             source = sourceMock
@@ -55,19 +55,19 @@ public class CopierInteractionTest {
             stopOnError = false
         ]
         copier.copy()
-        verify(destinationMock).put("one", 0)
-        verify(destinationMock).put("two", 1)
+        verify(destinationMock).put('one', 0)
+        verify(destinationMock).put('two', 1)
     }
 
     @Test
     def void appliesFilterWhenSupplied() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, true, false)
-        when(sourceMock.next).thenReturn("one", "two")
+        when(sourceMock.next).thenReturn('one', 'two')
         
         val matcherMock = mock(Matcher)
-        when(matcherMock.matches("one")).thenReturn(false)
-        when(matcherMock.matches("two")).thenReturn(true)
+        when(matcherMock.matches('one')).thenReturn(false)
+        when(matcherMock.matches('two')).thenReturn(true)
         
         val destinationMock = mock(Destination)
         
@@ -80,10 +80,10 @@ public class CopierInteractionTest {
 
         val inOrder = inOrder(sourceMock, matcherMock, destinationMock)
         inOrder.verify(sourceMock).hasNext
-        inOrder.verify(matcherMock).matches("one")
+        inOrder.verify(matcherMock).matches('one')
         inOrder.verify(sourceMock).hasNext
-        inOrder.verify(matcherMock).matches("two")
-        inOrder.verify(destinationMock).put("two", 1)
+        inOrder.verify(matcherMock).matches('two')
+        inOrder.verify(destinationMock).put('two', 1)
         inOrder.verify(sourceMock).hasNext
     }
 
@@ -91,10 +91,10 @@ public class CopierInteractionTest {
     def void appliesTransformerWhenSupplied() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
         
         val transformerMock = mock(Transformer, lifecycleMockSettings)
-        when(transformerMock.transform("one")).thenReturn("1")
+        when(transformerMock.transform('one')).thenReturn('1')
         
         val destinationMock = mock(Destination)
         
@@ -107,8 +107,8 @@ public class CopierInteractionTest {
 
         val inOrder = inOrder(sourceMock, transformerMock, destinationMock)
         inOrder.verify(sourceMock).hasNext
-        inOrder.verify(transformerMock).transform("one")
-        inOrder.verify(destinationMock).put("1", 0)
+        inOrder.verify(transformerMock).transform('one')
+        inOrder.verify(destinationMock).put('1', 0)
         inOrder.verify(sourceMock).hasNext
     }
 
@@ -116,7 +116,7 @@ public class CopierInteractionTest {
     def void copiesAllElements() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, true, false)
-        when(sourceMock.next).thenReturn("one", "two")
+        when(sourceMock.next).thenReturn('one', 'two')
         
         val destinationMock = mock(Destination)
         
@@ -128,8 +128,8 @@ public class CopierInteractionTest {
 
         verify(sourceMock,times(3)).hasNext
         val inOrder = inOrder(destinationMock)
-        inOrder.verify(destinationMock).put("one", 0)
-        inOrder.verify(destinationMock).put("two", 1)
+        inOrder.verify(destinationMock).put('one', 0)
+        inOrder.verify(destinationMock).put('two', 1)
     }
 
     @Test
@@ -154,7 +154,7 @@ public class CopierInteractionTest {
         
         try {
             copier.copy()
-            fail("copy() should have failed")
+            fail('copy() should have failed')
         } catch (RuntimeException e) {
             val order = inOrder(sourceMock, matcherMock, transformerMock, destinationMock)
             order.verify(sourceMock as Lifecycle).open()
@@ -247,7 +247,7 @@ public class CopierListenerTest {
     def reportsOnNext() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
         
         val destinationMock = mock(Destination)
         
@@ -260,14 +260,14 @@ public class CopierListenerTest {
         ]
         copier.copy()
     
-        verify(listenerMock).onNext("one", 0)
+        verify(listenerMock).onNext('one', 0)
     }
     
     @Test
     def omitsOnFilterIfNoFilter() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
         
         val destinationMock = mock(Destination)
         
@@ -287,10 +287,10 @@ public class CopierListenerTest {
     def reportsOnFilterIfFilter() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
         
         val matcherMock = mock(Matcher)
-        when(matcherMock.matches("one")).thenReturn(true)
+        when(matcherMock.matches('one')).thenReturn(true)
         
         val destinationMock = mock(Destination)
         
@@ -304,14 +304,14 @@ public class CopierListenerTest {
         ]
         copier.copy()
     
-        verify(listenerMock).onFilter("one", true, 0)
+        verify(listenerMock).onFilter('one', true, 0)
     }
     
     @Test
     def omitsTransformIfNoTransformer() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
         
         val destinationMock = mock(Destination)
         
@@ -331,10 +331,10 @@ public class CopierListenerTest {
     def reportsTransformIfTransformer() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
         
         val transformerMock = mock(Transformer)
-        when(transformerMock.transform("one")).thenReturn("1")
+        when(transformerMock.transform('one')).thenReturn('1')
         
         val destinationMock = mock(Destination)
         
@@ -348,14 +348,14 @@ public class CopierListenerTest {
         ]
         copier.copy()
     
-        verify(listenerMock).onTransform("one", "1", 0)
+        verify(listenerMock).onTransform('one', '1', 0)
     }
     
     @Test
     def reportsPut() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
         
         val destinationMock = mock(Destination)
         
@@ -368,7 +368,7 @@ public class CopierListenerTest {
         ]
         copier.copy()
     
-        verify(listenerMock).onPut("one", 0)
+        verify(listenerMock).onPut('one', 0)
     }
 
     @Test
@@ -389,7 +389,7 @@ public class CopierListenerTest {
         
         try {
             copier.copy()
-            fail("copy() should have failed!")
+            fail('copy() should have failed!')
         } catch (RuntimeException e) {
             val inOrder = inOrder(listenerMock)
             inOrder.verify(listenerMock).onOpen(sourceMock as Lifecycle)
@@ -441,7 +441,7 @@ public class CopierListenerTest {
         
         try {
             copier.copy()
-            fail("copy() should have failed!")
+            fail('copy() should have failed!')
         } catch (RuntimeException e) {
             verify(listenerMock).onNextError(0, e)
             verify(listenerMock).onStop(0)
@@ -467,7 +467,7 @@ public class CopierListenerTest {
         
         try {
             copier.copy()
-            fail("copy() should have failed!")
+            fail('copy() should have failed!')
         } catch (RuntimeException e) {
             verify(listenerMock).onNextError(0, e)
             verify(listenerMock).onStop(0)
@@ -478,10 +478,10 @@ public class CopierListenerTest {
     def reportsOnFilterError() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
         
         val matcherMock = mock(Matcher)
-        when(matcherMock.matches("one")).thenThrow(new RuntimeException)
+        when(matcherMock.matches('one')).thenThrow(new RuntimeException)
         
         val destinationMock = mock(Destination)
         
@@ -496,9 +496,9 @@ public class CopierListenerTest {
         
         try {
             copier.copy()
-            fail("copy() should have failed!")
+            fail('copy() should have failed!')
         } catch (RuntimeException e) {
-            verify(listenerMock).onFilterError("one", 0, e)
+            verify(listenerMock).onFilterError('one', 0, e)
         }
     }
     
@@ -506,10 +506,10 @@ public class CopierListenerTest {
     def reportsOnTransformError() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
         
         val transformerMock = mock(Transformer)
-        when(transformerMock.transform("one")).thenThrow(new RuntimeException)
+        when(transformerMock.transform('one')).thenThrow(new RuntimeException)
         
         val destinationMock = mock(Destination)
         
@@ -524,9 +524,9 @@ public class CopierListenerTest {
         
         try {
             copier.copy()
-            fail("copy() should have failed!")
+            fail('copy() should have failed!')
         } catch (RuntimeException e) {
-            verify(listenerMock).onTransformError("one", 0, e)
+            verify(listenerMock).onTransformError('one', 0, e)
         }
     }
     
@@ -534,10 +534,10 @@ public class CopierListenerTest {
     def reportsPutError() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn("one")
+        when(sourceMock.next).thenReturn('one')
 
         val destinationMock = mock(Destination)
-        doThrow(new RuntimeException).when(destinationMock).put("one", 0)
+        doThrow(new RuntimeException).when(destinationMock).put('one', 0)
         
         val CopierListener listenerMock = mock(CopierListener)
         
@@ -549,9 +549,9 @@ public class CopierListenerTest {
         
         try {
             copier.copy()
-            fail("copy() should have failed!")
+            fail('copy() should have failed!')
         } catch (Exception e) {
-           verify(listenerMock).onPutError("one", 0, e)
+           verify(listenerMock).onPutError('one', 0, e)
         }
     }
 }

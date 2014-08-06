@@ -41,6 +41,6 @@ class JDBCRecordSource extends JDBCBase implements Source<Record> {
     }
     
     override remove() {
-        throw new UnsupportedOperationException("Unimplemented: remove JDBCRecordSource")
+        throw new UnsupportedOperationException('Unimplemented: remove JDBCRecordSource')
     }
 }

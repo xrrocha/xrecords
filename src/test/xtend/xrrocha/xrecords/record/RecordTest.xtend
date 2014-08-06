@@ -19,8 +19,8 @@ class RecordTest {
     def void rejectsNullName() {
         val record = new Record
         try {
-            record.setField(null, "")
-            fail("Failed to reject null field name")
+            record.setField(null, '')
+            fail('Failed to reject null field name')
         } catch (NullPointerException npe) {}
     }
     
@@ -28,28 +28,28 @@ class RecordTest {
     def void rejectsBlankName() {
         val record = new Record
         try {
-            record.setField("", "")
-            fail("Failed to reject blank field name")
+            record.setField('', '')
+            fail('Failed to reject blank field name')
         } catch (IllegalArgumentException npe) {}
     }
     
     @Test
     def void acceptsNullValue() {
         val record = new Record
-            record.setField("name", null)
+            record.setField('name', null)
     }
     
     @Test
     def storesAndRetrievesField() {
         val record = new Record
 
-        record.setField("one", "1")
-        assertEquals("1", record.getField("one"))
+        record.setField('one', '1')
+        assertEquals('1', record.getField('one'))
         assertEquals(1, record.fieldNames.size)
 
-        record.setField("two", "2")
-        assertEquals("1", record.getField("one"))
-        assertEquals("2", record.getField("two"))
+        record.setField('two', '2')
+        assertEquals('1', record.getField('one'))
+        assertEquals('2', record.getField('two'))
         assertEquals(2, record.fieldNames.size)
     }
     
@@ -57,8 +57,8 @@ class RecordTest {
     def void getFailsForNonExistentName() {
         val record = new Record
         try {
-            record.getField("nonExistent")
-            fail("Returned non-existent field")
+            record.getField('nonExistent')
+            fail('Returned non-existent field')
         } catch (IllegalArgumentException npe) {}
     }
     
@@ -66,8 +66,8 @@ class RecordTest {
     def void removeFailsForNonExistentName() {
         val record = new Record
         try {
-            record.getField("nonExistent")
-            fail("Removed non-existent field")
+            record.getField('nonExistent')
+            fail('Removed non-existent field')
         } catch (IllegalArgumentException npe) {}
     }
     
@@ -75,29 +75,29 @@ class RecordTest {
     def void removesFields() {
         val record = new Record
 
-        record.setField("one", "1")
-        assertEquals("1", record.getField("one"))
+        record.setField('one', '1')
+        assertEquals('1', record.getField('one'))
         assertEquals(1, record.fieldNames.size)
 
-        record.setField("two", "2")
-        assertEquals("1", record.getField("one"))
-        assertEquals("2", record.getField("two"))
+        record.setField('two', '2')
+        assertEquals('1', record.getField('one'))
+        assertEquals('2', record.getField('two'))
         assertEquals(2, record.fieldNames.size)
         
-        record.removeField("two")
+        record.removeField('two')
         try {
-            record.getField("two")
-            fail("Retrieved non-existent field")
+            record.getField('two')
+            fail('Retrieved non-existent field')
         } catch (IllegalArgumentException iae) {}
-        assertEquals("1", record.getField("one"))
+        assertEquals('1', record.getField('one'))
         assertEquals(1, record.fieldNames.size)
     }
     
     @Test
     def void clearEmptiesFields() {
         val record = new Record
-        record.setField("one", "1")
-        record.setField("two", "2")
+        record.setField('one', '1')
+        record.setField('two', '2')
         assertEquals(2, record.fieldNames.size)
         record.clear()
         assertEquals(0, record.fieldNames.size)
@@ -106,42 +106,42 @@ class RecordTest {
     @Test
     def void retirevesFieldName() {
         val record = new Record
-        record.setField("one", "1")
-        record.setField("two", "2")
-        assertEquals(#{"one", "two"}, record.fieldNames)
-        record.removeField("one")
-        assertEquals(#{"two"}, record.fieldNames)
+        record.setField('one', '1')
+        record.setField('two', '2')
+        assertEquals(#{'one', 'two'}, record.fieldNames)
+        record.removeField('one')
+        assertEquals(#{'two'}, record.fieldNames)
     }
     
     @Test
     def void copiesToRecord() {
         val firstRecord = new Record
-        firstRecord.setField("one", "1")
-        firstRecord.setField("two", "2")
-        assertEquals(#{"one", "two"}, firstRecord.fieldNames)
+        firstRecord.setField('one', '1')
+        firstRecord.setField('two', '2')
+        assertEquals(#{'one', 'two'}, firstRecord.fieldNames)
         
         val secondRecord = new Record
-        secondRecord.setField("three", "3")
-        assertEquals(#{"three"}, secondRecord.fieldNames)
+        secondRecord.setField('three', '3')
+        assertEquals(#{'three'}, secondRecord.fieldNames)
         
         firstRecord.copyTo(secondRecord)
-        assertEquals(#{"one", "two", "three"}, secondRecord.fieldNames)
-        assertEquals(#{"one", "two"}, firstRecord.fieldNames)
+        assertEquals(#{'one', 'two', 'three'}, secondRecord.fieldNames)
+        assertEquals(#{'one', 'two'}, firstRecord.fieldNames)
     }
     
     @Test
     def void copiesFromRecord() {
         val firstRecord = new Record
-        firstRecord.setField("one", "1")
-        firstRecord.setField("two", "2")
-        assertEquals(#{"one", "two"}, firstRecord.fieldNames)
+        firstRecord.setField('one', '1')
+        firstRecord.setField('two', '2')
+        assertEquals(#{'one', 'two'}, firstRecord.fieldNames)
         
         val secondRecord = new Record
-        secondRecord.setField("three", "3")
-        assertEquals(#{"three"}, secondRecord.fieldNames)
+        secondRecord.setField('three', '3')
+        assertEquals(#{'three'}, secondRecord.fieldNames)
         
         secondRecord.copyFrom(firstRecord)
-        assertEquals(#{"one", "two", "three"}, secondRecord.fieldNames)
-        assertEquals(#{"one", "two"}, firstRecord.fieldNames)
+        assertEquals(#{'one', 'two', 'three'}, secondRecord.fieldNames)
+        assertEquals(#{'one', 'two'}, firstRecord.fieldNames)
     }
 }

@@ -19,11 +19,11 @@ class Person {
     
     def toRecord() {
         val record = new Record
-        record.setField("ID", id)
-        record.setField("FIRST_NAME", firstName)
-        record.setField("MIDDLE_NAME", middleName)
-        record.setField("LAST_NAME", lastName)
-        record.setField("GENDER", gender)
+        record.setField('ID', id)
+        record.setField('FIRST_NAME', firstName)
+        record.setField('MIDDLE_NAME', middleName)
+        record.setField('LAST_NAME', lastName)
+        record.setField('GENDER', gender)
         record
     }
 }

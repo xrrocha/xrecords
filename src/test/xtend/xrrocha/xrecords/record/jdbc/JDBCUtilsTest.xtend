@@ -14,7 +14,7 @@ class JDBCUtilsTest {
                
         val tableName = 'tableName'
         val fieldNames = #['field1', 'field2', 'field3']
-        val actualInsertSql = JDBCUtils.buildInsertSql(tableName, fieldNames)
+        val actualInsertSql = JDBCUtils.buildPreparedInsert(tableName, fieldNames)
 
         assertEquals(expectedInsertSql, actualInsertSql)
     }

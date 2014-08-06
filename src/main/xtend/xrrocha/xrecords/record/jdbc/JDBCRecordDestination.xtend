@@ -24,7 +24,7 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
     
     override open() {
         if (sqlText == null) {
-            sqlText = JDBCUtils.buildInsertSql(tableName, fieldNames)
+            sqlText = JDBCUtils.buildPreparedInsert(tableName, fieldNames)
         }
         
         val connection = dataSource.connection
