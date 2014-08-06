@@ -8,8 +8,8 @@ import org.junit.Test
 import xrrocha.xrecords.record.Record
 
 import static org.junit.Assert.*
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
-import java.sql.ResultSetMetaData
 
 class JDBCRecordDestinationTest extends JDBCRecordTest {
     static val ID = 'ID'
