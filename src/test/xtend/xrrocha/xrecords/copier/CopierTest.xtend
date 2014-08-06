@@ -47,7 +47,7 @@ public class CopierInteractionTest {
         when(sourceMock.next).thenReturn("one", "two")
         
         val destinationMock = mock(Destination)
-        doThrow(new RuntimeException).when(destinationMock).put("one")
+        doThrow(new RuntimeException).when(destinationMock).put("one", 0)
         
         val copier = new Copier => [
             source = sourceMock
@@ -55,8 +55,8 @@ public class CopierInteractionTest {
             stopOnError = false
         ]
         copier.copy()
-        verify(destinationMock).put("one")
-        verify(destinationMock).put("two")
+        verify(destinationMock).put("one", 0)
+        verify(destinationMock).put("two", 1)
     }
 
     @Test
@@ -83,7 +83,7 @@ public class CopierInteractionTest {
         inOrder.verify(matcherMock).matches("one")
         inOrder.verify(sourceMock).hasNext
         inOrder.verify(matcherMock).matches("two")
-        inOrder.verify(destinationMock).put("two")
+        inOrder.verify(destinationMock).put("two", 1)
         inOrder.verify(sourceMock).hasNext
     }
 
@@ -108,7 +108,7 @@ public class CopierInteractionTest {
         val inOrder = inOrder(sourceMock, transformerMock, destinationMock)
         inOrder.verify(sourceMock).hasNext
         inOrder.verify(transformerMock).transform("one")
-        inOrder.verify(destinationMock).put("1")
+        inOrder.verify(destinationMock).put("1", 0)
         inOrder.verify(sourceMock).hasNext
     }
 
@@ -128,8 +128,8 @@ public class CopierInteractionTest {
 
         verify(sourceMock,times(3)).hasNext
         val inOrder = inOrder(destinationMock)
-        inOrder.verify(destinationMock).put("one")
-        inOrder.verify(destinationMock).put("two")
+        inOrder.verify(destinationMock).put("one", 0)
+        inOrder.verify(destinationMock).put("two", 1)
     }
 
     @Test
@@ -537,7 +537,7 @@ public class CopierListenerTest {
         when(sourceMock.next).thenReturn("one")
 
         val destinationMock = mock(Destination)
-        doThrow(new RuntimeException).when(destinationMock).put("one")
+        doThrow(new RuntimeException).when(destinationMock).put("one", 0)
         
         val CopierListener listenerMock = mock(CopierListener)
         

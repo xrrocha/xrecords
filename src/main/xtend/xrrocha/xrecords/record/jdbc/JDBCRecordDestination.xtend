@@ -16,7 +16,6 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
     @Property int batchSize = 1
     @Property boolean commitOnBatch = true
     
-    private var int rowCount
     private var String sqlText
     private var PreparedStatement statement
     private var ResultSetMetaData metaData
@@ -24,8 +23,6 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
     private static Logger logger = LoggerFactory.getLogger(JDBCRecordDestination)
     
     override open() {
-        rowCount = 0
-
         if (sqlText == null) {
             sqlText = buildInsertSql(tableName, fieldNames)
         }
@@ -35,8 +32,7 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
         metaData = statement.getMetaData()
     }
 
-    // TODO Consider Destination.put(E element, int count)
-    override put(Record record) {
+    override put(Record record, int index) {
         try {
             for (i: 0 ..< fieldNames.length) {
                 val fieldValue = record.getField(fieldNames.get(i))
@@ -54,10 +50,9 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
 
             statement.addBatch()
             
-            rowCount = rowCount + 1
-            if (rowCount % batchSize == 0) {
+            if (index % batchSize == 0) {
                 if (logger.debugEnabled)
-                    logger.debug('''Batch execution point reached: «rowCount»''')
+                    logger.debug('''Batch execution point reached: «index»''')
                 statement.executeBatch()
                 if (commitOnBatch) {
                     statement.getConnection().commit()

@@ -7,19 +7,19 @@ interface CopierListener {
     def void onOpen(Lifecycle component)
     def void onOpenError(Lifecycle offendingComponent, Exception exception)
     
-    def void onFilter(Object element, boolean matches, int recno)
-    def void onFilterError(Object element, int recno, Exception exception)
+    def void onFilter(Object element, boolean matches, int index)
+    def void onFilterError(Object element, int index, Exception exception)
     
-    def void onNext(Object element, int recno)
-    def void onNextError(int recno, Exception exception)
+    def void onNext(Object element, int index)
+    def void onNextError(int index, Exception exception)
     
-    def void onTransform(Object element, Object transformedElement, int recno)
-    def void onTransformError(Object element, int recno, Exception exception)
+    def void onTransform(Object element, Object transformedElement, int index)
+    def void onTransformError(Object element, int index, Exception exception)
     
-    def void onPut(Object element, int recno)
-    def void onPutError(Object element, int recno, Exception exception)
+    def void onPut(Object element, int index)
+    def void onPutError(Object element, int index, Exception exception)
     
-    def void onStop(int recno)
+    def void onStop(int index)
     
     def void onCloseComponent(Lifecycle component, int count)
     def void onCloseComponentError(Lifecycle offendingComponent, int count, Exception exception)
@@ -34,14 +34,14 @@ abstract class DefaultCopierListener  extends BaseCopierListener {
     override onOpen(Lifecycle component) {}
     override onOpenError(Lifecycle offendingComponent, Exception exception) {}
         
-    override onFilter(Object element, boolean matches, int recno) {}
-    override onFilterError(Object element, int recno, Exception exception) {}
+    override onFilter(Object element, boolean matches, int index) {}
+    override onFilterError(Object element, int index, Exception exception) {}
     
-    override onTransform(Object element, Object transformedElement, int recno) {}
-    override onTransformError(Object element, int recno, Exception exception) {}
+    override onTransform(Object element, Object transformedElement, int index) {}
+    override onTransformError(Object element, int index, Exception exception) {}
     
-    override onPut(Object element, int recno) {}
-    override onPutError(Object element, int recno, Exception exception) {}
+    override onPut(Object element, int index) {}
+    override onPutError(Object element, int index, Exception exception) {}
     
     override onCloseComponent(Lifecycle component, int count) {}
     override onCloseComponentError(Lifecycle offendingComponent, int count, Exception exception) {}
@@ -60,34 +60,34 @@ class LoggingCopierListener extends DefaultCopierListener {
             logger.warn('''onOpenError(«offendingComponent.getClass.getName», «exception»)''', exception)
     }
 
-    override onNext(Object element, int recno) {
+    override onNext(Object element, int index) {
         if (logger.debugEnabled)
-            logger.debug('''onNext(«element», «recno»)''')
+            logger.debug('''onNext(«element», «index»)''')
     }
     
-    override onNextError(int recno, Exception exception) {
+    override onNextError(int index, Exception exception) {
         if (logger.warnEnabled)
-            logger.warn('''onNextError(«recno», «exception»)''', exception)
+            logger.warn('''onNextError(«index», «exception»)''', exception)
     }
         
-    override onFilterError(Object element, int recno, Exception exception) {
+    override onFilterError(Object element, int index, Exception exception) {
         if (logger.warnEnabled)
             logger.warn('''onFilterError(«element», «exception»)''', exception)
     }
     
-    override onTransformError(Object element, int recno, Exception exception) {
+    override onTransformError(Object element, int index, Exception exception) {
         if (logger.warnEnabled)
             logger.warn('''onTransformError(«element», «exception»)''', exception)
     }
     
-    override onPutError(Object element, int recno, Exception exception) {
+    override onPutError(Object element, int index, Exception exception) {
         if (logger.warnEnabled)
             logger.warn('''onPutError(«element», «exception»)''', exception)
     }
     
-    override void onStop(int recno) {
+    override void onStop(int index) {
         if (logger.warnEnabled)
-            logger.warn('''onStop(«recno»)''')
+            logger.warn('''onStop(«index»)''')
     }
     
     override onCloseComponent(Lifecycle component, int count) {
@@ -122,71 +122,71 @@ class SafeCopierListener extends BaseCopierListener {
         }
     }
 
-    override onNext(Object element, int recno) {
+    override onNext(Object element, int index) {
         try {
-            listener?.onNext(element, recno)
+            listener?.onNext(element, index)
         } catch (Exception r) {
             onRecursiveError('onNext', r)
         }
     }
     
-    override onNextError(int recno, Exception exception) {
+    override onNextError(int index, Exception exception) {
         try {
-            listener?.onNextError(recno, exception)
+            listener?.onNextError(index, exception)
         } catch (Exception r) {
             onRecursiveError('onNextError', r)
         }
     }
         
-    override onFilter(Object element, boolean matches, int recno) {
+    override onFilter(Object element, boolean matches, int index) {
         try {
-            listener?.onFilter(element, matches, recno)
+            listener?.onFilter(element, matches, index)
         } catch (Exception r) {
             onRecursiveError('onFilter', r)
         }
     }
 
-    override onFilterError(Object element, int recno, Exception exception) {
+    override onFilterError(Object element, int index, Exception exception) {
         try {
-            listener?.onFilterError(element, recno, exception)
+            listener?.onFilterError(element, index, exception)
         } catch (Exception r) {
             onRecursiveError('onFilterError', r)
         }
     }
     
-    override onTransform(Object element, Object transformedElement, int recno) {
+    override onTransform(Object element, Object transformedElement, int index) {
         try {
-            listener?.onTransform(element, transformedElement, recno)
+            listener?.onTransform(element, transformedElement, index)
         } catch (Exception r) {
             onRecursiveError('onTransform', r)
         }
     }
-    override onTransformError(Object element, int recno, Exception exception) {
+    override onTransformError(Object element, int index, Exception exception) {
         try {
-            listener?.onTransformError(element, recno, exception)
+            listener?.onTransformError(element, index, exception)
         } catch (Exception r) {
             onRecursiveError('onTransformationError', r)
         }
     }
     
-    override onPut(Object element, int recno) {
+    override onPut(Object element, int index) {
         try {
-            listener?.onPut(element, recno)
+            listener?.onPut(element, index)
         } catch (Exception r) {
             onRecursiveError('onPut', r)
         }
     }
-    override onPutError(Object element, int recno, Exception exception) {
+    override onPutError(Object element, int index, Exception exception) {
         try {
-            listener?.onPutError(element, recno, exception)
+            listener?.onPutError(element, index, exception)
         } catch (Exception r) {
             onRecursiveError('onPutError', r)
         }
     }
     
-    override void onStop(int recno) {
+    override void onStop(int index) {
         try {
-            listener?.onStop(recno)
+            listener?.onStop(index)
         } catch (Exception r) {
             onRecursiveError('onStop', r)
         }
@@ -241,87 +241,87 @@ class MultiCopierListener extends BaseCopierListener {
         ]
     }
 
-    override onNext(Object element, int recno) {
+    override onNext(Object element, int index) {
         listeners?.forEach[
             try {
-                it?.onNext(element, recno)
+                it?.onNext(element, index)
             } catch (Exception r) {
                 onRecursiveError('onNext', r)
             }
         ]
     }
     
-    override onNextError(int recno, Exception exception) {
+    override onNextError(int index, Exception exception) {
         listeners?.forEach[
             try {
-                it?.onNextError(recno, exception)
+                it?.onNextError(index, exception)
             } catch (Exception r) {
                 onRecursiveError('onNextError', r)
             }
         ]
     }
        
-    override onFilter(Object element, boolean matches, int recno) {
+    override onFilter(Object element, boolean matches, int index) {
         listeners?.forEach[
             try {
-                it?.onFilter(element, matches, recno)
+                it?.onFilter(element, matches, index)
             } catch (Exception r) {
                 onRecursiveError('onFilter', r)
             }
         ]
     }
-    override onFilterError(Object element, int recno, Exception exception) {
+    override onFilterError(Object element, int index, Exception exception) {
         listeners?.forEach[
             try {
-                it?.onFilterError(element, recno, exception)
+                it?.onFilterError(element, index, exception)
             } catch (Exception r) {
                 onRecursiveError('onFilterError', r)
             }
         ]
     }
     
-    override onTransform(Object element, Object transformedElement, int recno) {
+    override onTransform(Object element, Object transformedElement, int index) {
         listeners?.forEach[
             try {
-                it?.onTransform(element, transformedElement, recno)
+                it?.onTransform(element, transformedElement, index)
             } catch (Exception r) {
                 onRecursiveError('onTransform', r)
             }
         ]
     }
-    override onTransformError(Object element, int recno, Exception exception) {
+    override onTransformError(Object element, int index, Exception exception) {
         listeners?.forEach[
             try {
-                it?.onTransformError(element, recno, exception)
+                it?.onTransformError(element, index, exception)
             } catch (Exception r) {
                 onRecursiveError('onTransformError', r)
             }
         ]
     }
     
-    override onPut(Object element, int recno) {
+    override onPut(Object element, int index) {
         listeners?.forEach[
             try {
-                it?.onPut(element, recno)
+                it?.onPut(element, index)
             } catch (Exception r) {
                 onRecursiveError('onPut', r)
             }
         ]
     }
-    override onPutError(Object element, int recno, Exception exception) {
+    override onPutError(Object element, int index, Exception exception) {
         listeners?.forEach[
             try {
-                it?.onPutError(element, recno, exception)
+                it?.onPutError(element, index, exception)
             } catch (Exception r) {
                 onRecursiveError('onPutError', r)
             }
         ]
     }
     
-    override void onStop(int recno) {
+    override void onStop(int index) {
         listeners?.forEach[
             try {
-                it?.onStop(recno)
+                it?.onStop(index)
             } catch (Exception r) {
                 onRecursiveError('onStop', r)
             }

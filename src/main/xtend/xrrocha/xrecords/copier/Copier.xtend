@@ -14,7 +14,7 @@ interface Matcher<E> { def boolean matches(E element) }
 
 interface Transformer<E> { def E transform(E element) }
 
-interface Destination<E> { def void put(E element) }
+interface Destination<E> { def void put(E element, int index) }
 
 class Copier extends SafeCopierListener {
     @Property Source<Object> source
@@ -71,65 +71,65 @@ class Copier extends SafeCopierListener {
         ]
     }
     
-    private def hasNext(int recno) {
+    private def hasNext(int index) {
         try {
             source.hasNext
         } catch (Exception e) {
-            onNextError(recno, e)
+            onNextError(index, e)
             if (stopOnError) {
-                onStop(recno)
+                onStop(index)
             }
             throw e
         }
     }
 
-    private def next(int recno) {
+    private def next(int index) {
         try {
             val element = source.next
-            onNext(element, recno)
+            onNext(element, index)
             element
         } catch (Exception e) {
-            onNextError(recno, e)
+            onNextError(index, e)
             throw e
         }
     }
     
-    private def transform(Object element, int recno) {
+    private def transform(Object element, int index) {
         if (transformer == null) {
             element
         } else {
             try {
                 val transformedElement = transformer.transform(element)
-                onTransform(element, transformedElement, recno)
+                onTransform(element, transformedElement, index)
                 transformedElement
             } catch (Exception e) {
-                onTransformError(element, recno, e)
+                onTransformError(element, index, e)
                 throw e
             }
         }
     }
     
-    private def matches(Object element, int recno) {
+    private def matches(Object element, int index) {
         if (matcher == null) {
             true
         } else {
             try {
                 val matches = matcher.matches(element)
-                onFilter(element, matches, recno)
+                onFilter(element, matches, index)
                 matches
             } catch (Exception e) {
-                onFilterError(element, recno, e)
+                onFilterError(element, index, e)
                 throw e
             }
         }
     }
     
-    private def put(Object element, int recno) {
+    private def put(Object element, int index) {
         try {
-            destination.put(element)
-            onPut(element,recno)
+            destination.put(element, index)
+            onPut(element,index)
         } catch (Exception e) {
-            onPutError(element, recno, e)
+            onPutError(element, index, e)
             throw e
         }
     }
