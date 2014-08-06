@@ -7,12 +7,12 @@ class Field {
 class FormattedField<T> extends Field {
     @Property Parser<T> format
     
-    def parse(String s) {
-        getFormat.parse(s)
+    def fromString(String s) {
+        format.parse(s)
     }
     
-    def format(T t) {
-        getFormat.format(t)
+    def toString(T t) {
+        format.format(t)
     }
 }
 
@@ -21,11 +21,11 @@ class FixedField<T> extends FormattedField<T> {
     @Property int length
     
     def get(char[] chars) {
-        parse(new String(chars, offset, length))
+        fromString(new String(chars, offset, length))
     }
     
     def put(T t, char[] chars) {
-        val parsedChars = format(t).toCharArray
+        val parsedChars = toString(t).toCharArray
         if (parsedChars.length > length) {
             throw new IllegalArgumentException('''Formatted length («parsedChars.length» exceeds configured field length («length»)''')
         }

@@ -9,8 +9,8 @@ class FormattedFieldTest {
         val field = new FormattedField<Integer> => [
             format = new IntegerParser('###,###')
         ]
-        assertEquals(12345, field.parse('12,345'))
-        assertEquals('12,345', field.format(12345))
+        assertEquals(12345, field.fromString('12,345'))
+        assertEquals('12,345', field.toString(12345))
     }
 }
 

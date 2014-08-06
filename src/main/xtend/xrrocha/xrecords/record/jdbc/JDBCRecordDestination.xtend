@@ -24,7 +24,7 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
     
     override open() {
         if (sqlText == null) {
-            sqlText = JDBCUtils.buildPreparedInsert(tableName, fieldNames)
+            sqlText = buildPreparedInsert(tableName, fieldNames)
         }
         
         val connection = dataSource.connection
@@ -75,5 +75,11 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
         connection.commit()
         statement.close()
         connection.close()
+    }
+    static def String buildPreparedInsert(String tableName, List<String> fieldNames) {
+        '''
+            INSERT INTO "«tableName»"(«fieldNames.map['''"«it»"'''].join(', ')»)
+            VALUES(«(0 ..< fieldNames.size).map['?'].join(', ')»)
+        '''
     }
 }

@@ -114,4 +114,19 @@ class JDBCRecordDestinationTest extends JDBCRecordTest {
        destination.close(count)
        count
     }
+
+    @Test
+    def void buildsInsertSql() {
+        val expectedInsertSql =
+            '''
+                INSERT INTO "tableName"("field1", "field2", "field3")
+                VALUES(?, ?, ?)
+            '''
+               
+        val tableName = 'tableName'
+        val fieldNames = #['field1', 'field2', 'field3']
+        val actualInsertSql = JDBCRecordDestination.buildPreparedInsert(tableName, fieldNames)
+
+        assertEquals(expectedInsertSql, actualInsertSql)
+    }
 }
