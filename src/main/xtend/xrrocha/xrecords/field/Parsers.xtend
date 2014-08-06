@@ -2,7 +2,6 @@ package xrrocha.xrecords.field
 
 import java.math.BigDecimal
 import java.text.DecimalFormat
-import java.text.MessageFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
