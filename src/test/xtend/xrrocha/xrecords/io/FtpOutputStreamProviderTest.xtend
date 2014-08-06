@@ -1,13 +1,7 @@
 package xrrocha.xrecords.io
 
-import com.sun.net.httpserver.HttpExchange
-import com.sun.net.httpserver.HttpHandler
-import com.sun.net.httpserver.HttpServer
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.net.InetAddress
-import java.net.InetSocketAddress
 import java.util.ArrayList
 import java.util.Date
 import org.apache.ftpserver.FtpServer
@@ -21,97 +15,6 @@ import org.apache.ftpserver.usermanager.impl.WritePermission
 import org.junit.Test
 
 import static org.junit.Assert.*
-import static xrrocha.xrecords.io.LocationInputStreamProviderTest.*
-
-class LocationInputStreamProviderTest {
-   @Test
-   def void createsFileInputStream() {
-        val file = File.createTempFile('xyz', '.tmp')
-        file.deleteOnExit()
-        val outputStream = new FileOutputStream(file)
-        val content = 'Hey there!'
-        val bytes = content.bytes
-        outputStream.write(bytes)
-        outputStream.close()
-        
-        val provider = new LocationInputStreamProvider => [
-            location = file.absolutePath
-        ]
-        
-        val buffer = newByteArrayOfSize(bytes.length + 1)
-        val inputStream = provider.provide()
-        assertEquals(bytes.length, inputStream.read(buffer))
-        inputStream.close()
-        assertEquals(content, new String(buffer, 0, bytes.length))
-   } 
-   
-   @Test
-   def void createsHttpInputStream() {
-       startServer()
-       
-       try {
-           val path = '/path/to/nowhere/index.html'
-           val bytes = path.bytes
-           
-           val httpLocation = '''http://localhost:«serverPort»«path»'''
-           val provider = new LocationInputStreamProvider => [
-                location = httpLocation
-           ]
-        
-            val buffer = newByteArrayOfSize(bytes.length + 1)
-            val inputStream = provider.provide()
-            assertEquals(bytes.length, inputStream.read(buffer))
-            inputStream.close()
-            assertEquals(path.toUpperCase, new String(buffer, 0, bytes.length))
-       } finally {
-           stopServer()
-       }
-   }
-   
-   static val serverPort = 4269
-   static var HttpServer server
-
-   static def startServer() {
-        server = HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), serverPort), 0)
-        server.createContext('/', new HttpHandler {
-            override handle(HttpExchange exchange) {
-                val response = exchange.requestURI.path.toUpperCase
-                val bytes = response.bytes
-                val length = bytes.length
-                exchange.sendResponseHeaders(200, length)
-                exchange.responseBody.write(bytes)
-            }
-        })  
-        server.executor = null     
-        server.start()
-   }
-   
-   static def stopServer() {
-       server.stop(0)
-   }
-}
-
-class FileLocationOutputStreamProviderTest {
-    @Test
-    def void createsFileOutputStream() {
-        val file = File.createTempFile('xyz', '.tmp')
-        file.deleteOnExit()
-        
-        val provider = new FileLocationOutputStreamProvider => [
-            location = file.absolutePath
-        ]
-        
-        val outputStream = provider.provide
-        
-        val content = 'Hey there!'
-        val bytes = content.bytes
-        outputStream.write(bytes)
-        outputStream.flush()
-        outputStream.close()
-        
-        assertEquals(bytes.length, file.length)
-    }    
-}
 
 class FtpOutputStreamProviderTest {
     static val int serverPort = 4269
@@ -130,13 +33,90 @@ class FtpOutputStreamProviderTest {
     
     // TODO Test buildsProperFtpUri: credentials, port, path
     @Test
-    def buildsProperFtpUri() {
+    def buildsCompleteFtpUri() {
         val host = 'someHost'
         val port = 2221
         val  user = 'someUser'
         val password = 'somePassword'
         val path = 'somePath'
         val expectedUrl = 'ftp://someUser:somePassword@someHost:2221/somePath'
+        assertEquals(expectedUrl, FtpOutputStreamProvider.buildFtpUri(host, port, user, password, path))        
+    }
+    
+    @Test
+    def buildsFtpUrlWithoutCredentials() {
+        val host = 'someHost'
+        val port = 2221
+        val String user = null
+        val String password = null
+        val path = 'somePath'
+        val expectedUrl = 'ftp://someHost:2221/somePath'
+        assertEquals(expectedUrl, FtpOutputStreamProvider.buildFtpUri(host, port, user, password, path))        
+    }
+    
+    @Test
+    def buildsFtpUrlWithUserOnly() {
+        val host = 'someHost'
+        val port = 2221
+        val String user = 'someUser'
+        val String password = null
+        val path = 'somePath'
+        val expectedUrl = 'ftp://someUser@someHost:2221/somePath'
+        assertEquals(expectedUrl, FtpOutputStreamProvider.buildFtpUri(host, port, user, password, path))        
+    }
+    
+    @Test
+    def buildsFtpUrlWithBothUserAndPassword() {
+        val host = 'someHost'
+        val port = 2221
+        val String user = 'someUser'
+        val String password = 'somePassword'
+        val path = 'somePath'
+        val expectedUrl = 'ftp://someUser:somePassword@someHost:2221/somePath'
+        assertEquals(expectedUrl, FtpOutputStreamProvider.buildFtpUri(host, port, user, password, path))        
+    }
+    
+    @Test
+    def buildsFtpUrlForDefaultPort() {
+        val host = 'someHost'
+        val port = 21
+        val String user = 'someUser'
+        val String password = 'somePassword'
+        val path = 'somePath'
+        val expectedUrl = 'ftp://someUser:somePassword@someHost/somePath'
+        assertEquals(expectedUrl, FtpOutputStreamProvider.buildFtpUri(host, port, user, password, path))        
+    }
+    
+    @Test
+    def buildsFtpUrlForNonDefaultPort() {
+        val host = 'someHost'
+        val port = 1234
+        val String user = 'someUser'
+        val String password = 'somePassword'
+        val path = 'somePath'
+        val expectedUrl = 'ftp://someUser:somePassword@someHost:1234/somePath'
+        assertEquals(expectedUrl, FtpOutputStreamProvider.buildFtpUri(host, port, user, password, path))        
+    }
+    
+    @Test
+    def buildsFtpUrlForNonAbsolutePath() {
+        val host = 'someHost'
+        val port = 1234
+        val String user = 'someUser'
+        val String password = 'somePassword'
+        val path = 'somePath'
+        val expectedUrl = 'ftp://someUser:somePassword@someHost:1234/somePath'
+        assertEquals(expectedUrl, FtpOutputStreamProvider.buildFtpUri(host, port, user, password, path))        
+    }
+    
+    @Test
+    def buildsFtpUrlForAbsolutePath() {
+        val host = 'someHost'
+        val port = 1234
+        val String user = 'someUser'
+        val String password = 'somePassword'
+        val path = '/somePath'
+        val expectedUrl = 'ftp://someUser:somePassword@someHost:1234/somePath'
         assertEquals(expectedUrl, FtpOutputStreamProvider.buildFtpUri(host, port, user, password, path))        
     }
 
