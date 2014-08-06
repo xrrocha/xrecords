@@ -27,9 +27,9 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
             sqlText = JDBCUtils.buildInsertSql(tableName, fieldNames)
         }
         
-        val connection = dataSource.getConnection()
+        val connection = dataSource.connection
         statement = connection.prepareStatement(sqlText)
-        metaData = statement.getMetaData()
+        metaData = statement.metaData
     }
 
     override put(Record record, int index) {
@@ -57,7 +57,7 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
                 statement.executeBatch()
 
                 if (commitOnBatch) {
-                    statement.getConnection().commit()
+                    statement.connection.commit()
                 }
             }
         } catch (SQLException e) {
@@ -71,7 +71,7 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
         if (count % batchSize != 0) {
             statement.executeBatch()
         }
-        val connection = statement.getConnection()
+        val connection = statement.connection
         connection.commit()
         statement.close()
         connection.close()

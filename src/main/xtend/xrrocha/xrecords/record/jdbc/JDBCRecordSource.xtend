@@ -10,7 +10,7 @@ class JDBCRecordSource extends JDBCBase implements Source<Record> {
     private ResultSet resultSet
     
     override open() {
-        val connection = dataSource.getConnection()
+        val connection = dataSource.connection
         val statement = connection.createStatement()
         resultSet = statement.executeQuery(sqlText)
     }
@@ -20,8 +20,8 @@ class JDBCRecordSource extends JDBCBase implements Source<Record> {
     }
     
     override Record next() {
-        val metaData = resultSet.getMetaData()
-        val columnCount = metaData.getColumnCount()
+        val metaData = resultSet.metaData
+        val columnCount = metaData.columnCount
 
         val record = new Record
         
@@ -33,8 +33,8 @@ class JDBCRecordSource extends JDBCBase implements Source<Record> {
     }
     
     override close(int count) {
-        val statement = resultSet.getStatement()
-        val connection = statement.getConnection()
+        val statement = resultSet.statement
+        val connection = statement.connection
         resultSet.close()
         statement.close()
         connection.close()

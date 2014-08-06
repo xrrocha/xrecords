@@ -59,9 +59,9 @@ class JDBCRecordDestinationTest extends JDBCRecordTest {
         val connection = mock(Connection)
         val statement = mock(PreparedStatement)
         
-        when(dataSource.getConnection()).thenReturn(connection)
+        when(dataSource.connection).thenReturn(connection)
         when(connection.prepareStatement(anyString)).thenReturn(statement)
-        when(statement.getConnection()).thenReturn(connection)
+        when(statement.connection).thenReturn(connection)
         
         val destination = createDestination(dataSource, 2, true)
  
