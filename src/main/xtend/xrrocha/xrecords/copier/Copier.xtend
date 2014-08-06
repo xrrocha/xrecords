@@ -16,20 +16,19 @@ interface Transformer<E> { def E transform(E element) }
 
 interface Destination<E> { def void put(E element) }
 
-// FIXME Does Copier need a generic type?
-class Copier<E> extends SafeCopierListener<E> {
-    @Property Source<E> source
-    @Property Matcher<E> matcher
-    @Property Transformer<E> transformer
-    @Property Destination<E> destination
+class Copier extends SafeCopierListener {
+    @Property Source<Object> source
+    @Property Matcher<Object> matcher
+    @Property Transformer<Object> transformer
+    @Property Destination<Object> destination
     
     @Property boolean stopOnError = true
-    @Property CopierListener<E> listener = new LoggingCopierListener
+    @Property CopierListener listener = new LoggingCopierListener
 
     final def copy() {
         open()
         
-        val delegate = new CopierDelegate<E>(this)
+        val delegate = new CopierDelegate(this)
         
         try {
             delegate.forEach [
@@ -93,82 +92,74 @@ class Copier<E> extends SafeCopierListener<E> {
     }
 }
 
-class CopierDelegate<E> implements Source<E>, Matcher<E>, Transformer<E>, Destination<E> {
-    Source<E> source
-    Matcher<E> matcher
-    Transformer<E> transformer
-    Destination<E> destination
-    CopierListener<E> listener
+class CopierDelegate<E> implements Iterator<Object> {
+    Copier copier
     
     @Property int recno = 0
     
-    new(Copier<E> copier) {
-        this.source = copier.source
-        this.matcher = copier.matcher
-        this.transformer = copier.transformer
-        this.destination = copier.destination
-        this.listener = copier        
+    new(Copier copier) {
+        this.copier = copier        
     }
  
     override hasNext() {
         try {
-            source.hasNext
+            copier.source.hasNext
         } catch (Exception e) {
-            listener.onNextError(recno, e)
-            listener.onStop(recno)
+            copier.onNextError(recno, e)
+            copier.onStop(recno)
             throw e
         }
     }
     
     override next() {
         try {
-            val result = source.next
-            listener.onNext(result, recno)
+            val result = copier.source.next
+            copier.onNext(result, recno)
             result
         } catch (Exception e) {
-            listener.onNextError(recno, e)
-            listener.onStop(recno)
+            copier.onNextError(recno, e)
+            copier.onStop(recno)
             throw e
         }
     }
     
-    override boolean matches(E element) {
-        if (matcher == null) {
+    def boolean matches(Object element) {
+        if (copier.matcher == null) {
             true
         } else {
             try {
-                val matches = matcher.matches(element)
-                listener.onFilter(element, matches, recno)
+                val matches = copier.matcher.matches(element)
+                copier.onFilter(element, matches, recno)
                 matches
             } catch (Exception e) {
-                listener.onFilterError(element, recno, e)
+                copier.onFilterError(element, recno, e)
                 throw e
             }
         }
     }
     
-    override E transform(E element) {
-        if (transformer == null) {
+    def Object transform(Object element) {
+        if (copier.transformer == null) {
             element
         } else {
             try {
-                val transformedElement = transformer.transform(element)
-                listener.onTransform(element, transformedElement, recno)
+                val transformedElement = copier.transformer.transform(element)
+                copier.onTransform(element, transformedElement, recno)
                 transformedElement
             } catch (Exception e) {
-                listener.onTransformError(element, recno, e)
+                copier.onTransformError(element, recno, e)
                 throw e
             }
         }
     }
     
-    override void put(E element) {
+    def void put(Object element) {
         try {
-            destination.put(element)
-            listener.onPut(element,recno)
+            copier.destination.put(element)
+            copier.onPut(element,recno)
             recno = recno + 1
         } catch (Exception e) {
-            listener.onPutError(element, recno, e)
+            copier.onPutError(element, recno, e)
             throw e
         }
     }

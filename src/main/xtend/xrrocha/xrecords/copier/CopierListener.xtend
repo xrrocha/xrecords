@@ -3,21 +3,21 @@ package xrrocha.xrecords.copier
 import java.util.List
 import org.slf4j.LoggerFactory
 
-interface CopierListener<E> {
+interface CopierListener {
     def void onOpen(Lifecycle component)
     def void onOpenError(Lifecycle offendingComponent, Exception exception)
     
-    def void onFilter(E element, boolean matches, int recno)
-    def void onFilterError(E element, int recno, Exception exception)
+    def void onFilter(Object element, boolean matches, int recno)
+    def void onFilterError(Object element, int recno, Exception exception)
     
-    def void onNext(E element, int recno)
+    def void onNext(Object element, int recno)
     def void onNextError(int recno, Exception exception)
     
-    def void onTransform(E element, E transformedElement, int recno)
-    def void onTransformError(E element, int recno, Exception exception)
+    def void onTransform(Object element, Object transformedElement, int recno)
+    def void onTransformError(Object element, int recno, Exception exception)
     
-    def void onPut(E element, int recno)
-    def void onPutError(E element, int recno, Exception exception)
+    def void onPut(Object element, int recno)
+    def void onPutError(Object element, int recno, Exception exception)
     
     def void onStop(int recno)
     
@@ -26,29 +26,29 @@ interface CopierListener<E> {
     def void onClose(int count)
 }
 
-abstract class BaseCopierListener<E> implements CopierListener<E> {
+abstract class BaseCopierListener implements CopierListener {
     def onRecursiveError(String context, Exception exception) {}
 }
 
-abstract class DefaultCopierListener<E>  extends BaseCopierListener<E> {
+abstract class DefaultCopierListener  extends BaseCopierListener {
     override onOpen(Lifecycle component) {}
     override onOpenError(Lifecycle offendingComponent, Exception exception) {}
         
-    override onFilter(E element, boolean matches, int recno) {}
-    override onFilterError(E element, int recno, Exception exception) {}
+    override onFilter(Object element, boolean matches, int recno) {}
+    override onFilterError(Object element, int recno, Exception exception) {}
     
-    override onTransform(E element, E transformedElement, int recno) {}
-    override onTransformError(E element, int recno, Exception exception) {}
+    override onTransform(Object element, Object transformedElement, int recno) {}
+    override onTransformError(Object element, int recno, Exception exception) {}
     
-    override onPut(E element, int recno) {}
-    override onPutError(E element, int recno, Exception exception) {}
+    override onPut(Object element, int recno) {}
+    override onPutError(Object element, int recno, Exception exception) {}
     
     override onCloseComponent(Lifecycle component, int count) {}
     override onCloseComponentError(Lifecycle offendingComponent, int count, Exception exception) {}
     override onClose(int count)
 }
 
-class LoggingCopierListener<E> extends DefaultCopierListener<E> {
+class LoggingCopierListener extends DefaultCopierListener {
    static val logger = LoggerFactory.getLogger(LoggingCopierListener)
    
     override onOpen(Lifecycle component) {
@@ -60,7 +60,7 @@ class LoggingCopierListener<E> extends DefaultCopierListener<E> {
             logger.warn('''onOpenError(«offendingComponent.getClass.getName», «exception»)''', exception)
     }
 
-    override onNext(E element, int recno) {
+    override onNext(Object element, int recno) {
         if (logger.debugEnabled)
             logger.debug('''onNext(«element», «recno»)''')
     }
@@ -70,17 +70,17 @@ class LoggingCopierListener<E> extends DefaultCopierListener<E> {
             logger.warn('''onNextError(«recno», «exception»)''', exception)
     }
         
-    override onFilterError(E element, int recno, Exception exception) {
+    override onFilterError(Object element, int recno, Exception exception) {
         if (logger.warnEnabled)
             logger.warn('''onFilterError(«element», «exception»)''', exception)
     }
     
-    override onTransformError(E element, int recno, Exception exception) {
+    override onTransformError(Object element, int recno, Exception exception) {
         if (logger.warnEnabled)
             logger.warn('''onTransformError(«element», «exception»)''', exception)
     }
     
-    override onPutError(E element, int recno, Exception exception) {
+    override onPutError(Object element, int recno, Exception exception) {
         if (logger.warnEnabled)
             logger.warn('''onPutError(«element», «exception»)''', exception)
     }
@@ -104,8 +104,8 @@ class LoggingCopierListener<E> extends DefaultCopierListener<E> {
     }
 }
 
-class SafeCopierListener<E> extends BaseCopierListener<E> {
-    @Property CopierListener<E> listener
+class SafeCopierListener extends BaseCopierListener {
+    @Property CopierListener listener
     
     override onOpen(Lifecycle component) {
         try {
@@ -122,7 +122,7 @@ class SafeCopierListener<E> extends BaseCopierListener<E> {
         }
     }
 
-    override onNext(E element, int recno) {
+    override onNext(Object element, int recno) {
         try {
             listener?.onNext(element, recno)
         } catch (Exception r) {
@@ -138,7 +138,7 @@ class SafeCopierListener<E> extends BaseCopierListener<E> {
         }
     }
         
-    override onFilter(E element, boolean matches, int recno) {
+    override onFilter(Object element, boolean matches, int recno) {
         try {
             listener?.onFilter(element, matches, recno)
         } catch (Exception r) {
@@ -146,7 +146,7 @@ class SafeCopierListener<E> extends BaseCopierListener<E> {
         }
     }
 
-    override onFilterError(E element, int recno, Exception exception) {
+    override onFilterError(Object element, int recno, Exception exception) {
         try {
             listener?.onFilterError(element, recno, exception)
         } catch (Exception r) {
@@ -154,14 +154,14 @@ class SafeCopierListener<E> extends BaseCopierListener<E> {
         }
     }
     
-    override onTransform(E element, E transformedElement, int recno) {
+    override onTransform(Object element, Object transformedElement, int recno) {
         try {
             listener?.onTransform(element, transformedElement, recno)
         } catch (Exception r) {
             onRecursiveError('onTransform', r)
         }
     }
-    override onTransformError(E element, int recno, Exception exception) {
+    override onTransformError(Object element, int recno, Exception exception) {
         try {
             listener?.onTransformError(element, recno, exception)
         } catch (Exception r) {
@@ -169,14 +169,14 @@ class SafeCopierListener<E> extends BaseCopierListener<E> {
         }
     }
     
-    override onPut(E element, int recno) {
+    override onPut(Object element, int recno) {
         try {
             listener?.onPut(element, recno)
         } catch (Exception r) {
             onRecursiveError('onPut', r)
         }
     }
-    override onPutError(E element, int recno, Exception exception) {
+    override onPutError(Object element, int recno, Exception exception) {
         try {
             listener?.onPutError(element, recno, exception)
         } catch (Exception r) {
@@ -215,12 +215,12 @@ class SafeCopierListener<E> extends BaseCopierListener<E> {
     }
 }
 
-class MultiCopierListener<E> extends BaseCopierListener<E> {
-    @Property List<?extends CopierListener<E>> listeners
+class MultiCopierListener extends BaseCopierListener {
+    @Property List<?extends CopierListener> listeners
     
     new() {}
     
-    new(List<?extends CopierListener<E>> listeners) { this.listeners = listeners }
+    new(List<?extends CopierListener> listeners) { this.listeners = listeners }
     
     override onOpen(Lifecycle component) {
         listeners?.forEach[
@@ -241,7 +241,7 @@ class MultiCopierListener<E> extends BaseCopierListener<E> {
         ]
     }
 
-    override onNext(E element, int recno) {
+    override onNext(Object element, int recno) {
         listeners?.forEach[
             try {
                 it?.onNext(element, recno)
@@ -261,7 +261,7 @@ class MultiCopierListener<E> extends BaseCopierListener<E> {
         ]
     }
        
-    override onFilter(E element, boolean matches, int recno) {
+    override onFilter(Object element, boolean matches, int recno) {
         listeners?.forEach[
             try {
                 it?.onFilter(element, matches, recno)
@@ -270,7 +270,7 @@ class MultiCopierListener<E> extends BaseCopierListener<E> {
             }
         ]
     }
-    override onFilterError(E element, int recno, Exception exception) {
+    override onFilterError(Object element, int recno, Exception exception) {
         listeners?.forEach[
             try {
                 it?.onFilterError(element, recno, exception)
@@ -280,7 +280,7 @@ class MultiCopierListener<E> extends BaseCopierListener<E> {
         ]
     }
     
-    override onTransform(E element, E transformedElement, int recno) {
+    override onTransform(Object element, Object transformedElement, int recno) {
         listeners?.forEach[
             try {
                 it?.onTransform(element, transformedElement, recno)
@@ -289,7 +289,7 @@ class MultiCopierListener<E> extends BaseCopierListener<E> {
             }
         ]
     }
-    override onTransformError(E element, int recno, Exception exception) {
+    override onTransformError(Object element, int recno, Exception exception) {
         listeners?.forEach[
             try {
                 it?.onTransformError(element, recno, exception)
@@ -299,7 +299,7 @@ class MultiCopierListener<E> extends BaseCopierListener<E> {
         ]
     }
     
-    override onPut(E element, int recno) {
+    override onPut(Object element, int recno) {
         listeners?.forEach[
             try {
                 it?.onPut(element, recno)
@@ -308,7 +308,7 @@ class MultiCopierListener<E> extends BaseCopierListener<E> {
             }
         ]
     }
-    override onPutError(E element, int recno, Exception exception) {
+    override onPutError(Object element, int recno, Exception exception) {
         listeners?.forEach[
             try {
                 it?.onPutError(element, recno, exception)

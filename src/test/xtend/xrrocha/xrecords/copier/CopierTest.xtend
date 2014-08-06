@@ -20,7 +20,7 @@ public class CopierInteractionTest {
         
         val destinationMock = mock(Destination, lifecycleMockSettings)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             matcher = matcherMock
             transformer = transformerMock
@@ -49,7 +49,7 @@ public class CopierInteractionTest {
         val destinationMock = mock(Destination)
         doThrow(new RuntimeException).when(destinationMock).put("one")
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
             stopOnError = false
@@ -71,7 +71,7 @@ public class CopierInteractionTest {
         
         val destinationMock = mock(Destination)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             matcher = matcherMock
             destination = destinationMock
@@ -98,7 +98,7 @@ public class CopierInteractionTest {
         
         val destinationMock = mock(Destination)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             transformer = transformerMock
             destination = destinationMock
@@ -120,7 +120,7 @@ public class CopierInteractionTest {
         
         val destinationMock = mock(Destination)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
         ]
@@ -145,7 +145,7 @@ public class CopierInteractionTest {
 
         doThrow(new RuntimeException).when(destinationMock as Lifecycle).open()
 
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             matcher = matcherMock
             transformer = transformerMock
@@ -185,7 +185,7 @@ public class CopierInteractionTest {
         val destinationMock = mock(Destination, lifecycleMockSettings)
         doThrow(new RuntimeException).when(destinationMock as Lifecycle).close()
 
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             matcher = matcherMock
             transformer = transformerMock
@@ -222,7 +222,7 @@ public class CopierListenerTest {
         
         val listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             matcher = matcherMock
             transformer = transformerMock
@@ -251,12 +251,12 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         copier.copy()
     
@@ -271,12 +271,12 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         copier.copy()
     
@@ -294,13 +294,13 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             matcher = matcherMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         copier.copy()
     
@@ -315,12 +315,12 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         copier.copy()
     
@@ -338,13 +338,13 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             transformer = transformerMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         copier.copy()
     
@@ -359,12 +359,12 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         copier.copy()
     
@@ -379,12 +379,12 @@ public class CopierListenerTest {
         val destinationMock = mock(Destination, lifecycleMockSettings)
         doThrow(new RuntimeException).when(destinationMock as Lifecycle).open()
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         
         try {
@@ -408,12 +408,12 @@ public class CopierListenerTest {
         val exception = new RuntimeException
         doThrow(exception).when(destinationMock as Lifecycle).close()
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         copier.copy()
         
@@ -430,13 +430,13 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
             stopOnError = true
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         
         try {
@@ -456,13 +456,13 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
             stopOnError = true
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         
         try {
@@ -485,13 +485,13 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             matcher = matcherMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         
         try {
@@ -513,13 +513,13 @@ public class CopierListenerTest {
         
         val destinationMock = mock(Destination)
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             transformer = transformerMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         
         try {
@@ -539,12 +539,12 @@ public class CopierListenerTest {
         val destinationMock = mock(Destination)
         doThrow(new RuntimeException).when(destinationMock).put("one")
         
-        val CopierListener<Object> listenerMock = mock(CopierListener)
+        val CopierListener listenerMock = mock(CopierListener)
         
-        val copier = new Copier<Object> => [
+        val copier = new Copier => [
             source = sourceMock
             destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener<Object>, listenerMock])
+            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
         ]
         
         try {
