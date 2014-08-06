@@ -1,45 +1,47 @@
 package xrrocha.xrecords.record.jdbc
 
+import java.sql.Connection
+import java.sql.PreparedStatement
+import java.util.List
+import javax.sql.DataSource
 import org.junit.Test
 import xrrocha.xrecords.record.Record
 
 import static org.junit.Assert.*
+import static org.mockito.Mockito.*
+import java.sql.ResultSetMetaData
 
 class JDBCRecordDestinationTest extends JDBCRecordTest {
+    static val ID = 'ID'
+    static val FIRST_NAME = 'FIRST_NAME'
+    static val MIDDLE_NAME = 'MIDDLE_NAME'
+    static val LAST_NAME = 'LAST_NAME'
+    static val GENDER = 'GENDER'
+    
     @Test
     def void populatesTable() {
        val records = newArrayList(
            Record.fromMap(#{
-               'ID' -> 1,
-               'FIRST_NAME' -> 'John',
-               'MIDDLE_NAME' -> null,
-               'LAST_NAME' -> 'Doe',
-               'GENDER' -> 'M'
+               ID -> 1,
+               FIRST_NAME -> 'John',
+               MIDDLE_NAME -> null,
+               LAST_NAME -> 'Doe',
+               GENDER -> 'M'
            }),
            Record.fromMap(#{
-               'ID' -> 2,
-               'FIRST_NAME' -> 'Janet',
-               'MIDDLE_NAME' -> null,
-               'LAST_NAME' -> 'Doe',
-               'GENDER' -> 'F'
+               ID -> 2,
+               FIRST_NAME -> 'Janet',
+               MIDDLE_NAME -> null,
+               LAST_NAME -> 'Doe',
+               GENDER -> 'F'
            })
        )
        
-       val destination = new JDBCRecordDestination => [
-           tableName = 'PERSON'
-           fieldNames = #['ID', 'FIRST_NAME', 'MIDDLE_NAME', 'LAST_NAME', 'GENDER']
-           batchSize = 1
-           commitOnBatch = false
-           dataSource = createDataSource()
-       ]
+       val destination = createDestination(createDataSource(), 1, false)
+
+       val count = runDestination(destination, records)
        
-       destination.open()
-       val count = records.fold(0)[ index, record |
-           destination.put(record, index)
-           index + 1
-       ]
-       destination.close(count)
-       
+       assertEquals(records.size, count)
        val statement = connection.createStatement()
        val resultSet = statement.executeQuery('SELECT * FROM person ORDER BY id')
        records.forEach [ record |
@@ -51,7 +53,65 @@ class JDBCRecordDestinationTest extends JDBCRecordTest {
        assertFalse(resultSet.next)
     }
     
-    // commitOnBatch
+    @Test
+    def void commitsOnBatchAndExecutesBatchOnClose() {
+        val dataSource = mock(DataSource)
+        val connection = mock(Connection)
+        val statement = mock(PreparedStatement)
+        
+        when(dataSource.getConnection()).thenReturn(connection)
+        when(connection.prepareStatement(anyString)).thenReturn(statement)
+        when(statement.getConnection()).thenReturn(connection)
+        
+        val destination = createDestination(dataSource, 2, true)
+ 
+        val records = newArrayList(
+           Record.fromMap(#{
+               ID -> 1,
+               FIRST_NAME -> 'John',
+               MIDDLE_NAME -> null,
+               LAST_NAME -> 'Doe',
+               GENDER -> 'M'
+           }),
+           Record.fromMap(#{
+               ID -> 2,
+               FIRST_NAME -> 'Janet',
+               MIDDLE_NAME -> null,
+               LAST_NAME -> 'Doe',
+               GENDER -> 'F'
+           }),
+           Record.fromMap(#{
+               ID -> 3,
+               FIRST_NAME -> 'Sponge',
+               MIDDLE_NAME -> null,
+               LAST_NAME -> 'Bob',
+               GENDER -> 'M'
+           })
+       )
+
+       runDestination(destination, records)
+       
+       verify(statement, times(2)).executeBatch()
+       verify(connection, times(2)).commit()
+    }
     
-    // executeBatch on close
+    def createDestination(DataSource theDataSource, int theBatchSize, boolean theCommitOnBatch) {
+        new JDBCRecordDestination => [
+           tableName = 'PERSON'
+           fieldNames = #[ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, GENDER]
+           batchSize = theBatchSize
+           commitOnBatch = theCommitOnBatch
+           dataSource = theDataSource
+        ]
+    }
+    
+    def runDestination(JDBCRecordDestination destination, List<Record> records) {
+       destination.open()
+       val count = records.fold(0)[ index, record |
+           destination.put(record, index)
+           index + 1
+       ]
+       destination.close(count)
+       count
+    }
 }
