@@ -31,7 +31,6 @@ class FtpOutputStreamProviderTest {
         directory
     }
     
-    // TODO Test buildsProperFtpUri: credentials, port, path
     @Test
     def buildsCompleteFtpUri() {
         val host = 'someHost'
