@@ -82,7 +82,7 @@ class LocationInputStreamProviderTest {
                 exchange.responseBody.write(bytes)
             }
         })  
-        server.setExecutor(null)     
+        server.executor = null     
         server.start()
    }
    
@@ -197,12 +197,12 @@ class FtpOutputStreamProviderTest {
             password = userPassword
             homeDirectory = userDirectory.absolutePath
         ]
-        user.setAuthorities(authorities)
+        user.authorities = authorities
         userManager.save(user)
         
         val serverFactory = new FtpServerFactory()
         val listenerFactory = new ListenerFactory
-        listenerFactory.setPort(serverPort)
+        listenerFactory.port = serverPort
         serverFactory.addListener('default', listenerFactory.createListener)
         serverFactory.userManager = userManager
         server = serverFactory.createServer()
