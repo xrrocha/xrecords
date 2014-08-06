@@ -15,7 +15,6 @@ class JDBCRecordSource extends JDBCBase implements Source<Record> {
         resultSet = statement.executeQuery(sqlText)
     }
 
-    // FIXME ResultSet.next != Iterator.hasNext
     override boolean hasNext() {
         resultSet.next()
     }
