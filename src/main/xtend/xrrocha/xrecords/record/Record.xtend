@@ -1,9 +1,18 @@
 package xrrocha.xrecords.record
 
 import java.util.HashMap
+import java.util.Map
 
 class Record {
     val fields = new HashMap<String, Object>()
+    
+    static def fromMap(Map<String, ?extends Object> map) {
+        val record = new Record
+        map.keySet.forEach [ fieldName |
+            record.setField(fieldName, map.get(fieldName))
+        ]
+        record
+    }
     
     def void setField(String name, Object value) {
         if (name == null)

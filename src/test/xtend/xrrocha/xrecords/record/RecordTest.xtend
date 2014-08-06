@@ -5,6 +5,17 @@ import static org.junit.Assert.*
 
 class RecordTest {
     @Test
+    def void createsRecordFromMap() {
+        val map = #{ 'one' -> 1, 'two' -> 2, 'three' -> 3 }
+        val record = new Record => [
+            setField('one', 1)
+            setField('two', 2)
+            setField('three', 3)
+        ]
+        assertEquals(record, Record.fromMap(map))
+    }
+    
+    @Test
     def void rejectsNullName() {
         val record = new Record
         try {
