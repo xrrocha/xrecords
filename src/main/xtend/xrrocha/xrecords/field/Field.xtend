@@ -1,5 +1,7 @@
 package xrrocha.xrecords.field
 
+import java.util.List
+
 class Field {
     @Property String name
 }
@@ -13,6 +15,14 @@ class FormattedField<T> extends Field {
     
     def toString(T t) {
         format.format(t)
+    }
+}
+
+class IndexedField<T> extends FormattedField<T> {
+    @Property int index
+    
+    def getValueFrom(List<String> list) {
+        fromString(list.get(index))
     }
 }
 

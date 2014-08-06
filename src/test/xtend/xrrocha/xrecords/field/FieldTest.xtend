@@ -14,6 +14,18 @@ class FormattedFieldTest {
     }
 }
 
+class IndexedFieldTest {
+    @Test
+    def void extractsFieldByIndex() {
+        val field = new IndexedField<Integer> => [
+            index = 2
+            format = new IntegerParser('###,###')
+        ]
+        val values = #['Spongebob', '1/1/1980', '1,234']
+        assertEquals(1234, field.getValueFrom(values))
+    }
+}
+
 class FixedFieldTest {
     @Test
     def void getsValueProperly() {
