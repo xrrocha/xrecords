@@ -93,28 +93,44 @@
 	</dependencies>
 
 	<build>
+        <sourceDirectory>${basedir}/src/main/xtend</sourceDirectory>
+        <testSourceDirectory>${basedir}/src/test/xtend</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
 				<version>${xtend.version}</version>
 				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-							<goal>testCompile</goal>
-							<goal>xtend-install-debug-info</goal>
-							<goal>xtend-test-install-debug-info</goal>
-						</goals>
-					</execution>
+                    <execution>
+                        <id>xtend-compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>xtend-install-debug-info</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/main/xtend-gen</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>xtend-test-compile</id>
+                        <goals>
+                            <goal>testCompile</goal>
+                            <goal>xtend-test-install-debug-info</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/xtend-gen</outputDirectory>
+                        </configuration>
+                    </execution>
 				</executions>
 				<configuration>
-					<outputDirectory>src/main/xtend-gen</outputDirectory>
+					<outputDirectory>${basedir}/src/main/xtend-gen</outputDirectory>
+					<testOutputDirectory>${basedir}/src/test/xtend-gen</testOutputDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
 				<inherited>true</inherited>
 				<configuration>
 					<source>${maven-compiler-plugin.source}</source>
@@ -124,6 +140,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven-jar-plugin.version}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -134,7 +151,28 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
+				<version>${maven-clean-plugin.version}</version>
 				<configuration>
 					<filesets>
 						<fileset>
@@ -161,11 +199,11 @@
 		<mainClass>xrrocha.xrecords.Main</mainClass>
 
 		<xtend.version>2.6.2</xtend.version>
-		<maven-compiler-plugin.source>1.7</maven-compiler-plugin.source>
-		<maven-compiler-plugin.target>1.7</maven-compiler-plugin.target>
+		<maven-compiler-plugin.source>1.5</maven-compiler-plugin.source>
+		<maven-compiler-plugin.target>1.5</maven-compiler-plugin.target>
 
 		<snakeyaml.version>1.13</snakeyaml.version>
-		<yamltag.version>1.0</yamltag.version>
+		<yamltag.version>1.0.0</yamltag.version>
 		<javadbf.version>0.4.0</javadbf.version>
 		<opencsv.version>2.3</opencsv.version>
 		<pojomatic.version>2.0.1</pojomatic.version>
@@ -177,5 +215,10 @@
 		<hsqldb.version>2.3.2</hsqldb.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<ftpserver-core.version>1.0.6</ftpserver-core.version>
+
+		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+		<maven-source-plugin.version>2.3</maven-source-plugin.version>
+		<maven-jar-plugin.version>2.5</maven-jar-plugin.version>
+		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
 	</properties>
 </project>
