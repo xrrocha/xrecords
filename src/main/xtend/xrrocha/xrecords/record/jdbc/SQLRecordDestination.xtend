@@ -39,7 +39,7 @@ class SQLRecordDestination implements Destination<Record>, Validatable {
                 if (objectValue instanceof Number) {
                     objectValue.toString
                 } else if(objectValue instanceof String) {
-                    enclose(escape(objectValue as String))
+                    enclose(escape(objectValue))
                 } else {
                     enclose(field.toString(objectValue))
                 }
