@@ -30,7 +30,7 @@
 			<version>${snakeyaml.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>xrrocha</groupId>
+			<groupId>net.xrrocha</groupId>
 			<artifactId>yamltag</artifactId>
 			<version>${yamltag.version}</version>
 		</dependency>

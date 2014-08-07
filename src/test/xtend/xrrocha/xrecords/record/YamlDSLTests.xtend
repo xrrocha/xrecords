@@ -5,7 +5,7 @@ import java.util.List
 import org.junit.Test
 import static org.junit.Assert.*
 import xrrocha.xrecords.copier.Copier
-import xrrocha.yamltag.DefaultYamlFactory
+import net.xrrocha.yamltag.DefaultYamlFactory
 
 class YamlDSLTests {
     @Test
