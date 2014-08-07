@@ -4,12 +4,11 @@ import au.com.bytecode.opencsv.CSVWriter
 import java.io.Writer
 import java.util.List
 import xrrocha.xrecords.copier.Destination
-import xrrocha.xrecords.copier.Lifecycle
 import xrrocha.xrecords.field.FormattedField
 import xrrocha.xrecords.record.Record
 import xrrocha.xrecords.util.Provider
 
-class CSVRecordDestination extends CSVBase implements Destination<Record>, Lifecycle {
+class CSVRecordDestination extends CSVBase implements Destination<Record> {
     @Property Provider<Writer> output
     @Property List<FormattedField<Object>> fields
 

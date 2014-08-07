@@ -3,19 +3,18 @@ package xrrocha.xrecords.copier
 import java.util.ArrayList
 import java.util.Iterator
 
-// FIXME Have Source and Destination extend Lifecycle
 interface Lifecycle {
     def void open()
     def void close(int count)
 }
 
-interface Source<E> extends Iterator<E> {}
+interface Source<E> extends Lifecycle, Iterator<E> {}
 
 interface Matcher<E> { def boolean matches(E element) }
 
 interface Transformer<E> { def E transform(E element) }
 
-interface Destination<E> { def void put(E element, int index) }
+interface Destination<E> extends Lifecycle { def void put(E element, int index) }
 
 class Copier extends SafeCopierListener {
     @Property Source<Object> source

@@ -3,13 +3,12 @@ package xrrocha.xrecords.record.csv
 import au.com.bytecode.opencsv.CSVReader
 import java.io.Reader
 import java.util.List
-import xrrocha.xrecords.copier.Lifecycle
 import xrrocha.xrecords.copier.Source
 import xrrocha.xrecords.field.IndexedField
 import xrrocha.xrecords.record.Record
 import xrrocha.xrecords.util.Provider
 
-class CSVRecordSource extends CSVBase implements Source<Record>, Lifecycle {
+class CSVRecordSource extends CSVBase implements Source<Record> {
     @Property Provider<Reader> input
     // FIXME Handle field generic types properly
     // TODO Validate field name and index uniqueness in fields
