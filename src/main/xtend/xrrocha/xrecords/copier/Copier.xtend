@@ -3,6 +3,7 @@ package xrrocha.xrecords.copier
 import java.util.ArrayList
 import java.util.Iterator
 
+// FIXME Have Source and Destination extend Lifecycle
 interface Lifecycle {
     def void open()
     def void close(int count)
