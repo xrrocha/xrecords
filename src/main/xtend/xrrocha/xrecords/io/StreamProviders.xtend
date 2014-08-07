@@ -16,7 +16,6 @@ class LocationInputStreamProvider implements Provider<InputStream> {
 
 class FtpOutputStreamProvider extends FtpBase implements Provider<OutputStream> {
     override provide() {
-        // TODO binary mode?
         new URL(location).openConnection.outputStream
     }
 }

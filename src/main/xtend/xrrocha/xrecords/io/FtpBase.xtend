@@ -6,17 +6,18 @@ abstract class FtpBase {
     @Property String user = 'anonymous'
     @Property String password = 'someone@somewhere.net'
     @Property String path
+    @Property boolean binary = false
     
     private var String location
     
-    protected def getLocation() {
+    def getLocation() {
         if (location == null) {
-            location = buildFtpUri(host, port, user, password, path)
+            location = buildFtpUri
         }
         location    
     }
-    
-    static def String buildFtpUri(String host, int port, String user, String password, String path) {
+
+    def String buildFtpUri() {
         val credentialsFragment = {
             if (user == null) ''
             else if (password == null) '''«user»@'''
@@ -32,6 +33,11 @@ abstract class FtpBase {
             if (path.startsWith('/')) path
             else '''/«path»'''
         }
-        '''ftp://«credentialsFragment»«host»«portFragment»«pathFragment»'''
+        
+        val binaryFragment =
+            if (binary) ";type=i"
+            else ""
+            
+        '''ftp://«credentialsFragment»«host»«portFragment»«pathFragment»«binaryFragment»'''
     }
 }
