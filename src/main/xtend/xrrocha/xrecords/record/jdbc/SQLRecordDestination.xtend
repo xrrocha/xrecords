@@ -8,8 +8,9 @@ import xrrocha.xrecords.copier.Destination
 import xrrocha.xrecords.field.FormattedField
 import xrrocha.xrecords.record.Record
 import xrrocha.xrecords.util.Provider
+import xrrocha.xrecords.validation.Validatable
 
-class SQLRecordDestination implements Destination<Record> {
+class SQLRecordDestination implements Destination<Record>, Validatable {
     @Property String tableName
     @Property List<FormattedField<Object>> fields
     
@@ -65,5 +66,27 @@ class SQLRecordDestination implements Destination<Record> {
     
     def escape(String string) {
         string.replace("'", "''")
+    }
+
+    override validate(List<String> errors) {
+        if (tableName == null || tableName.trim.length == 0) {
+            errors.add('Missing table name')
+        }
+
+        if (output == null) {
+            errors.add('Missing output')
+        }
+
+        if (fields == null) {
+            errors.add('Missing fields')
+        } else {
+            for (i: 0..< fields.size) {
+                if (fields.get(i) == null) {
+                    errors.add('''Missing field «i»''')
+                } else {
+                    fields.get(i).validate(errors)
+                }
+            }
+        }
     }
 }
