@@ -20,6 +20,7 @@ class SQLRecordDestination implements Destination<Record>, Lifecycle {
     @Property Provider<OutputStream> output
     
     private var PrintWriter out
+    
     override open() {
         out = new PrintWriter(new OutputStreamWriter(output.provide()), true)
         if (prolog != null) {

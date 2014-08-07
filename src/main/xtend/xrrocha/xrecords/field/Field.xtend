@@ -1,6 +1,7 @@
 package xrrocha.xrecords.field
 
 import java.util.List
+import xrrocha.xrecords.record.Record
 
 class Field {
     @Property String name
@@ -15,6 +16,13 @@ class FormattedField<T> extends Field {
     
     def toString(T t) {
         format.format(t)
+    }
+    
+    // TODO Test formatValueFrom
+    def formatValueFrom(Record record) {
+        val value = record.getField(name) as T
+        if (value == null) ""
+        else toString(value)
     }
 }
 
