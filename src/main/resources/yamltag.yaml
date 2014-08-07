@@ -11,7 +11,7 @@ xrrocha.xrecords.record.jdbc.JDBCRecordDestination:
   tagName: databaseDestination
 
 org.apache.commons.dbcp.BasicDataSource:
-  tagName: dataSource
+  tagName: basicDataSource
 
 xrrocha.xrecords.record.csv.CSVRecordSource:
   tagName: csvSource
@@ -22,6 +22,33 @@ xrrocha.xrecords.record.csv.CSVRecordDestination:
   tagName: csvDestination
   listProperties:
     fields: xrrocha.xrecords.field.FormattedField
+
+xrrocha.xrecords.field.Field:
+  tagName: field
+
+xrrocha.xrecords.field.FormattedField:
+  tagName: formattedField
+
+xrrocha.xrecords.field.IndexedField:
+  tagName: indexedField
+  
+xrrocha.xrecords.field.IntegerParser:
+  tagName: integer
+  
+xrrocha.xrecords.field.DoubleParser:
+  tagName: double
+  
+xrrocha.xrecords.field.BigDecimalParser:
+  tagName: bigDecimal
+  
+xrrocha.xrecords.field.DateParser:
+  tagName: date
+  
+xrrocha.xrecords.field.StringParser:
+  tagName: string
+
+xrrocha.xrecords.io.StringReaderProvider:
+  tagName: fixedInput
 
 xrrocha.xrecords.io.LocationInputStreamProvider:
   tagName: inputLocation

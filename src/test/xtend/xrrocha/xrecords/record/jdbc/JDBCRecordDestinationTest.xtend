@@ -10,14 +10,9 @@ import xrrocha.xrecords.record.Record
 import static org.junit.Assert.*
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import static xrrocha.xrecords.record.jdbc.Person.*
 
 class JDBCRecordDestinationTest extends JDBCRecordTest {
-    static val ID = 'ID'
-    static val FIRST_NAME = 'FIRST_NAME'
-    static val MIDDLE_NAME = 'MIDDLE_NAME'
-    static val LAST_NAME = 'LAST_NAME'
-    static val GENDER = 'GENDER'
-    
     @Test
     def void populatesTable() {
        val records = newArrayList(

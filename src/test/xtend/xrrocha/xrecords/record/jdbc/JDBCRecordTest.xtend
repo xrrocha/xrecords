@@ -16,6 +16,13 @@ class Person {
     String middleName
     String lastName
     String gender
+
+    public static val ID = 'ID'
+    public static val FIRST_NAME = 'FIRST_NAME'
+    public static val MIDDLE_NAME = 'MIDDLE_NAME'
+    public static val LAST_NAME = 'LAST_NAME'
+    public static val GENDER = 'GENDER'
+
     
     def toRecord() {
         val record = new Record

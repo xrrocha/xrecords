@@ -14,6 +14,9 @@ import xrrocha.xrecords.util.Provider
 class StringReaderProvider implements Provider<Reader> {
     @Property String content
     
+    new() {}
+    new(String content) { this.content = content }
+    
     override provide() {
         new StringReader(content)
     }

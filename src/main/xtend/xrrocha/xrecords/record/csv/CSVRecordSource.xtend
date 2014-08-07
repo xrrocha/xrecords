@@ -30,7 +30,7 @@ class CSVRecordSource extends CSVBase implements Source<Record>, Lifecycle {
 
     override next() {
         val record = new Record
-        
+
         fields.forEach [ field |
             val value = field.getValueFrom(fieldValues)
             record.setField(field.name, value)

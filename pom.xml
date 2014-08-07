@@ -29,8 +29,11 @@
 			<artifactId>snakeyaml</artifactId>
 			<version>${snakeyaml.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>xrrocha</groupId> <artifactId>yamltag</artifactId> 
-			<version>${yamltag.version}</version> </dependency> -->
+		<dependency>
+			<groupId>xrrocha</groupId>
+			<artifactId>yamltag</artifactId>
+			<version>${yamltag.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -74,18 +77,18 @@
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>${hsqldb.version}</version>
-            <scope>test</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>${commons-dbcp.version}</version>
-            <scope>test</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.ftpserver</groupId>
-		    <artifactId>ftpserver-core</artifactId>
-		    <version>${ftpserver-core.version}</version>
+			<groupId>org.apache.ftpserver</groupId>
+			<artifactId>ftpserver-core</artifactId>
+			<version>${ftpserver-core.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -99,9 +102,9 @@
 					<execution>
 						<goals>
 							<goal>compile</goal>
-                            <goal>testCompile</goal>
-                            <goal>xtend-install-debug-info</goal>
-                            <goal>xtend-test-install-debug-info</goal>
+							<goal>testCompile</goal>
+							<goal>xtend-install-debug-info</goal>
+							<goal>xtend-test-install-debug-info</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -134,18 +137,18 @@
 				<artifactId>maven-clean-plugin</artifactId>
 				<configuration>
 					<filesets>
-                        <fileset>
-                            <directory>src/main/xtend-gen</directory>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>src/test/xtend-gen</directory>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </fileset>
+						<fileset>
+							<directory>src/main/xtend-gen</directory>
+							<includes>
+								<include>**</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>src/test/xtend-gen</directory>
+							<includes>
+								<include>**</include>
+							</includes>
+						</fileset>
 					</filesets>
 				</configuration>
 			</plugin>
@@ -162,6 +165,7 @@
 		<maven-compiler-plugin.target>1.7</maven-compiler-plugin.target>
 
 		<snakeyaml.version>1.13</snakeyaml.version>
+		<yamltag.version>1.0</yamltag.version>
 		<javadbf.version>0.4.0</javadbf.version>
 		<opencsv.version>2.3</opencsv.version>
 		<pojomatic.version>2.0.1</pojomatic.version>
@@ -171,7 +175,7 @@
 		<mockito.version>1.9.5</mockito.version>
 		<hamcrest-all.version>1.3</hamcrest-all.version>
 		<hsqldb.version>2.3.2</hsqldb.version>
-        <commons-dbcp.version>1.4</commons-dbcp.version>
-        <ftpserver-core.version>1.0.6</ftpserver-core.version>
-    </properties>
+		<commons-dbcp.version>1.4</commons-dbcp.version>
+		<ftpserver-core.version>1.0.6</ftpserver-core.version>
+	</properties>
 </project>
