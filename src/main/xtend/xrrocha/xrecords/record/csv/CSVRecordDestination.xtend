@@ -39,4 +39,22 @@ class CSVRecordDestination extends CSVBase implements Destination<Record> {
     override close(int count) {
         writer.close()
     }
+
+    override validate(List<String> errors) {
+        super.validate(errors)
+        if (output == null) {
+            errors.add('Missing output')
+        }
+        if (fields == null) {
+            errors.add('Missing fields')
+        } else {
+            for (i: 0..< fields.size) {
+                if (fields.get(i) == null) {
+                    errors.add('''Missing field «i»''')
+                } else {
+                    fields.get(i).validate(errors)
+                }
+            }
+        }
+    }
 }

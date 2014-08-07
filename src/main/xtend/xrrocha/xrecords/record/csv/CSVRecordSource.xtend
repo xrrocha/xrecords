@@ -10,7 +10,6 @@ import xrrocha.xrecords.util.Provider
 
 class CSVRecordSource extends CSVBase implements Source<Record> {
     @Property Provider<Reader> input
-    // FIXME Handle field generic types properly
     // TODO Validate field name and index uniqueness in fields
     @Property List<IndexedField<Object>> fields
     
@@ -40,6 +39,24 @@ class CSVRecordSource extends CSVBase implements Source<Record> {
 
     override close(int count) {
         reader.close()
+    }
+
+    override validate(List<String> errors) {
+        super.validate(errors)
+        if (input == null) {
+            errors.add('Missing input')
+        }
+        if (fields == null) {
+            errors.add('Missing fields')
+        } else {
+            for (i: 0..< fields.size) {
+                if (fields.get(i) == null) {
+                    errors.add('''Missing field «i»''')
+                } else {
+                    fields.get(i).validate(errors)
+                }
+            }
+        }
     }
 
     override remove() {

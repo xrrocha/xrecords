@@ -2,6 +2,10 @@ package xrrocha.xrecords.copier
 
 import java.util.ArrayList
 import java.util.Iterator
+import xrrocha.xrecords.validation.Validatable
+import xrrocha.xrecords.validation.Validator
+
+import static xrrocha.xrecords.validation.ValidationState.*
 
 interface Lifecycle {
     def void open()
@@ -24,8 +28,15 @@ class Copier extends SafeCopierListener {
     
     @Property boolean stopOnError = true
     @Property CopierListener listener = new LoggingCopierListener
-
+    
     final def copy() {
+        if (validator.state == NEW) {
+            validator.validate()
+        }
+        if (validator.state == FAILED) {
+            throw new IllegalStateException('Cannot copy: validation failed')
+        }
+        
         open()
         
         var count = 0
@@ -157,4 +168,23 @@ class Copier extends SafeCopierListener {
         }
         components
     }
+    
+    private val validator = new Validator [ errors |
+        if (source == null) {
+            errors.add('Missing source')
+        } else if (source instanceof Validatable) {
+            (source as Validatable).validate(errors)
+        }
+        if (destination == null) {
+            errors.add('Missing destination')
+        } else if (destination instanceof Validatable) {
+            (destination as Validatable).validate(errors)
+        }
+        if (matcher != null && matcher instanceof Validatable) {
+            (matcher as Validatable).validate(errors)
+        }
+        if (transformer != null && transformer instanceof Validatable) {
+            (transformer as Validatable).validate(errors)
+        }
+    ]
 }

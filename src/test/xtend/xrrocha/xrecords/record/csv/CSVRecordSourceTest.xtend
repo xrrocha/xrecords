@@ -53,6 +53,7 @@ class CSVRecordSourceTest {
                     format = new IntegerParser('#,###')
                 ]
             ].map[it as Object].map[it as IndexedField<Object>] // uff!
+            // FIXME Handle field generic types properly
         ]
         
         source.open()

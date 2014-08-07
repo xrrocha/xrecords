@@ -1,8 +1,15 @@
 package xrrocha.xrecords.record.jdbc
 
+import java.util.List
 import javax.sql.DataSource
-import xrrocha.xrecords.copier.Lifecycle
+import xrrocha.xrecords.validation.Validatable
 
-abstract class JDBCBase implements Lifecycle {
+abstract class JDBCBase implements Validatable {
     @Property DataSource dataSource
+    
+    override def validate(List<String> errors) {
+        if (dataSource == null) {
+            errors.add('Missing data source')
+        }
+    }
 }

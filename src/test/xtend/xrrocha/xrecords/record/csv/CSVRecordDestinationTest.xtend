@@ -55,6 +55,7 @@ class CSVRecordDestinationTest {
                     format = new IntegerParser('#,###')
                 ]
             ].map[it as Object].map[it as FormattedField<Object>] // uff!
+            // FIXME Handle field generic types properly
         ]
         
         destination.open()
@@ -71,5 +72,5 @@ class CSVRecordDestinationTest {
             "Ivan","14/11/1988","5,432"
         '''
         assertEquals(expectedOutput, destination.output.toString)
-    }    
+    }
 }

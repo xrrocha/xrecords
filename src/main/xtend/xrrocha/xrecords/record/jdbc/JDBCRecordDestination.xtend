@@ -76,6 +76,29 @@ class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
         statement.close()
         connection.close()
     }
+    
+    override def validate(List<String> errors) {
+        super.validate(errors)
+        
+        if (tableName == null || tableName.trim.length == 0) {
+            errors.add('Missing table name')
+        }
+        
+        if (fieldNames == null) {
+            errors.add('Missing field names')
+        } else {
+            for (i: 0 ..< fieldNames.size) {
+                if (fieldNames.get(i) == null || fieldNames.get(i).trim.length == 0) {
+                    errors.add('''Missing field name «i»''')
+                }
+            }
+        }
+        
+        if (batchSize <= 0) {
+            errors.add('Batch size cannot be negative or zero')
+        }
+    }
+    
     static def String buildPreparedInsert(String tableName, List<String> fieldNames) {
         '''
             INSERT INTO "«tableName»"(«fieldNames.map['''"«it»"'''].join(', ')»)
