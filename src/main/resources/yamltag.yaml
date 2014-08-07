@@ -1,3 +1,39 @@
-xrrocha.io.FileInputStreamSource: { tagName: fileInput }
-xrrocha.io.FileOutputStreamSource: {tagName: fileOutput }
 
+xrrocha.xrecords.record.jdbc.JDBCRecordSource:
+  tagName: databaseSource
+
+xrrocha.xrecords.record.jdbc.SQLRecordDestination:
+  tagName: sqlInsertDestination
+  listProperties:
+    fields: xrrocha.xrecords.field.FormattedField
+
+xrrocha.xrecords.record.jdbc.JDBCRecordDestination:
+  tagName: databaseDestination
+
+org.apache.commons.dbcp.BasicDataSource:
+  tagName: dataSource
+
+xrrocha.xrecords.record.csv.CSVRecordSource:
+  tagName: csvSource
+  listProperties:
+    fields: xrrocha.xrecords.field.IndexedField
+
+xrrocha.xrecords.record.csv.CSVRecordDestination:
+  tagName: csvDestination
+  listProperties:
+    fields: xrrocha.xrecords.field.FormattedField
+
+xrrocha.xrecords.io.LocationInputStreamProvider:
+  tagName: inputLocation
+
+xrrocha.xrecords.io.LocationReaderProvider:
+  tagName: inputReader
+
+xrrocha.xrecords.io.FileLocationWriterProvider:
+  tagName: outputFileWriter
+
+xrrocha.xrecords.io.FtpOutputStreamProvider:
+  tagName: ftpOutput
+
+xrrocha.xrecords.io.FileLocationOutputStreamProvider:
+  tagName: outputFile

@@ -22,6 +22,9 @@ class StringReaderProvider implements Provider<Reader> {
 class LocationReaderProvider implements Provider<Reader> {
     @Property String location
     
+    new() {}
+    new (String location) { this.location = location }
+    
     override provide() {
         val provider = new LocationInputStreamProvider => [
             location = LocationReaderProvider.this.location
@@ -45,6 +48,9 @@ class StringWriterProvider implements Provider<Writer> {
 
 class FileLocationWriterProvider implements Provider<Writer> {
     @Property String location
+    
+    new() {}
+    new (String location) { this.location = location }
     
     override provide() {
         new FileWriter(new File(location))

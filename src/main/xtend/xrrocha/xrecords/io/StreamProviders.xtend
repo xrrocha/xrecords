@@ -9,6 +9,9 @@ import xrrocha.xrecords.util.Provider
 class LocationInputStreamProvider implements Provider<InputStream> {
     @Property String location
     
+    new() {}
+    new (String location) { this.location = location }
+    
     override provide() {
         IOUtils.uriFromLocation(location).toURL.openStream()
     }
@@ -22,6 +25,9 @@ class FtpOutputStreamProvider extends FtpBase implements Provider<OutputStream> 
 
 class FileLocationOutputStreamProvider implements Provider<OutputStream> {
     @Property String location
+    
+    new() {}
+    new (String location) { this.location = location }
     
     override provide() {
         new FileOutputStream(location)
