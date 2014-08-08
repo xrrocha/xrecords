@@ -26,18 +26,18 @@ delimited file:
 source: !delimitedSource
     input:  !fromFile [people.txt]
     delimiter: '\t'
-    fields:
-        - { name: code }
-        - { name: fname }
-        - { name: lname, type: STRING } # STRING is the default type
+    fields: &fields
+        - { name: id }
+        - { name: first_name }
+        - { name: last_name, type: STRING } # STRING is the default type
         - { name: salary,   type: NUMBER, format: '$###,###.##' }
         - { name: hiredate, type: DATE, format: MM/dd/yyyy }
 
-filter: !scriptFilter [salary > 1500]
+filter: !condition [salary > 75000]
 
 destination: !databaseDestination
   tableName: person
-  columnNames: [id, first_name, last_name, salary, hiredate]
+  columns: *fields
   dataSource: !!org.postgresql.ds.PGSimpleDataSource
     user: test
     password: test
