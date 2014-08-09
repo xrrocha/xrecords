@@ -2,7 +2,6 @@ package net.xrrocha.xrecords.script
 
 import java.util.List
 import java.util.Map
-import javax.script.ScriptContext
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
 import net.xrrocha.xrecords.validation.Validatable
@@ -69,10 +68,6 @@ class Script implements Validatable {
             if (engine == null) {
                 throw new IllegalArgumentException('''No such scripting language: «language»''')
             }
-            
-            if (environment != null) {
-                environment.forEach[k, v | engine.put(k, v)]
-            }
         }
         
         engine
@@ -83,12 +78,10 @@ class Script implements Validatable {
             errors.add('Missing script')
         }
         
-        if (language != null) {
-            val factory = new ScriptEngineManager()
-            val engine = factory.getEngineByName(language)
-            if (engine == null) {
-                errors.add('''No such scripting language: «language»''')
-            }
+        try {
+            getEngine
+        } catch (Exception e) {
+            errors.add(e.message)
         }
     }
 }
