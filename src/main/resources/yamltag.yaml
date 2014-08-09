@@ -1,66 +1,66 @@
 
-xrrocha.xrecords.record.jdbc.JDBCRecordSource:
+net.xrrocha.xrecords.record.jdbc.JDBCRecordSource:
   tagName: databaseSource
 
-xrrocha.xrecords.record.jdbc.SQLRecordDestination:
+net.xrrocha.xrecords.record.jdbc.SQLRecordDestination:
   tagName: sqlInsertDestination
   listProperties:
-    fields: xrrocha.xrecords.field.FormattedField
+    fields: net.xrrocha.xrecords.field.FormattedField
 
-xrrocha.xrecords.record.jdbc.JDBCRecordDestination:
+net.xrrocha.xrecords.record.jdbc.JDBCRecordDestination:
   tagName: databaseDestination
 
 org.apache.commons.dbcp.BasicDataSource:
   tagName: basicDataSource
 
-xrrocha.xrecords.record.csv.CSVRecordSource:
+net.xrrocha.xrecords.record.csv.CSVRecordSource:
   tagName: csvSource
   listProperties:
-    fields: xrrocha.xrecords.field.IndexedField
+    fields: net.xrrocha.xrecords.field.IndexedField
 
-xrrocha.xrecords.record.csv.CSVRecordDestination:
+net.xrrocha.xrecords.record.csv.CSVRecordDestination:
   tagName: csvDestination
   listProperties:
-    fields: xrrocha.xrecords.field.FormattedField
+    fields: net.xrrocha.xrecords.field.FormattedField
 
-xrrocha.xrecords.field.Field:
+net.xrrocha.xrecords.field.Field:
   tagName: field
 
-xrrocha.xrecords.field.FormattedField:
+net.xrrocha.xrecords.field.FormattedField:
   tagName: formattedField
 
-xrrocha.xrecords.field.IndexedField:
+net.xrrocha.xrecords.field.IndexedField:
   tagName: indexedField
   
-xrrocha.xrecords.field.IntegerParser:
+net.xrrocha.xrecords.field.IntegerParser:
   tagName: integer
   
-xrrocha.xrecords.field.DoubleParser:
+net.xrrocha.xrecords.field.DoubleParser:
   tagName: double
   
-xrrocha.xrecords.field.BigDecimalParser:
+net.xrrocha.xrecords.field.BigDecimalParser:
   tagName: bigDecimal
   
-xrrocha.xrecords.field.DateParser:
+net.xrrocha.xrecords.field.DateParser:
   tagName: date
   
-xrrocha.xrecords.field.StringParser:
+net.xrrocha.xrecords.field.StringParser:
   tagName: string
 
-xrrocha.xrecords.io.StringReaderProvider:
+net.xrrocha.xrecords.io.StringReaderProvider:
   tagName: fixedInput
 
-xrrocha.xrecords.io.LocationInputStreamProvider:
+net.xrrocha.xrecords.io.LocationInputStreamProvider:
   tagName: inputLocation
 
-xrrocha.xrecords.io.LocationReaderProvider:
+net.xrrocha.xrecords.io.LocationReaderProvider:
   tagName: inputReader
 
-xrrocha.xrecords.io.FileLocationWriterProvider:
+net.xrrocha.xrecords.io.FileLocationWriterProvider:
   tagName: outputFileWriter
 
-xrrocha.xrecords.io.FtpOutputStreamProvider:
+net.xrrocha.xrecords.io.FtpOutputStreamProvider:
   tagName: ftpOutput
 
-xrrocha.xrecords.io.FileLocationOutputStreamProvider:
+net.xrrocha.xrecords.io.FileLocationOutputStreamProvider:
   tagName: outputFile
