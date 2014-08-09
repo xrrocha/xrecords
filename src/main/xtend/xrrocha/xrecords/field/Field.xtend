@@ -47,7 +47,6 @@ class FormattedField<T> extends Field {
         format.format(t)
     }
     
-    // TODO Test formatValueFrom
     def formatValueFrom(Record record) {
         val value = record.getField(name) as T
         if (value == null) ""

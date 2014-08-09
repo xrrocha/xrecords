@@ -144,4 +144,51 @@ class RecordTest {
         assertEquals(#{'one', 'two', 'three'}, secondRecord.fieldNames)
         assertEquals(#{'one', 'two'}, firstRecord.fieldNames)
     }
+    
+    @Test
+    def void equalsSameKeysAndValues() {
+        val firstRecord = new Record
+        firstRecord.setField('one', '1')
+        firstRecord.setField('two', '2')
+
+        val secondRecord = new Record
+        secondRecord.setField('one', '1')
+        secondRecord.setField('two', '2')
+        
+        assertEquals(firstRecord, secondRecord)
+    }
+    
+    @Test
+    def void notEqualsDifferentKeysAndValues() {
+        val firstRecord = new Record
+        firstRecord.setField('one', '1')
+        firstRecord.setField('two', '2')
+
+        val secondRecord = new Record
+        secondRecord.setField('one', '1')
+        secondRecord.setField('two', '2')
+        secondRecord.setField('three', '3')
+        
+        assertNotEquals(firstRecord, secondRecord)
+    }
+    
+    @Test
+    def void sameHashCodeAsMap() {
+        val record = new Record
+        record.setField('one', 1)
+        record.setField('two', '2')
+        
+        val map = #{ 'one' -> 1, 'two' -> '2'}
+        assertEquals(map.hashCode, record.hashCode)
+    }
+    
+    @Test
+    def void sameToStringAsMap() {
+        val record = new Record
+        record.setField('one', 1)
+        record.setField('two', '2')
+        
+        val map = #{ 'one' -> 1, 'two' -> '2'}
+        assertEquals(map.toString, record.toString)
+    }
 }

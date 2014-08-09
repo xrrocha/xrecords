@@ -55,7 +55,6 @@ class Record {
         other.copyTo(this)
     }
     
-    // TODO Test Record.equals, hashCode & toString
     override boolean equals(Object other) {
         if (!(other instanceof Record && other != null)) {
             false

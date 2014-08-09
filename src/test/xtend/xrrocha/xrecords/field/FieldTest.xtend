@@ -2,6 +2,8 @@ package xrrocha.xrecords.field
 
 import org.junit.Test
 import static org.junit.Assert.*
+import java.util.GregorianCalendar
+import xrrocha.xrecords.record.Record
 
 class FormattedFieldTest {
     @Test
@@ -11,6 +13,31 @@ class FormattedFieldTest {
         ]
         assertEquals(12345, field.fromString('12,345'))
         assertEquals('12,345', field.toString(12345))
+    }
+    
+    @Test
+    def void formatsNonNullValueFromRecord() {
+        val date = new GregorianCalendar(1955, 3, 18).time
+        val field = new FormattedField => [
+            name = 'date'
+            format = new DateParser('yyy/MM/dd')
+        ]
+        val record = new Record => [
+            setField('date', date)
+        ]
+        assertEquals('1955/04/18', field.formatValueFrom(record))
+    }
+    
+    @Test
+    def void formatsNullValueFromRecord() {
+        val field = new FormattedField => [
+            name = 'string'
+            format = new StringParser
+        ]
+        val record = new Record => [
+            setField('string', null)
+        ]
+        assertEquals('', field.formatValueFrom(record))
     }
 }
 
