@@ -11,7 +11,6 @@ import xrrocha.xrecords.field.Field
 
 class CSVRecordSource extends CSVBase implements Source<Record> {
     @Property Provider<Reader> input
-    // TODO Validate field name and index uniqueness in fields
     @Property List<IndexedField<Object>> fields
     
     private CSVReader reader
