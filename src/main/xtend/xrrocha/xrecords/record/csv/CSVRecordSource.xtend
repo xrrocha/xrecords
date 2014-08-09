@@ -7,6 +7,7 @@ import xrrocha.xrecords.copier.Source
 import xrrocha.xrecords.field.IndexedField
 import xrrocha.xrecords.record.Record
 import xrrocha.xrecords.util.Provider
+import xrrocha.xrecords.field.Field
 
 class CSVRecordSource extends CSVBase implements Source<Record> {
     @Property Provider<Reader> input
@@ -46,17 +47,7 @@ class CSVRecordSource extends CSVBase implements Source<Record> {
         if (input == null) {
             errors.add('Missing input')
         }
-        if (fields == null) {
-            errors.add('Missing fields')
-        } else {
-            for (i: 0..< fields.size) {
-                if (fields.get(i) == null) {
-                    errors.add('''Missing field «i»''')
-                } else {
-                    fields.get(i).validate(errors)
-                }
-            }
-        }
+        Field.validateFields(fields, errors)
     }
 
     override remove() {

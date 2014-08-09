@@ -2,6 +2,7 @@ package xrrocha.xrecords.field
 
 import java.util.List
 import xrrocha.xrecords.record.Record
+import xrrocha.xrecords.util.Extensions
 import xrrocha.xrecords.validation.Validatable
 
 class Field implements Validatable {
@@ -10,6 +11,27 @@ class Field implements Validatable {
     override validate(List<String> errors) {
         if (name == null || name.trim.length == 0) {
             errors.add('Missing field name')
+        }
+    }
+    
+    // TODO Test field name uniqueness validation
+    static def validateFields(List<?extends Field> fields, List<String> errors) {
+        if (fields == null) {
+            errors.add('Missing fields')
+        } else {
+            // FIXME fields.groupBy should work!
+            val duplicateNames = Extensions.groupBy(fields)[name].filter[n, f | f.size > 1].keySet
+            if (duplicateNames.size > 0) {
+                errors.add('''Duplicate field name(s): «duplicateNames.toList.sort.join(', ')»''')
+            }
+
+            for (i: 0..< fields.size) {
+                if (fields.get(i) == null) {
+                    errors.add('''Missing field «i»''')
+                } else {
+                    fields.get(i).validate(errors)
+                }
+            }
         }
     }
 }

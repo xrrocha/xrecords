@@ -7,6 +7,7 @@ import xrrocha.xrecords.copier.Destination
 import xrrocha.xrecords.field.FormattedField
 import xrrocha.xrecords.record.Record
 import xrrocha.xrecords.util.Provider
+import xrrocha.xrecords.field.Field
 
 class CSVRecordDestination extends CSVBase implements Destination<Record> {
     @Property Provider<Writer> output
@@ -45,17 +46,6 @@ class CSVRecordDestination extends CSVBase implements Destination<Record> {
         if (output == null) {
             errors.add('Missing output')
         }
-        if (fields == null) {
-            errors.add('Missing fields')
-        } else {
-            // TODO Validate field name uniqueness
-            for (i: 0..< fields.size) {
-                if (fields.get(i) == null) {
-                    errors.add('''Missing field «i»''')
-                } else {
-                    fields.get(i).validate(errors)
-                }
-            }
-        }
+        Field.validateFields(fields, errors)
     }
 }
