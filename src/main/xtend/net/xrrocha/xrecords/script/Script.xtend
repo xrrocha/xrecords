@@ -9,7 +9,10 @@ import net.xrrocha.xrecords.validation.Validatable
 class Script implements Validatable {
     @Property String script
     @Property String language = DEFAULT_LANGUAGE
-    @Property Map<String, Object> environment = newHashMap
+    @Property Map<String, ?extends Object> environment = newHashMap
+    
+    // TODO Inject utility object into scripts to deal w/records
+    // TODO Add per-language prolog/epilog
     
     public static val DEFAULT_LANGUAGE = 'javascript'
     
@@ -25,11 +28,11 @@ class Script implements Validatable {
         this(language, script, newHashMap)
     }
     
-    new(String script, Map<String, Object> environment) {
+    new(String script, Map<String, ?extends Object> environment) {
         this(DEFAULT_LANGUAGE, script, environment)
     }
     
-    new(String language, String script, Map<String, Object> environment) {
+    new(String language, String script, Map<String, ?extends Object> environment) {
         this.language = language
         this.script = script
         this.environment = environment
@@ -39,7 +42,7 @@ class Script implements Validatable {
         execute(null)
     }
     
-    def execute(Map<String, Object> environment) {
+    def execute(Map<String, ?extends Object> environment) {
         if (script == null) {
             throw new IllegalStateException('Missing script')
         }

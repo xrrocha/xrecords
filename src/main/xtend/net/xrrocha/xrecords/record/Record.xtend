@@ -2,6 +2,7 @@ package net.xrrocha.xrecords.record
 
 import java.util.HashMap
 import java.util.Map
+import java.util.Collections
 
 class Record {
     val fields = new HashMap<String, Object>()
@@ -12,6 +13,10 @@ class Record {
             record.setField(fieldName, map.get(fieldName))
         ]
         record
+    }
+    
+    def toMap() {
+        Collections.unmodifiableMap(fields)
     }
     
     def void setField(String name, Object value) {
