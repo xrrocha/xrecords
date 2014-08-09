@@ -13,8 +13,61 @@ import xrrocha.xrecords.record.Record
 import static org.junit.Assert.assertEquals
 
 class CSVRecordDestinationTest {
-    // TODO Test quoting
-    // TODO Test header
+    @Test
+    def void prependsFieldNames() {
+        val destination = new CSVRecordDestination => [
+            separator = ','
+            headerRecord = true
+            output = new StringWriterProvider
+            fields = #[
+                new FormattedField<String> => [
+                    name = 'name'
+                    format = new StringParser
+                ],
+                new FormattedField<Date> => [
+                    name = 'birthdate'
+                    format = new DateParser('dd/MM/yyyy')
+                ],
+                new FormattedField<Integer> => [
+                    name = 'count'
+                    format = new IntegerParser('#,###')
+                ]
+            ].cast
+        ]
+        
+        destination.open()
+        
+        val expectedHeader = destination.fields.map[name].join(',').trim
+        val actualHeader = destination.output.toString.trim
+        
+        assertEquals(expectedHeader, actualHeader)
+    }
+    
+    @Test
+    def void omitsFieldNames() {
+        val destination = new CSVRecordDestination => [
+            headerRecord = false
+            output = new StringWriterProvider
+            fields = #[
+                new FormattedField<String> => [
+                    name = 'name'
+                    format = new StringParser
+                ],
+                new FormattedField<Date> => [
+                    name = 'birthdate'
+                    format = new DateParser('dd/MM/yyyy')
+                ],
+                new FormattedField<Integer> => [
+                    name = 'count'
+                    format = new IntegerParser('#,###')
+                ]
+            ].cast
+        ]
+        
+        destination.open()
+        
+        assertEquals(0, destination.output.toString.length)
+    }
     
     @Test
     def void createsCsvRecords() {
@@ -54,7 +107,7 @@ class CSVRecordDestinationTest {
                     name = 'count'
                     format = new IntegerParser('#,###')
                 ]
-            ].cast // FIXME Handle field generic types properly
+            ].cast
         ]
         
         destination.open()
