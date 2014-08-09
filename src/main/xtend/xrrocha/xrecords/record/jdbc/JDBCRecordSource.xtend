@@ -1,6 +1,7 @@
 package xrrocha.xrecords.record.jdbc
 
 import java.sql.ResultSet
+import java.util.List
 import xrrocha.xrecords.copier.Source
 import xrrocha.xrecords.record.Record
 
@@ -38,6 +39,13 @@ class JDBCRecordSource extends JDBCBase implements Source<Record> {
         resultSet.close()
         statement.close()
         connection.close()
+    }
+    
+    override validate(List<String> errors) {
+        super.validate(errors)
+        if (sqlText == null || sqlText.trim.length == 0) {
+            errors.add('Missing sql text for JDBC source')
+        }
     }
     
     override remove() {

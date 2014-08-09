@@ -14,6 +14,19 @@ import static xrrocha.xrecords.record.jdbc.Person.*
 
 class JDBCRecordDestinationTest extends JDBCRecordTest {
     @Test
+    def void validatesAll() {
+        val destination = new JDBCRecordDestination => [
+            dataSource = null
+            tableName = null
+            fieldNames = null
+            batchSize = 0
+        ]
+        val errors = newLinkedList
+        destination.validate(errors)
+        assertTrue(errors.size == 4)
+    }
+
+    @Test
     def void populatesTable() {
        val records = newArrayList(
            Record.fromMap(#{

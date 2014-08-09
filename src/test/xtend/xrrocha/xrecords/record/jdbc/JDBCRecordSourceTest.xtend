@@ -3,8 +3,20 @@ package xrrocha.xrecords.record.jdbc
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.*
 
 class JDBCRecordSourceTest extends JDBCRecordTest {
+    @Test
+    def void validatesAll() {
+        val source = new JDBCRecordSource => [
+            dataSource = null
+            sqlText = null
+        ]
+        val errors = newLinkedList
+        source.validate(errors)
+        assertTrue(errors.size == 2)
+    }
+
     @Test
     def void retrievesAllRecords() {
         val people = #[

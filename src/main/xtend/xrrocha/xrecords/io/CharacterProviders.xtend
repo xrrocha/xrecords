@@ -36,6 +36,7 @@ class LocationReaderProvider implements Provider<Reader> {
     }
 }
 
+// TODO Test providers
 class StringWriterProvider implements Provider<Writer> {
     private var StringWriter stringWriter
     

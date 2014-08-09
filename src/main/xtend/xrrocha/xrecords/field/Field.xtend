@@ -14,7 +14,6 @@ class Field implements Validatable {
         }
     }
     
-    // TODO Test field name uniqueness validation
     static def validateFields(List<?extends Field> fields, List<String> errors) {
         if (fields == null) {
             errors.add('Missing fields')

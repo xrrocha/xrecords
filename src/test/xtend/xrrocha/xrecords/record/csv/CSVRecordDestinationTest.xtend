@@ -9,10 +9,22 @@ import xrrocha.xrecords.field.IntegerParser
 import xrrocha.xrecords.field.StringParser
 import xrrocha.xrecords.io.StringWriterProvider
 import xrrocha.xrecords.record.Record
+import static org.junit.Assert.*
 
 import static org.junit.Assert.assertEquals
 
 class CSVRecordDestinationTest {
+    @Test
+    def void validatesAll() {
+        val destination = new CSVRecordDestination => [
+            separator = '\u0000'
+            quote = '\u0000'
+        ]
+        val errors = newLinkedList
+        destination.validate(errors)
+        assertTrue(errors.size == 4) // separator, quote, provider, fields
+    }
+    
     @Test
     def void prependsFieldNames() {
         val destination = new CSVRecordDestination => [

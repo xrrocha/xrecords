@@ -10,7 +10,6 @@ enum ValidationState {
     NEW, FAILED, OK
 }
 
-// TODO Test all validations
 class Validator {
     private val (List<String>) => void validation
     

@@ -17,6 +17,17 @@ import static org.junit.Assert.*
 
 class CSVRecordSourceTest {
     @Test
+    def void validatesAll() {
+        val destination = new CSVRecordSource => [
+            separator = '\u0000'
+            quote = '\u0000'
+        ]
+        val errors = newLinkedList
+        destination.validate(errors)
+        assertTrue(errors.size == 4) // separator, quote, provider, fields
+    }
+
+    @Test
     def void readsCsvRecords() {
         val csvRecords = '''
             "name","birthdate","count"
