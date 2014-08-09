@@ -48,6 +48,7 @@ class CSVRecordDestination extends CSVBase implements Destination<Record> {
         if (fields == null) {
             errors.add('Missing fields')
         } else {
+            // TODO Validate field name uniqueness
             for (i: 0..< fields.size) {
                 if (fields.get(i) == null) {
                     errors.add('''Missing field «i»''')

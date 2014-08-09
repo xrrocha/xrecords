@@ -54,8 +54,7 @@ class CSVRecordDestinationTest {
                     name = 'count'
                     format = new IntegerParser('#,###')
                 ]
-            ].map[it as Object].map[it as FormattedField<Object>] // uff!
-            // FIXME Handle field generic types properly
+            ].cast // FIXME Handle field generic types properly
         ]
         
         destination.open()
@@ -73,4 +72,6 @@ class CSVRecordDestinationTest {
         '''
         assertEquals(expectedOutput, destination.output.toString)
     }
+
+    def <T> T cast(Object obj) { obj as T }
 }

@@ -52,8 +52,7 @@ class CSVRecordSourceTest {
                     name = 'count'
                     format = new IntegerParser('#,###')
                 ]
-            ].map[it as Object].map[it as IndexedField<Object>] // uff!
-            // FIXME Handle field generic types properly
+            ].cast // FIXME Handle field generic types properly
         ]
         
         source.open()
@@ -83,4 +82,6 @@ class CSVRecordSourceTest {
         
         assertEquals(expectedRecords, actualRecords)
     }
+    
+    def <T> T cast(Object obj) { obj as T }
 }
