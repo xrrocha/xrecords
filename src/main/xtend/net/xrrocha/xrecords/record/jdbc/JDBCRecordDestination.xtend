@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory
 import net.xrrocha.xrecords.copier.Destination
 import net.xrrocha.xrecords.record.Record
 
+// TODO Allow for field names to be set from first record
 class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
     @Property String tableName
     @Property List<String> fieldNames

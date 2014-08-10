@@ -5,6 +5,7 @@ import java.io.FileReader
 import net.xrrocha.xrecords.copier.Copier
 import net.xrrocha.yamltag.DefaultYamlFactory
 
+// TODO Expand yaml content with variables set from CLI (e.g. --myValue=someValue)
 class Main {
     def static void main(String[] args) {
         if (args.length < 1) {

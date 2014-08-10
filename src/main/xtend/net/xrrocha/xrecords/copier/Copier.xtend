@@ -20,6 +20,8 @@ interface Transformer<E> { def E transform(E element) }
 
 interface Destination<E> extends Lifecycle { def void put(E element, int index) }
 
+// TODO Add record field renaming transformer
+// TODO Add pre/post hooks to Copier (w/scripting implementation)
 class Copier extends SafeCopierListener {
     @Property Source<Object> source
     @Property Matcher<Object> matcher

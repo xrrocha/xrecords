@@ -19,11 +19,10 @@ class CSVRecordDestinationTest {
     def void validatesAll() {
         val destination = new CSVRecordDestination => [
             separator = '\u0000'
-            quote = '\u0000'
         ]
         val errors = newLinkedList
         destination.validate(errors)
-        assertTrue(errors.size == 4) // separator, quote, provider, fields
+        assertTrue(errors.size == 3) // separator,, provider, fields
     }
     
     @Test
