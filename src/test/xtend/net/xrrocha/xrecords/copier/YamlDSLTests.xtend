@@ -24,7 +24,7 @@ class YamlDSLTests {
                         { index: 1,  name: gender,    format: !string  }
                     ]
                 
-                matcher: !script [gender == "M"]
+                filter: !script [gender == "M"]
                 
                 transformer: !script |
                   ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})

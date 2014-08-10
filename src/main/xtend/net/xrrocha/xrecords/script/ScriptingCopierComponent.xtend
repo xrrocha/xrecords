@@ -1,11 +1,11 @@
 package net.xrrocha.xrecords.script
 
 import java.util.Map
-import net.xrrocha.xrecords.copier.Matcher
+import net.xrrocha.xrecords.copier.Filter
 import net.xrrocha.xrecords.copier.Transformer
 import net.xrrocha.xrecords.record.Record
 
-class ScriptingCopierComponent extends Script implements Matcher<Record>, Transformer<Record> {
+class ScriptingCopierComponent extends Script implements Filter<Record>, Transformer<Record> {
     new() {
     }
 

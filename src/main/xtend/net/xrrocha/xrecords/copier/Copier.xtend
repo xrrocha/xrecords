@@ -14,7 +14,7 @@ interface Lifecycle {
 
 interface Source<E> extends Lifecycle, Iterator<E> {}
 
-interface Matcher<E> { def boolean matches(E element) }
+interface Filter<E> { def boolean matches(E element) }
 
 interface Transformer<E> { def E transform(E element) }
 
@@ -24,7 +24,7 @@ interface Destination<E> extends Lifecycle { def void put(E element, int index) 
 // TODO Add pre/post hooks to Copier (w/scripting implementation)
 class Copier extends SafeCopierListener {
     @Property Source<Object> source
-    @Property Matcher<Object> matcher
+    @Property Filter<Object> filter
     @Property Transformer<Object> transformer
     @Property Destination<Object> destination
     
@@ -48,7 +48,7 @@ class Copier extends SafeCopierListener {
                 try {
                     val element = next(count)
                     
-                    if (matches(element, count)) {
+                    if (filter(element, count)) {
                         val transformedElement = transform(element, count)
                         put(transformedElement, count)
                     }
@@ -121,12 +121,12 @@ class Copier extends SafeCopierListener {
         }
     }
     
-    private def matches(Object element, int index) {
-        if (matcher == null) {
+    private def filter(Object element, int index) {
+        if (filter == null) {
             true
         } else {
             try {
-                val matches = matcher.matches(element)
+                val matches = filter.matches(element)
                 onFilter(element, matches, index)
                 matches
             } catch (Exception e) {
@@ -163,7 +163,7 @@ class Copier extends SafeCopierListener {
     private var Iterable<Lifecycle> components 
     private def lifecycleComponents() {
         if (components == null) {
-            components = #[source, matcher, transformer, destination].
+            components = #[source, filter, transformer, destination].
                 filter [it instanceof Lifecycle].
                 map[it as Lifecycle]
         }
@@ -181,8 +181,8 @@ class Copier extends SafeCopierListener {
         } else if (destination instanceof Validatable) {
             (destination as Validatable).validate(errors)
         }
-        if (matcher != null && matcher instanceof Validatable) {
-            (matcher as Validatable).validate(errors)
+        if (filter != null && filter instanceof Validatable) {
+            (filter as Validatable).validate(errors)
         }
         if (transformer != null && transformer instanceof Validatable) {
             (transformer as Validatable).validate(errors)
