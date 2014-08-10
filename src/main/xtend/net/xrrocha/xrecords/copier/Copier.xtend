@@ -44,12 +44,11 @@ class Copier extends SafeCopierListener {
         try {
             while (hasNext(count)) {
                 try {
-                    val nextElement = next(count)
-                    
-                    val element = transform(nextElement, count)
+                    val element = next(count)
                     
                     if (matches(element, count)) {
-                        put(element, count)
+                        val transformedElement = transform(element, count)
+                        put(transformedElement, count)
                     }
                 } catch (Exception e) {
                     if (stopOnError) {
