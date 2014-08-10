@@ -13,8 +13,5 @@ abstract class CSVBase implements Validatable {
         if (separator == 0) {
             errors.add('Invalid zero separator')
         }
-        if (quote == 0) {
-            errors.add('Invalid zero quote')
-        }
     }
 }
