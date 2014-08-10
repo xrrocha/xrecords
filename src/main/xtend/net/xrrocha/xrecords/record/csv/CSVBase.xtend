@@ -5,7 +5,7 @@ import java.util.List
 import net.xrrocha.xrecords.validation.Validatable
 
 abstract class CSVBase implements Validatable {
-    @Property char separator = '\t'
+    @Property char separator = ','
     @Property boolean headerRecord = false
     @Property char quote = CSVWriter.NO_QUOTE_CHARACTER
 
