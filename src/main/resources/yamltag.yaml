@@ -1,3 +1,5 @@
+net.xrrocha.xrecords.script.ScriptingCopierComponent:
+  tagName: script
 
 net.xrrocha.xrecords.record.jdbc.JDBCRecordSource:
   tagName: databaseSource
