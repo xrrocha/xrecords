@@ -1,7 +1,8 @@
-.classpath
-.project
-.settings
-target
-stage
-.README.md.html
 *.bak
+.classpath
+doc
+.project
+.README.md.html
+.settings
+stage
+target
