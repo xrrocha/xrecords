@@ -14,24 +14,24 @@ class YamlDSLTests {
         val yamlScript = '''
             source: !csvSource
                 input: !fixedInput |
-                    1,M,John,,Doe
-                    2,F,Janet,,Doe
-                    3,M,Alexio,,Flako
+                    1,M,1/1/1980,John,,Doe
+                    2,F,2/2/1990,Janet,,Doe
+                    3,M,3/3/2000,Alexio,,Flako
                 fields: [
-                    { index: 0, name: id, format: !integer },
-                    { index: 2, name: firstName, format: !string },
-                    { index: 4,  name: lastName, format: !string },
-                    { index: 1,  name: gender,  format: !string }
+                    { index: 0,  name: id, format: !integer        },
+                    { index: 3,  name: firstName,  format: !string },
+                    { index: 5,  name: lastName,   format: !string },
+                    { index: 1,  name: gender,     format: !string }
                 ]
 
             matcher: !script [gender == "M"]
 
             transformer: !script |
-                ({ID: id, FIRST_NAME: firstName, LAST_NAME: lastName, GENDER: gender})
+                ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})
 
             destination: !databaseDestination
                 tableName: PERSON
-                fieldNames: [ID, FIRST_NAME, LAST_NAME, GENDER]
+                fieldNames: [ID, NAME, GENDER]
                 batchSize: 1
                 commitOnBatch: true
                 dataSource: !basicDataSource
@@ -54,9 +54,7 @@ class YamlDSLTests {
         createStatement.execute('''
             CREATE MEMORY TABLE person (
                 id          INTEGER     NOT NULL PRIMARY KEY,
-                first_name  VARCHAR(16) NOT NULL,
-                middle_name VARCHAR(16),
-                last_name   VARCHAR(16) NOT NULL,
+                name        VARCHAR(32) NOT NULL,
                 gender      CHAR(1)     NOT NULL
                     CHECK (gender IN ('F', 'M'))
             )
@@ -85,13 +83,11 @@ class YamlDSLTests {
         assertEquals(2, records.size)
         
         assertEquals(1, records.get(0).getField("ID"))
-        assertEquals('John', records.get(0).getField("FIRST_NAME"))
-        assertEquals('Doe', records.get(0).getField("LAST_NAME"))
+        assertEquals('John Doe', records.get(0).getField("NAME"))
         assertEquals('M', records.get(0).getField("GENDER"))
         
         assertEquals(3, records.get(1).getField("ID"))
-        assertEquals('Alexio', records.get(1).getField("FIRST_NAME"))
-        assertEquals('Flako', records.get(1).getField("LAST_NAME"))
+        assertEquals('Alexio Flako', records.get(1).getField("NAME"))
         assertEquals('M', records.get(1).getField("GENDER"))
     }
 }
