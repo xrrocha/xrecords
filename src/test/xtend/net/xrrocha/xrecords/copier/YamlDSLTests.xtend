@@ -30,14 +30,14 @@ class YamlDSLTests {
                 ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})
 
             destination: !databaseDestination
-                tableName: PERSON
+                tableName:  PERSON
                 fieldNames: [ID, NAME, GENDER]
-                batchSize: 1
+                batchSize:  1
                 commitOnBatch: true
                 dataSource: !basicDataSource
                     driverClassName: org.hsqldb.jdbc.JDBCDataSource
-                    url: jdbc:hsqldb:mem:shutdown
-                    username: sa
+                    url:             jdbc:hsqldb:mem:shutdown
+                    username:        sa
                     password:
         '''
         

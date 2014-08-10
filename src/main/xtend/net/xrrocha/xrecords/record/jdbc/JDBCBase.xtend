@@ -4,6 +4,7 @@ import java.util.List
 import javax.sql.DataSource
 import net.xrrocha.xrecords.validation.Validatable
 
+// Add suport for array fields jdbc
 abstract class JDBCBase implements Validatable {
     @Property DataSource dataSource
     

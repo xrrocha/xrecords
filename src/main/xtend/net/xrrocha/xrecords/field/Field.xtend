@@ -6,6 +6,7 @@ import net.xrrocha.xrecords.validation.Validatable
 
 import static extension net.xrrocha.xrecords.util.Extensions.*
 
+// Add suport for array fields
 class Field implements Validatable {
     @Property String name
     
