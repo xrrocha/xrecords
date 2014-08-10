@@ -12,8 +12,8 @@ net.xrrocha.xrecords.record.jdbc.SQLRecordDestination:
 net.xrrocha.xrecords.record.jdbc.JDBCRecordDestination:
   tagName: databaseDestination
 
-org.apache.commons.dbcp.BasicDataSource:
-  tagName: basicDataSource
+#org.apache.commons.dbcp.BasicDataSource:
+#  tagName: basicDataSource
 
 net.xrrocha.xrecords.record.csv.CSVRecordSource:
   tagName: csvSource
