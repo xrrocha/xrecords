@@ -13,7 +13,6 @@ class YamlDSLTests {
     def void populatesDatabaseFromCSV() {
         val yamlScript = '''
             source: !csvSource
-                separator: ','
                 input: !fixedInput |
                     1,M,John,,Doe
                     2,F,Janet,,Doe
@@ -24,13 +23,12 @@ class YamlDSLTests {
                     { index: 4,  name: lastName, format: !string },
                     { index: 1,  name: gender,  format: !string }
                 ]
+
             matcher: !script [gender == "M"]
-            transformer: !script ['({
-                ID: id,
-                FIRST_NAME: firstName,
-                LAST_NAME: lastName,
-                GENDER: gender
-            })']
+
+            transformer: !script |
+                ({ID: id, FIRST_NAME: firstName, LAST_NAME: lastName, GENDER: gender})
+
             destination: !databaseDestination
                 tableName: PERSON
                 fieldNames: [ID, FIRST_NAME, LAST_NAME, GENDER]
