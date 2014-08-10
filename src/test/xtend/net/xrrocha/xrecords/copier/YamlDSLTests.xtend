@@ -14,25 +14,16 @@ class YamlDSLTests {
         val yamlScript = '''
             source: !csvSource
                 separator: ','
-                quote: '"'
-                headerRecord: false
                 input: !fixedInput |
-                    1,"M","John",,"Doe"
-                    2,"F","Janet",,"Doe"
-                    3,"M","Alexio",,"Flako"
-                fields:
-                    - index: 0
-                      name: id
-                      format: !integer
-                    - index: 2
-                      name: firstName
-                      format: !string
-                    - index: 4
-                      name: lastName
-                      format: !string
-                    - index: 1
-                      name: gender
-                      format: !string
+                    1,M,John,,Doe
+                    2,F,Janet,,Doe
+                    3,M,Alexio,,Flako
+                fields: [
+                    { index: 0, name: id, format: !integer },
+                    { index: 2, name: firstName, format: !string },
+                    { index: 4,  name: lastName, format: !string },
+                    { index: 1,  name: gender,  format: !string }
+                ]
             matcher: !script [gender == "M"]
             transformer: !script ['({
                 ID: id,
