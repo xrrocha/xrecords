@@ -12,33 +12,29 @@ class YamlDSLTests {
     @Test
     def void populatesDatabaseFromCSV() {
         val yamlScript = '''
-            source: !csvSource
-                input: !fixedInput |
-                    1,M,1/1/1980,John,,Doe
-                    2,F,2/2/1990,Janet,,Doe
-                    3,M,3/3/2000,Alexio,,Flako
-                fields: [
-                    { index: 0,  name: id, format: !integer        },
-                    { index: 3,  name: firstName,  format: !string },
-                    { index: 5,  name: lastName,   format: !string },
-                    { index: 1,  name: gender,     format: !string }
-                ]
-
-            matcher: !script [gender == "M"]
-
-            transformer: !script |
-                ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})
-
-            destination: !databaseDestination
-                tableName:  PERSON
-                fieldNames: [ID, NAME, GENDER]
-                batchSize:  1
-                commitOnBatch: true
-                dataSource: !basicDataSource
-                    driverClassName: org.hsqldb.jdbc.JDBCDataSource
-                    url:             jdbc:hsqldb:mem:shutdown
-                    username:        sa
-                    password:
+                source: !csvSource
+                    input: !fixedInput |
+                        1,M,1/1/1980,John,,Doe
+                        2,F,2/2/1990,Janet,,Doe
+                        3,M,3/3/2000,Alexio,,Flako
+                    fields: [
+                        { index: 0,  name: id,        format: !integer },
+                        { index: 3,  name: firstName, format: !string  },
+                        { index: 5,  name: lastName,  format: !string  },
+                        { index: 1,  name: gender,    format: !string  }
+                    ]
+                
+                matcher: !script [gender == "M"]
+                
+                transformer: !script |
+                  ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})
+                
+                destination: !databaseDestination
+                    tableName:  PERSON
+                    fieldNames: [ID, NAME, GENDER]
+                    dataSource: !!org.hsqldb.jdbc.JDBCDataSource
+                        url:    jdbc:hsqldb:mem:shutdown
+                        user:   sa
         '''
         
         val yaml = new DefaultYamlFactory().newYaml
