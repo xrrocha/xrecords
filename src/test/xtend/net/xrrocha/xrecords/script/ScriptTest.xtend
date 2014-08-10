@@ -6,6 +6,7 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 
+// TODO Complete Script tests
 class ScriptTest {
     @Test
     def void runsScript() {

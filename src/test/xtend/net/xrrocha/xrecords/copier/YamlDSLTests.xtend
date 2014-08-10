@@ -1,11 +1,12 @@
-package net.xrrocha.xrecords.record
+package net.xrrocha.xrecords.copier
 
 import java.sql.DriverManager
 import java.util.List
-import org.junit.Test
-import static org.junit.Assert.*
-import net.xrrocha.xrecords.copier.Copier
+import net.xrrocha.xrecords.record.Record
 import net.xrrocha.yamltag.DefaultYamlFactory
+import org.junit.Test
+
+import static org.junit.Assert.*
 
 class YamlDSLTests {
     @Test
@@ -18,21 +19,27 @@ class YamlDSLTests {
                 input: !fixedInput |
                     1,"M","John",,"Doe"
                     2,"F","Janet",,"Doe"
+                    3,"M","Alexio",,"Flako"
                 fields:
                     - index: 0
-                      name: ID
+                      name: id
                       format: !integer
                     - index: 2
-                      name: FIRST_NAME
+                      name: firstName
                       format: !string
                     - index: 4
-                      name: LAST_NAME
+                      name: lastName
                       format: !string
                     - index: 1
-                      name: GENDER
+                      name: gender
                       format: !string
-            #matcher:
-            #transformer:
+            matcher: !script [gender == "M"]
+            transformer: !script ['({
+                ID: id,
+                FIRST_NAME: firstName,
+                LAST_NAME: lastName,
+                GENDER: gender
+            })']
             destination: !databaseDestination
                 tableName: PERSON
                 fieldNames: [ID, FIRST_NAME, LAST_NAME, GENDER]
@@ -93,9 +100,9 @@ class YamlDSLTests {
         assertEquals('Doe', records.get(0).getField("LAST_NAME"))
         assertEquals('M', records.get(0).getField("GENDER"))
         
-        assertEquals(2, records.get(1).getField("ID"))
-        assertEquals('Janet', records.get(1).getField("FIRST_NAME"))
-        assertEquals('Doe', records.get(1).getField("LAST_NAME"))
-        assertEquals('F', records.get(1).getField("GENDER"))
+        assertEquals(3, records.get(1).getField("ID"))
+        assertEquals('Alexio', records.get(1).getField("FIRST_NAME"))
+        assertEquals('Flako', records.get(1).getField("LAST_NAME"))
+        assertEquals('M', records.get(1).getField("GENDER"))
     }
 }

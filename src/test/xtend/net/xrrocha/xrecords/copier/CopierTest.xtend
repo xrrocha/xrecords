@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*
 public class CopierInteractionTest {
     private val lifecycleMockSettings = withSettings().extraInterfaces(Lifecycle)
     
+    // TODO Ascertain match comes before transform
     @Test
     def opensAndClosesLifecycleComponents() {
         val sourceMock = mock(Source, lifecycleMockSettings)
