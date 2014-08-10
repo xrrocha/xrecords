@@ -12,32 +12,41 @@ interface Lifecycle {
     def void close(int count)
 }
 
-interface Source<E> extends Lifecycle, Iterator<E> {}
+interface Source<E> extends Lifecycle, Iterator<E> {
+}
 
-interface Filter<E> { def boolean matches(E element) }
+interface Filter<E> {
+    def boolean matches(E element)
+}
 
-interface Transformer<E> { def E transform(E element) }
+interface Transformer<E> {
+    def E transform(E element)
+}
 
-interface Destination<E> extends Lifecycle { def void put(E element, int index) }
+interface Destination<E> extends Lifecycle {
+    def void put(E element, int index)
+}
 
 // TODO Add record field renaming transformer
 // TODO Add pre/post hooks to Copier (w/scripting implementation)
 class Copier extends SafeCopierListener {
     @Property Source<Object> source
-    @Property Filter<Object> filter
-    @Property Transformer<Object> transformer
+    @Property Filter<Object> filter = nullFilter
+    @Property Transformer<Object> transformer = nullTransformer
     @Property Destination<Object> destination
     
     @Property boolean stopOnError = true
     @Property CopierListener listener = new LoggingCopierListener
     
+    private static val nullFilter = new Filter<Object> {
+        override matches(Object object) { true }
+    }
+    private static val nullTransformer = new Transformer<Object> {
+        override transform(Object object) { object }
+    }
+    
     final def copy() {
-        if (validator.state == NEW) {
-            validator.validate()
-        }
-        if (validator.state == FAILED) {
-            throw new IllegalStateException('Cannot copy: validation failed')
-        }
+        validate()
         
         open()
         
@@ -170,22 +179,38 @@ class Copier extends SafeCopierListener {
         components
     }
     
+    def validate() {
+        if (validator.state == NEW) {
+            validator.validate()
+        }
+        if (validator.state == FAILED) {
+            throw new IllegalStateException('Cannot copy: validation failed')
+        }
+    }
+    
     private val validator = new Validator [ errors |
         if (source == null) {
             errors.add('Missing source')
         } else if (source instanceof Validatable) {
             (source as Validatable).validate(errors)
         }
+        
+        if (filter == null) {
+            filter = nullFilter
+        } else if (filter instanceof Validatable) {
+            (filter as Validatable).validate(errors)
+        }
+
+        if (transformer == null) {
+            transformer = nullTransformer
+        } else if (transformer instanceof Validatable) {
+            (transformer as Validatable).validate(errors)
+        }
+        
         if (destination == null) {
             errors.add('Missing destination')
         } else if (destination instanceof Validatable) {
             (destination as Validatable).validate(errors)
-        }
-        if (filter != null && filter instanceof Validatable) {
-            (filter as Validatable).validate(errors)
-        }
-        if (transformer != null && transformer instanceof Validatable) {
-            (transformer as Validatable).validate(errors)
         }
     ]
 }

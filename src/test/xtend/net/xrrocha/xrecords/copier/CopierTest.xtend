@@ -264,25 +264,25 @@ public class CopierListenerTest {
         verify(listenerMock).onNext('one', 0)
     }
     
-    @Test
-    def omitsOnFilterIfNoFilter() {
-        val sourceMock = mock(Source)
-        when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn('one')
-        
-        val destinationMock = mock(Destination)
-        
-        val CopierListener listenerMock = mock(CopierListener)
-        
-        val copier = new Copier => [
-            source = sourceMock
-            destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
-        ]
-        copier.copy()
-    
-        verify(listenerMock, never).onFilter(any, anyBoolean, anyInt)
-    }
+//    @Test
+//    def omitsOnFilterIfNoFilter() {
+//        val sourceMock = mock(Source)
+//        when(sourceMock.hasNext).thenReturn(true, false)
+//        when(sourceMock.next).thenReturn('one')
+//        
+//        val destinationMock = mock(Destination)
+//        
+//        val CopierListener listenerMock = mock(CopierListener)
+//        
+//        val copier = new Copier => [
+//            source = sourceMock
+//            destination = destinationMock
+//            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
+//        ]
+//        copier.copy()
+//    
+//        verify(listenerMock, never).onFilter(any, anyBoolean, anyInt)
+//    }
     
     @Test
     def reportsOnFilterIfFilter() {
@@ -308,25 +308,25 @@ public class CopierListenerTest {
         verify(listenerMock).onFilter('one', true, 0)
     }
     
-    @Test
-    def omitsTransformIfNoTransformer() {
-        val sourceMock = mock(Source)
-        when(sourceMock.hasNext).thenReturn(true, false)
-        when(sourceMock.next).thenReturn('one')
-        
-        val destinationMock = mock(Destination)
-        
-        val CopierListener listenerMock = mock(CopierListener)
-        
-        val copier = new Copier => [
-            source = sourceMock
-            destination = destinationMock
-            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
-        ]
-        copier.copy()
-    
-        verify(listenerMock, never).onTransform(any, any, anyInt)
-    }
+//    @Test
+//    def omitsTransformIfNoTransformer() {
+//        val sourceMock = mock(Source)
+//        when(sourceMock.hasNext).thenReturn(true, false)
+//        when(sourceMock.next).thenReturn('one')
+//        
+//        val destinationMock = mock(Destination)
+//        
+//        val CopierListener listenerMock = mock(CopierListener)
+//        
+//        val copier = new Copier => [
+//            source = sourceMock
+//            destination = destinationMock
+//            listener = new MultiCopierListener(#[new LoggingCopierListener, listenerMock])
+//        ]
+//        copier.copy()
+//    
+//        verify(listenerMock, never).onTransform(any, any, anyInt)
+//    }
     
     @Test
     def reportsTransformIfTransformer() {
