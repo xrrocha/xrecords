@@ -11,10 +11,13 @@ limited to):
 - XML
 - DBF (Xbase)
 
+Check the [documentation](doc/intro.md) for an discussion of the framework
+design. 
+
 ```xrecords``` is a [blackbox](http://en.wikipedia.org/wiki/Extensibility#Black-Box_Extensibility)
 framework and thus can be instantiated declaratively, without programming.
 
-```xrecords``` file-conversion applications are written using
+File-conversion applications are written using
 [YAML](http://en.wikipedia.org/wiki/YAML). Blackbox components can be scripted
 in any JVM language supported by
 [JSR-223](https://jcp.org/en/jsr/detail?id=223).
@@ -23,26 +26,27 @@ The following ```xrecords``` application populates a Postgres table from a
 delimited file:
 
 ```yaml
-source: !delimitedSource
-    input:  !location [people.txt]
-    delimiter: '\t'
-    fields: &fields
-        - { name: id }
-        - { name: first_name }
-        - { name: last_name, type: STRING } # STRING is the default type
-        - { name: salary,   type: NUMBER, format: '$###,###.##' }
-        - { name: hiredate, type: DATE, format: MM/dd/yyyy }
+source: !csvSource
+    input: !inputLocation [data/form4269.csv]
+    fields: &fields [
+        { name: tariff, format: !integer },
+        { name: desc,   format: !string  },
+        { name: qty,    format: !integer  },
+        { name: price,  format: !double ['#,###.##']  },
+        { name: origin, format: !string  },
+        { name: eta, format: !date [dd/MM/yyyy]  }
+    ]
 
-filter: !condition [salary > 75000]
+filter: !scriptFilter [tariff != 0]
 
 destination: !databaseDestination
-  tableName: person
-  columns: *fields
-  dataSource: !!org.postgresql.ds.PGSimpleDataSource
-    user: test
-    password: test
-    serverName: localhost
-    databaseName: hr
+    tableName:  form4269
+    columns: *fields
+    dataSource: !!org.postgresql.ds.PGSimpleDataSource
+        user: load
+        password: load123
+        serverName: forms.customs.feudalia.gov
+        databaseName: forms
 ```
 
 ```xrecords``` is written in the [Xtend](http://www.eclipse.org/xtend)
