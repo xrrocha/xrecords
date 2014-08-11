@@ -1,7 +1,7 @@
 
 # Learning to Build Object Oriented Frameworks #
 
-<img style="float: left;" src="img/jigsaw.png">
+![frameworks](img/jigsaw.png)
 [Object oriented frameworks](http://en.wikipedia.org/wiki/Software_framework)
 are a mainstay of modern software development. Whether you develop in Java, C#,
 Objective-C, Python, Ruby or Javascript, chances are you're basing your
@@ -11,6 +11,9 @@ Yet, few of us are familiar with *building* application frameworks to fulfill
 business needs in our organizations. This series of posts illustrates object
 oriented framework development around a simple (but not trivial) application
 domain.
+
+> The code for these documents, written in the [Xtend](http://www.eclipse.org/xtend/)
+> programming language is available at https://github.com/xrrocha/xrecords.
 
 ## What is a framework anyway? ##
 
