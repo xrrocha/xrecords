@@ -9,11 +9,11 @@ development on some sort of application development framework.
 
 Yet, few of us are familiar with *building* application frameworks to fulfill
 business needs in our organizations. This series of posts illustrates object
-oriented framework development around a simple (but not trivial) application
+oriented framework development around a simple (though not trivial) application
 domain.
 
 > The code for these documents, written in the [Xtend](http://www.eclipse.org/xtend/)
-> programming language is available at https://github.com/xrrocha/xrecords.
+> programming language, is available at https://github.com/xrrocha/xrecords.
 
 ## What is a framework anyway? ##
 
@@ -56,13 +56,13 @@ framework as the foundation for a class of applications is much more general.
 
 ## Too abstract! Show me an example ##
 
-Sure. Mind you, though: frameworks *are* abstract ;-)
+Sure! Mind you, though: frameworks *are* abstract ;-)
 
 Consider the case of a small country's government agency that decided to
 allow patrons to submit some forms (and receive replies) as flat files instead
 of paper documents. Incoming files are loaded into their relational database
 and replies are extracted from the database in the patron's preferred file
-format. Supported file formats included:
+format. Supported file formats include:
 
 <table>
     <tr>
@@ -70,7 +70,7 @@ format. Supported file formats included:
             <ul>
                 <li>CSV/delimited files</li>
                 <li>Fixed-length files</li>
-                <li>Flat XML files</li>
+                <li>[Flat] XML files</li>
                 <li>XBase (DBF) files</li>
             </ul>
         </td>
@@ -93,10 +93,12 @@ format. Supported file formats included:
 At first, only a few forms were supported so developers wrote script-like Java
 programs to load and extract data in a form/format specific fashion. As was to
 be expected, other forms were soon included and the number of patrons opting for
-"electronic form processing" grew. The number of repetitive load/extraction
+"electronic form processing" grew. The count of repetitive load/extraction
 programs went over a hundred. In some cases, programmers opted for writing
 conversions from an unsupported file format to a supported one in order to
 leverage existing load/extraction programs for a given form.
+
+A call for help was made to simplify and unify this codebase.
 
 ### What's the *application domain* here? ###
 
@@ -170,7 +172,7 @@ The above theory is depicted in the following class diagram:
 
 ![Framework Class Model](img/copier-framework.png)
 
-> NOTE: Even though we intend to copy `Record`s, the copier framework as
+> NOTE: Even though we intend to copy only `Record`s, the copier framework as
 > such need not be concerned with the actual type of its data. Because of this,
 > it copies data items with a generic type (`E`) rather than being
 > unnecessarily limited to `Record`. This reflects another framework design principle:
@@ -199,7 +201,7 @@ destination.close()
 Because this logic doesn't ever change it's referred to as a *frozen spot*.
 In our framework, the `Copier` (shown in light blue) is a frozen spot.
 
-The portions of the aplication that *can* change are, correspondingly, called
+The portions of the aplication that *can* change are called, correspondingly,
 *hot spots*. In our framework the relevant hot spot interfaces
 (shown in light red) are:
 
@@ -215,19 +217,18 @@ database (JDBC) and CSV tabular formats:
 
 > Note that both `Filter` and `Transformer` have *scripting* (rather than
 > framework-supplied) implementations.
-> This reflects the fact that record selection and modification logic is
+> This reflects the fact that  logic for record selection and modification is
 > application-specific and, thus, hard to capture in a general,
 > reusable way. Scripting provides a mechanism for developers to pass
 > simple filtering and transformation expressions without having to
 > write framework-aware code.
-> An exception to this is the `FieldRenamingTransformer` component that
-> satisfies the commonly occurring need to map input field names to different
-> output field names. 
+> The `FieldRenamingTransformer` component, however, satisfies the commonly
+> occurring need to map input field names to different output field names. 
 
 ## Framework Instantiation ##
 
-The act of extending the framework into an executable application is called
-*framework instantiation*.
+The process of extending the framework to turn it into an executable application
+is called *framework instantiation*.
 
 Instantiation for most frameworks require developers to write code extending
 framework-provided classes and interfaces. Such frameworks are referred to
