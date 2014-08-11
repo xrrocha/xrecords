@@ -91,7 +91,7 @@ format. Supported file formats include:
 </table>
 
 At first, only a few forms were supported so developers wrote script-like Java
-programs to load and extract data in a form/format specific fashion. As was to
+programs to load and extract data in a form/format-specific fashion. As was to
 be expected, other forms were soon included and the number of patrons opting for
 "electronic form processing" grew. The count of repetitive load/extraction
 programs went over a hundred. In some cases, programmers opted for writing
@@ -118,8 +118,8 @@ format.
 
 Added bonus: even though our business requirements didn't call for it, we should
 be able to convert between non-database formats without extra effort! Thus,
-for instance, we could convert a fixed-length file to CSV format to move
-mainframe data to a spreadsheet. 
+for instance, we could convert a fixed-length file to CSV format in order to
+move mainframe data to a spreadsheet. 
 
 ### What's the *theory*? ###
 
@@ -154,8 +154,8 @@ Given this common data representation we can now address the essence of our
 format conversion framework.
 
 - Each conversion has a *source* and a *destination*.
-- A `Source` reads one or more data data items encoded in its tabular format and
-  converts each to the `Record` format.
+- A `Source` reads one or more data data items encoded in its input tabular
+  format and converts each to the `Record` format.
 - A `Destination`, in turn, accepts one or more `Record`s and converts each to
   its output tabular format.
 - As each record is read it can be *filtered* to determine whether it should be
@@ -168,14 +168,15 @@ format conversion framework.
 
 ## The Framework Model ##
 
-The above theory is depicted in the following class diagram:
+The above theory is captured in the following class diagram:
 
 ![Framework Class Model](img/copier-framework.png)
 
 > NOTE: Even though we intend to copy only `Record`s, the copier framework as
 > such need not be concerned with the actual type of its data. Because of this,
 > it copies data items with a generic type (`E`) rather than being
-> unnecessarily limited to `Record`. This reflects another framework design principle:
+> unnecessarily limited to `Record`. This exemplifies another framework design
+> principle:
 > *[separation of concerns](http://en.wikipedia.org/wiki/Separation_of_concerns)* 
 
 We had previously stated that a framework captures what doesn't change in its
@@ -199,11 +200,9 @@ destination.close()
 ```
 
 Because this logic doesn't ever change it's referred to as a *frozen spot*.
-In our framework, the `Copier` (shown in light blue) is a frozen spot.
 
 The portions of the aplication that *can* change are called, correspondingly,
-*hot spots*. In our framework the relevant hot spot interfaces
-(shown in light red) are:
+*hot spots*. In our framework they are:
 
 - `Source`. This interface has implementations for all supported formats
 - `Destination`. This interface has implementations for all supported formats
@@ -257,7 +256,7 @@ source: !csvSource
         { name: qty,    format: !integer  },
         { name: price,  format: !double ['#,###.##']  },
         { name: origin, format: !string  },
-        { name: eta, format: !date [dd/MM/yyyy]  }
+        { name: eta,    format: !date [dd/MM/yyyy]  }
     ]
 
 filter: !scriptFilter [tariff != 0]
