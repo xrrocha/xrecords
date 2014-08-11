@@ -14,8 +14,8 @@ domain.
 
 > The code for these documents, written in the [Xtend](http://www.eclipse.org/xtend/)
 > programming language, is available at https://github.com/xrrocha/xrecords.
-> Xtend is a modern JVM language highly readable to developers acquainted with
-> most mainstream object oriented languages.
+> Xtend is a modern JVM language whose syntax is highly readable to developers
+> acquainted with the various mainstream object oriented languages.
 
 ## What is a framework anyway? ##
 
