@@ -1,6 +1,5 @@
 *.bak
 .classpath
-doc
 .project
 .README.md.html
 .settings
