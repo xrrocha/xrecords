@@ -29,21 +29,14 @@ interface Destination<E> extends Lifecycle {
 
 // TODO Add record field renaming transformer
 // TODO Add pre/post hooks to Copier (w/scripting implementation)
-class Copier extends SafeCopierListener {
-    @Property Source<Object> source
-    @Property Filter<Object> filter = nullFilter
-    @Property Transformer<Object> transformer = nullTransformer
-    @Property Destination<Object> destination
+class Copier<E> extends SafeCopierListener {
+    @Property Source<E> source
+    @Property Filter<E> filter
+    @Property Transformer<E> transformer
+    @Property Destination<E> destination
     
     @Property boolean stopOnError = true
     @Property CopierListener listener = new LoggingCopierListener
-    
-    private static val nullFilter = new Filter<Object> {
-        override matches(Object object) { true }
-    }
-    private static val nullTransformer = new Transformer<Object> {
-        override transform(Object object) { object }
-    }
     
     final def copy() {
         validate()
@@ -115,7 +108,7 @@ class Copier extends SafeCopierListener {
         }
     }
     
-    private def transform(Object element, int index) {
+    private def transform(E element, int index) {
         if (transformer == null) {
             element
         } else {
@@ -130,7 +123,7 @@ class Copier extends SafeCopierListener {
         }
     }
     
-    private def filter(Object element, int index) {
+    private def filter(E element, int index) {
         if (filter == null) {
             true
         } else {
@@ -145,7 +138,7 @@ class Copier extends SafeCopierListener {
         }
     }
     
-    private def put(Object element, int index) {
+    private def put(E element, int index) {
         try {
             destination.put(element, index)
             onPut(element,index)
@@ -195,15 +188,11 @@ class Copier extends SafeCopierListener {
             (source as Validatable).validate(errors)
         }
         
-        if (filter == null) {
-            filter = nullFilter
-        } else if (filter instanceof Validatable) {
+        if (filter != null && filter instanceof Validatable) {
             (filter as Validatable).validate(errors)
         }
 
-        if (transformer == null) {
-            transformer = nullTransformer
-        } else if (transformer instanceof Validatable) {
+        if (transformer != null && transformer instanceof Validatable) {
             (transformer as Validatable).validate(errors)
         }
         
