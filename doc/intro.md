@@ -112,7 +112,9 @@ view it as a conversion from the database table format to the target flat file
 format.
 
 Added bonus: even though our business requirements didn't call for it, we should
-be able to convert between non-database formats without extra effort.
+be able to convert between non-database formats without extra effort! Thus,
+for instance, we could convert a fixed-length file to CSV format to move
+mainframe data to a spreadsheet. 
 
 ### What's the *theory*? ###
 
@@ -124,7 +126,7 @@ A theory about an application domain can only be comprehensive when it stems
 from repeated experiences in automating the domain. This is referred to as
 the [Three Examples](http://st-www.cs.illinois.edu/users/droberts/evolve.html#ThreeExamples)
 rule of framework development; it is impossible to develop a framework in
-absence of such experience. As the document states *no one is that smart*.
+absence of such experience. As the document states, *no one is that smart*.
 
 In our case, thankfully, we have over a hundred tabular file conversions to
 draw from ;-)
@@ -161,7 +163,7 @@ format conversion framework.
 
 ## The Framework Model ##
 
-The above is depicted in the following class diagram:
+The above theory is depicted in the following class diagram:
 
 ![Framework Class Model](img/copier-framework.png)
 
@@ -171,11 +173,12 @@ The above is depicted in the following class diagram:
 > unnecessarily limited to `Record`. This reflects another framework design principle:
 > *[separation of concerns](http://en.wikipedia.org/wiki/Separation_of_concerns)* 
 
-We has previously stated that a framework captures what doesn't change in its
+We had previously stated that a framework captures what doesn't change in its
 domain. In our case, what doesn't change is the general algorithm followed to
 copy records from a source to a destination:
 
 ```java
+// Copier.xtend
 source.open()
 destination.open()
 
@@ -209,12 +212,12 @@ database (JDBC) and CSV tabular formats:
 
 > Note that both `Filter` and `Transformer` have *scripting* (rather than
 > framework-supplied) implementations.
-> This reflects the fact that record selection and modification are
-> application-specific concerns that are hard to capture in a general,
+> This reflects the fact that record selection and modification logic is
+> application-specific and, thus, hard to capture in a general,
 > reusable way. Scripting provides a mechanism for developers to pass
 > simple filtering and transformation expressions without having to
 > write framework-aware code.
-> An exception to this is the `FieldRenamingTransformer` implementation that
+> An exception to this is the `FieldRenamingTransformer` component that
 > satisfies the commonly occurring need to map input field names to different
 > output field names. 
 
@@ -232,13 +235,12 @@ Other frameworks (ours included!) provide a repertoire of ready-made components
 such that framework instantiation no longer requires application code but
 only framework component *configuration*. Such frameworks are referred to as
 *blackbox frameworks* because their internal implementation is opaque to
-application developers who are only concerned with properly configuring
-framework-supplied components.
+application developers who are only concerned with component configuration.
 
 For our framework instantiation we've chosen
 [Yaml](http://en.wikipedia.org/wiki/Yaml) (in its
 [SnakeYAML](https://code.google.com/p/snakeyaml/) incarnation) to enunciate
-the object graph. For scripting we default to Javascript.
+the application's object graph. For scripting we default to Javascript.
 
 The following Yaml script populates a database table from a CSV file:
 
