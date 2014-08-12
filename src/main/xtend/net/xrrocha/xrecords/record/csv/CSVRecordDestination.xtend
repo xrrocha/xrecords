@@ -11,7 +11,7 @@ import net.xrrocha.xrecords.field.Field
 
 class CSVRecordDestination extends CSVBase implements Destination<Record> {
     @Property Provider<Writer> output
-    @Property List<FormattedField<Object>> fields
+    @Property List<FormattedField<?extends Object>> fields
 
     private var CSVWriter writer
     

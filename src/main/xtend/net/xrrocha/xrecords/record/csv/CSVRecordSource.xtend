@@ -11,7 +11,7 @@ import net.xrrocha.xrecords.field.Field
 
 class CSVRecordSource extends CSVBase implements Source<Record> {
     @Property Provider<Reader> input
-    @Property List<IndexedField<Object>> fields
+    @Property List<IndexedField<?extends Object>> fields
     
     private CSVReader reader
     private String[] fieldValues

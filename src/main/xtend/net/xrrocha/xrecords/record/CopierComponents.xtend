@@ -3,6 +3,7 @@ package net.xrrocha.xrecords.record
 import java.util.Map
 import net.xrrocha.xrecords.copier.Transformer
 
+// TODO Validate and test FieldRenamingTransformer
 class FieldRenamingTransformer implements Transformer<Record> {
     @Property Map<String, String> renames
     
