@@ -23,6 +23,11 @@ class IntegerParser implements Parser<Integer> {
             parseBigDecimal = false
         ]
     }
+    
+    new(String pattern, int multiplier) {
+        this(pattern)
+        format.multiplier = multiplier
+    }
 
     override Integer parse(String string) {
         format.parse(string).intValue
