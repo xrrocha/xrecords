@@ -76,7 +76,6 @@ class IndexedField<T> extends FormattedField<T> {
     }
 }
 
-// TODO Fixed fields must specify implicit decimal position
 class FixedField<T> extends FormattedField<T> {
     @Property int offset
     @Property int length
