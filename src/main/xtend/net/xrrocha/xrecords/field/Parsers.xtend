@@ -5,6 +5,7 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
+// TODO Add boolean parser
 interface Parser<T> {
     def T parse(String string)
     def String format(T item)    

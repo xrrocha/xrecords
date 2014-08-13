@@ -4,6 +4,7 @@ import java.util.HashMap
 import java.util.Map
 import java.util.Collections
 
+// TODO Allow for array and nested record fields
 class Record {
     val fields = new HashMap<String, Object>()
     
