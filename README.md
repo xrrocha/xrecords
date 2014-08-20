@@ -27,25 +27,25 @@ delimited file:
 
 ```yaml
 source: !csvSource
-    input: !inputLocation [data/form4269.csv]
-    fields: &fields [
+    input: !fromLocation [data/acme-form4269.csv]
+    fields: &myFields [
         { name: tariff, format: !integer },
         { name: desc,   format: !string  },
-        { name: qty,    format: !integer  },
-        { name: price,  format: !double ['#,###.##']  },
-        { name: origin, format: !string  },
-        { name: eta, format: !date [dd/MM/yyyy]  }
+        { name: qty,    format: !integer },
+        { name: price,  format: !double ['#,###.##'] },
+        { name: origin, format: !string },
+        { name: eta,    format: !date [dd/MM/yyyy] }
     ]
 
-filter: !scriptFilter [tariff != 0]
+filter: !condition [tariff != 0] # javascript
 
 destination: !databaseDestination
     tableName:  form4269
-    columns: *fields
+    columns: *myFields # CSV field names match column names
     dataSource: !!org.postgresql.ds.PGSimpleDataSource
         user: load
         password: load123
-        serverName: forms.customs.feudalia.gov
+        serverName: customs.feudalia.gov
         databaseName: forms
 ```
 
