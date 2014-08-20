@@ -37,8 +37,8 @@ change and deliberately leaves out what *can* change. You, the application
 developer, must provide the bits that change for the framework to become an
 executable application.
 
-Because of this, developing with frameworks exhibits a property dubbed
-*[inversion of control](http://martinfowler.com/bliki/InversionOfControl.html)*
+Because of this frameworks exhibit a property dubbed
+[inversion of control](http://martinfowler.com/bliki/InversionOfControl.html),
 where it is the framework that calls into your code, not the other way around.
 
 ## What a framework is not ##
@@ -58,115 +58,128 @@ framework as the foundation for a class of applications is much more general.
 
 ## Too abstract! Show me an example ##
 
-Sure! Mind you, though: frameworks *are* abstract ;-)
+Sure! Mind you, though, frameworks *are* abstract ;-)
 
-Consider the case of a small country's government agency that decided to
-allow patrons to submit some forms (and receive replies) as flat files instead
-of paper documents. Incoming files are loaded into their relational database
-and replies are extracted from the database in the patron's preferred file
-format. Supported file formats include:
+Consider a utility to convert between tabular record formats such as:
 
-<table>
-    <tr>
-        <td>
-            <ul>
-                <li>CSV/delimited files</li>
-                <li>Fixed-length files</li>
-                <li>[Flat] XML files</li>
-                <li>XBase (DBF) files</li>
-            </ul>
-        </td>
-        <td>
-            <table>
-                <tr>
-                    <td><img src="img/csv-file.png"></td>
-                </tr>
-                <tr>
-                    <td><img src="img/fixed-file.png"></td>
-                </tr>
-                <tr>
-                    <td><img src="img/xml-file.png"></td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+- Relational database tables
+- CSV and delimited files
+- Fixed-length files
+- XBase (DBF) files
+- Flat XML files
+
+Our utility uses [Yaml](http://en.wikipedia.org/wiki/YAML) as its configuration
+format. Thus, for example, the following Yaml script populates a database table
+from a CSV file:
+ 
+```yaml
+source: !csvSource
+    input: !fromLocation [data/acme-form4269.csv]
+    fields: &myFields [
+        { name: tariff, format: !integer },
+        { name: desc,   format: !string  },
+        { name: qty,    format: !integer },
+        { name: price,  format: !double ['#,###.##'] },
+        { name: origin, format: !string },
+        { name: eta,    format: !date [dd/MM/yyyy] }
+    ]
+
+filter: !condition [tariff != 0] # javascript
+
+destination: !databaseDestination
+    tableName:  form4269
+    columns: *myFields # CSV field names match column names
+    dataSource: !!org.postgresql.ds.PGSimpleDataSource
+        user: load
+        password: load123
+        serverName: customs.feudalia.gov
+        databaseName: forms
+```
+
+> The Yaml parser used here is [SnakeYAML](https://code.google.com/p/snakeyaml/).
+> Type tags are based on [YamlTag](https://github.com/xrrocha/yamltag) 
+
+### What's our application domain? ###
+
+Every framework addresses a particular *application domain* for which it
+supports building concrete applications.
+
+Our utility's application domain is that of *tabular file format conversion*:
+it transcribes data from one tabular file format to another.
+
+<table border="0">
+  <tr>
+    <th>From: CSV</th>
+    <th>To: Fixed-length</th>
+  </tr>
+  <tr>
+    <td><img src="img/csv-file.png"></td>
+    <td><img src="img/fixed-file.png"></td>
+  </tr>
 </table>
 
-At first, only a few forms were supported so developers wrote script-like Java
-programs to load and extract data in a form/format-specific fashion. As was to
-be expected, other forms were soon included and the number of patrons opting for
-"electronic form processing" grew. The count of repetitive load/extraction
-programs went over a hundred. In some cases, programmers opted for writing
-conversions from an unsupported file format to a supported one in order to
-leverage existing load/extraction programs for a given form.
+We use the term *tabular* to state our records are flat in nature: we support
+scalar fields only, with no provisions for arrays or nested records.
 
-A call for help was made to simplify and unify this codebase.
+Incidentally, we treat relational database tables as just another format, on par
+with its flat file cousins.
 
-### What's the *application domain* here? ###
+### What's the domain theory? ###
 
-On the surface, one could consider this application domain to be that of
-"database loading and extraction" but closer analysis reveals we can actually
-simplify things by addressing a more general space:
-*tabular file format conversion*; the simpler act of rephrasing the same data
-from one format to another.
+A framework embodies a theory about its problem domain. This is always the case,
+even when the theory is implied only by the implementation.
 
-We use the term "tabular" (rather than "flat") to emphasize that relational
-database tables are just another format, on par with their flat file cousins.
-Thus, when a flat file containing a filled form is received we view  it as a
-conversion from the flat file's format to the database table format.
-Correspondingly, when we extract the reply from the database to a flat file we
-view it as a conversion from the database table format to the target flat file
-format.
+Because frameworks strive to provide the foundation for *any* application
+within their stated domain, their theories need to be comprehensive.
 
-Added bonus: even though our business requirements didn't call for it, we should
-be able to convert between non-database formats without extra effort! Thus,
-for instance, we could convert a fixed-length file to CSV format in order to
-move mainframe data to a spreadsheet. 
+A comprehensive theory about an application domain can only stem from repeated
+experiences in automating the domain. This is referred to as the
+[Three Examples](http://st-www.cs.illinois.edu/users/droberts/evolve.html#ThreeExamples)
+pattern of framework development.
 
-### What's the *theory*? ###
+Our tabular format conversion domain is simple enough to have a small theory.
+Within this domain the notion of *concrete application* corresponds to a
+program or script performing a specific conversion. In regard to the 3 examples
+rule, this framework is backed by numerous hand-written, ad-hoc conversions. 
 
-A framework always embodies a theory about its problem domain. This theory
-demarcates the scope of the framework and dictates how it satisfies the
-domain's business requirements.
+#### *Lingua Franca* ####
 
-A theory about an application domain can only be comprehensive when it stems
-from repeated experiences in automating the domain. This is referred to as
-the [Three Examples](http://st-www.cs.illinois.edu/users/droberts/evolve.html#ThreeExamples)
-rule of framework development; it is impossible to develop a framework in
-absence of such experience. As the document states, *no one is that smart*.
+Translating among many formats calls for an *intermediate representation* to be
+chosen such that all formats have translations to and from the intermediate
+representation rather than translations to every other format.
 
-In our case, thankfully, we have over a hundred tabular file conversions to
-draw from ;-)
-
-The first realization in our tabular record conversion domain is that we need
-a reference data format, a *lingua franca*. Otherwise, we'd be in the Babel
-Tower predicament of having to implement `n*(n - 1)` format conversions!
+This reduces the number of translations  from <code>n<sup>2</sup> - n</code> to
+a more manageable <code>2n</code>. In absence of such *lingua franca*, we'd be
+in a Babel Tower predicament.
 
 ![We need a lingua franca](img/sign.png)
 ![Babel Tower](img/babel-tower.png)
 
-Our chosen lingua franca is a neuter, in-memory representation of a tabular
-record: a humble `Map<String, Object>` whose keys are field names and whose
-values are field contents. We'll refer to this representation as `Record`.
+A suitable intermediate representation for tabular records is the
+format-agnostic, in-memory map whose keys are field names and whose values are
+field contents:
 
-Thus, all participating formats are required to provide conversions to and from
-`Record`.
+```java
+class Record {
+    val fields = new HashMap<String, Object>()
+    . . .
+}
+```
 
-Given this common data representation we can now address the essence of our
-format conversion framework.
+#### General Theory ####
 
-- Each conversion has a *source* and a *destination*.
-- A `Source` reads one or more data data items encoded in its input tabular
-  format and converts each to the `Record` format.
-- A `Destination`, in turn, accepts one or more `Record`s and converts each to
-  its output tabular format.
+- Every conversion has a *source* and a *destination*.
+- The `Source` reads zero or more records encoded in the input tabular format.
+  As each record is read, it is converted to a `Record` representation.
+- The `Destination` accepts zero or more `Record`s. As each record is
+  accepted, it is converted to the output tabular format and subsequently
+  written.
 - As each record is read it can be *filtered* to determine whether it should be
-  included in the output. The optional component resposible for this is called
-  a `Filter`. 
+  included in the output or not. The optional component responsible for this
+  selection is referred to as the `Filter`. 
 - Finally, selected records can be *transformed* so as to conform with the
-  expectations of the given `Destination` (for instance, when copying between
-  database tables, columns may need to be renamed). The optional component
-  responsible for this is called a `Transformer`.
+  requirements of the given `Destination`. The optional component
+  responsible for this is referred to as the `Transformer`.
 
 ## The Framework Model ##
 
@@ -175,10 +188,9 @@ The above theory is captured in the following class diagram:
 ![Framework Class Model](img/copier-framework.png)
 
 > NOTE: Even though we intend to copy only `Record`s, the copier framework as
-> such need not be concerned with the actual type of its data. Because of this,
-> it copies data items with a generic type (`E`) rather than being
-> unnecessarily limited to `Record`. This exemplifies another framework design
-> principle:
+> such need not be concerned with the concrete type of its data. Thus,
+> it copies data items with a generic type (`E`) rather limiting itself to
+> `Record`. This exemplifies another framework tenet:
 > *[separation of concerns](http://en.wikipedia.org/wiki/Separation_of_concerns)* 
 
 We had previously stated that a framework captures what doesn't change in its
@@ -201,15 +213,19 @@ source.close()
 destination.close()
 ```
 
-Because this logic doesn't ever change it's referred to as a *frozen spot*.
+Because this logic doesn't ever change it is referred to as a *frozen spot*.
 
 The portions of the aplication that *can* change are called, correspondingly,
 *hot spots*. In our framework they are:
 
-- `Source`. This interface has implementations for all supported formats
-- `Destination`. This interface has implementations for all supported formats
-- `Filter`. This interface has a scripting implementation
-- `Transformer`. This interface has a scripting implementation
+- `Source`. Responsible for reading data items and translating them to the
+  intermediate representation
+- `Destination`. Responsible for translating from the intermediate
+  representation to the output format and writing the result
+- `Filter`. Responsible for determining whether a given instance of the
+   intermediate representation should be further processed
+- `Transformer`. Responsible for converting an intermediate representation
+  instance provided by the `Source` to one suitable for the `Destination` 
 
 The following class diagram depicts the framework implementation for the
 database (JDBC) and CSV tabular formats:
@@ -223,8 +239,8 @@ database (JDBC) and CSV tabular formats:
 > reusable way. Scripting provides a mechanism for developers to pass
 > simple filtering and transformation expressions without having to
 > write framework-aware code.
-> The `FieldRenamingTransformer` component, however, satisfies the commonly
-> occurring need to map input field names to different output field names. 
+> The `FieldRenamingTransformer` component, on the other hand, satisfies the
+> commonly occurring need to map input field names to different output field names. 
 
 ## Framework Instantiation ##
 
