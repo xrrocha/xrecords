@@ -51,5 +51,5 @@ destination: !databaseDestination
 
 ```xrecords``` is written in the [Xtend](http://www.eclipse.org/xtend)
 programming language and uses the [SnakeYAML](https://code.google.com/p/snakeyaml/)
-YAML library.
+and [YamlTag](https://github.com/xrrocha/yamltag) libraries.
 
