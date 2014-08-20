@@ -5,8 +5,6 @@ import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.validation.Validatable
 import org.eclipse.xtend.lib.annotations.Accessors
 
-import static extension net.xrrocha.xrecords.util.Extensions.*
-
 // Add suport for array fields
 class Field implements Validatable {
     @Accessors String name
