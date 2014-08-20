@@ -1,5 +1,5 @@
 
-# Learning to Build Object Oriented Frameworks #
+# Building Object Oriented Frameworks #
 
 ![frameworks](img/jigsaw.png)
 [Object oriented frameworks](http://en.wikipedia.org/wiki/Software_framework)
@@ -11,6 +11,10 @@ Yet, few of us are familiar with *building* application frameworks to fulfill
 business needs in our organizations. This series of posts illustrates object
 oriented framework development around a simple (though not trivial) application
 domain.
+
+This posts outlines what a framework is, how it is implemented and how it can
+be used to build concrete applications. Future posts will zoom into the details
+of framework design, usability and extensibility.
 
 > The code for these documents, written in the [Xtend](http://www.eclipse.org/xtend/)
 > programming language, is available at https://github.com/xrrocha/xrecords.
@@ -66,9 +70,9 @@ Consider a utility to convert between tabular record formats such as:
 - CSV and delimited files
 - Fixed-length files
 - XBase (DBF) files
-- Flat XML files
+- Flat JSON, XML or Yaml files
 
-Our utility uses [Yaml](http://en.wikipedia.org/wiki/YAML) as its configuration
+This utility uses [Yaml](http://en.wikipedia.org/wiki/YAML) as its configuration
 format. Thus, for example, the following Yaml script populates a database table
 from a CSV file:
  
@@ -232,8 +236,19 @@ database (JDBC) and CSV tabular formats:
 
 ![Framework Implementation Class Model](img/copier-implementation.png)
 
-> Note that both `Filter` and `Transformer` have *scripting* (rather than
-> framework-supplied) implementations.
+Note how, despite their seemingly opposite natures, `Source` and `Destination`
+share a common superclass for each tabular format.
+
+Thus, for example, `CSVSource` (which reads comma-separated files) and
+`CSVDestination` (which writes comma-separated files) share common attributes
+such the separator character, the field-enclosing quote character and whether
+the file has a header record or not.
+
+Likewise, the database components `JDBCSource` and `JDBCDestination` share
+a SQL `DataSource` attribute.
+
+> Note that both `Filter` and `Transformer` above have *scripting* (rather
+> than framework-supplied) implementations.
 > This reflects the fact that  logic for record selection and modification is
 > application-specific and, thus, hard to capture in a general,
 > reusable way. Scripting provides a mechanism for developers to pass
@@ -256,39 +271,112 @@ Other frameworks (ours included!) provide a repertoire of ready-made components
 such that framework instantiation no longer requires application code but
 only framework component *configuration*. Such frameworks are referred to as
 *blackbox frameworks* because their internal implementation is opaque to
-application developers who are only concerned with component configuration.
+application developers who are only concerned configuring component
+instances.
 
-For our framework instantiation we've chosen
-[Yaml](http://en.wikipedia.org/wiki/Yaml) (in its
-[SnakeYAML](https://code.google.com/p/snakeyaml/) incarnation) to enunciate
-the application's object graph. For scripting we default to Javascript.
-
-The following Yaml script populates a database table from a CSV file:
+Blackbox frameworks make it possible to write new applications by wiring
+pre-existing components like thus: 
 
 ```yaml
-source: !csvSource
-    input: !inputLocation [data/form4269.csv]
-    fields: &fields [
-        { name: tariff, format: !integer },
-        { name: desc,   format: !string  },
-        { name: qty,    format: !integer  },
-        { name: price,  format: !double ['#,###.##']  },
-        { name: origin, format: !string  },
-        { name: eta,    format: !date [dd/MM/yyyy]  }
+source: !databaseSource
+     # Column labels are used as field names
+    sqlText: |
+        SELECT *
+        FROM   emp
+        ORDER BY deptno, empno
+    dataSource: !!org.hsqldb.jdbc.JDBCDataSource
+        url:    jdbc:hsqldb:file:hsqldb/example;hsqldb;shutdown=true
+        user:   sa
+
+filter: !scriptFilter [sal > 1000] # javascript
+
+transformer: !renameFields # Only named fields are included in output record
+    - empno: id
+    - ename: name
+    - sal: salary
+
+destination: !xbaseDestination
+    output:  !outputDestination [data/well-paid-emps.dbf]
+    fields: [
+        { id, format: !integer },
+        { ename, format: !string },
+        { sal, format: !double },
     ]
-
-filter: !scriptFilter [tariff != 0]
-
-destination: !databaseDestination
-    tableName:  form4269
-    columns: *fields
-    dataSource: !!org.postgresql.ds.PGSimpleDataSource
-        user: load
-        password: load123
-        serverName: forms.customs.feudalia.gov
-        databaseName: forms
 ```
 
+For our framework instantiation we've chosen Yaml to enunciate the application's
+object graph. For scripting we default to Javascript.
+
+In addition to Yaml, other forms in blackbox framework instantiation are
+used.
+
+In the Java world, in particular, the ever-popular
+[Spring IoC container](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html)
+is frequently used as means of expressing framework instantiation. See
+[the Heritrix settings](https://webarchive.jira.com/wiki/display/Heritrix/Basic+Crawl+Job+Settings)
+guide for an example of Spring IoC framework configuration. 
+
+Of course, good ole' source code can be used to enact framework instantiation:
+
+```java
+val copier = new Copier => [
+    source = new JDBCRecordSource => [
+        sqlText = "SELECT * FROM emp ORDER BY deptno, empno"
+        dataSource = new JDBCDataSource => [
+            user = "sa"
+            url = "jdbc:hsqldb:file:hsqldb/example;hsqldb;shutdown=true"
+        ]
+    ]
+    
+    filter = new ScriptingCopierComponent => [
+        script = "sal > 1000"
+    ]
+    
+    transformer = new FieldRenamingTransformer => [
+        renames = #{
+            "empno" -> "id",
+            "ename" -> "name",
+            "sal"   -> "salary"
+        }
+    ]
+    
+    destination = new XBaseRecordDestination => [
+        output = new FileLocationOutputStreamProvider => [
+            location = "data/well-paid-emps.dbf"
+        ]
+        fields = #[
+            new FormattedField<Integer> => [ parser = new IntegerParser ],
+            new FormattedField<String> => [ parser = new StringParser ],
+            new FormattedField<Double> => [ parser = new DoubleParser ]
+        ]
+    ]  
+]
+```
+
+## Conclusion ##
+
+The essence of framework design lies in capturing the application logic that
+doesn't change. Such immutable logic (or *frozen spot*) expresses the business
+behavior in terms of one or more abstract components (or *hot spots*) that
+model what does change from application to application.
+
+For each hot spot multiple, alternative implementations may exist. Framework
+instantiation generally involves selecting what specific hot spot implementations
+to use as dictated by the application's requirements.
+
+As we'll see later on, each concrete hot spot implementation can be itself
+modeled as a framework. This recursive design process pervades framework
+design and implementation.
+
+Ideally, frameworks evolve towards a *blackbox* style where new applications can
+be created with little or no programming. Instead, new applications are built
+by mixing, matching, wiring and configuring pre-existing components.
+
+This is the approach illustrated by our tabular format conversion utility. By
+capturing all the moving parts in its domain, this framework can be fully
+instantiated as an object graph wiring together existing components to assemble
+a fully working application capable of performing a specific format-to-format
+conversion.
 
 
 
