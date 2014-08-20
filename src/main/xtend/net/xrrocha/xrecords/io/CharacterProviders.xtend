@@ -10,9 +10,10 @@ import java.io.StringWriter
 import java.io.Writer
 import java.net.URL
 import net.xrrocha.xrecords.util.Provider
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class StringReaderProvider implements Provider<Reader> {
-    @Property String content
+    @Accessors String content
     
     new() {}
     new(String content) { this.content = content }
@@ -23,7 +24,7 @@ class StringReaderProvider implements Provider<Reader> {
 }
 
 class LocationReaderProvider implements Provider<Reader> {
-    @Property String location
+    @Accessors String location
     
     new() {}
     new (String location) { this.location = location }
@@ -51,7 +52,7 @@ class StringWriterProvider implements Provider<Writer> {
 }
 
 class FileLocationWriterProvider implements Provider<Writer> {
-    @Property String location
+    @Accessors String location
     
     new() {}
     new (String location) { this.location = location }

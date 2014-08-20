@@ -1,6 +1,7 @@
 package net.xrrocha.xrecords.io
 
 import org.junit.Test
+
 import static org.junit.Assert.*
 
 class StringReaderProviderTest {

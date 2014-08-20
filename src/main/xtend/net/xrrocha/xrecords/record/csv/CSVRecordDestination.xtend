@@ -4,14 +4,15 @@ import au.com.bytecode.opencsv.CSVWriter
 import java.io.Writer
 import java.util.List
 import net.xrrocha.xrecords.copier.Destination
+import net.xrrocha.xrecords.field.Field
 import net.xrrocha.xrecords.field.FormattedField
 import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.util.Provider
-import net.xrrocha.xrecords.field.Field
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class CSVRecordDestination extends CSVBase implements Destination<Record> {
-    @Property Provider<Writer> output
-    @Property List<FormattedField<?extends Object>> fields
+    @Accessors Provider<Writer> output
+    @Accessors List<FormattedField<?extends Object>> fields
 
     private var CSVWriter writer
     

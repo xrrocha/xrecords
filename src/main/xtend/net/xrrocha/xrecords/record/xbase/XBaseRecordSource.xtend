@@ -6,10 +6,11 @@ import java.util.List
 import net.xrrocha.xrecords.copier.Source
 import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.util.Provider
+import org.eclipse.xtend.lib.annotations.Accessors
 
 // Test XBaseRecordSource
 class XBaseRecordSource extends XBase implements Source<Record> {
-    @Property Provider<InputStream> input
+    @Accessors Provider<InputStream> input
     
     private var InputStream is
     private var DBFReader reader

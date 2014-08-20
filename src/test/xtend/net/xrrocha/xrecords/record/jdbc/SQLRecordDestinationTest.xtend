@@ -4,13 +4,13 @@ import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.util.Date
 import java.util.GregorianCalendar
-import org.junit.Test
 import net.xrrocha.xrecords.field.DateParser
 import net.xrrocha.xrecords.field.FormattedField
 import net.xrrocha.xrecords.field.IntegerParser
 import net.xrrocha.xrecords.field.StringParser
 import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.util.Provider
+import org.junit.Test
 
 import static org.junit.Assert.*
 

@@ -9,15 +9,16 @@ import net.xrrocha.xrecords.field.FormattedField
 import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.util.Provider
 import net.xrrocha.xrecords.validation.Validatable
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class SQLRecordDestination implements Destination<Record>, Validatable {
-    @Property String tableName
-    @Property List<FormattedField<Object>> fields
+    @Accessors String tableName
+    @Accessors List<FormattedField<Object>> fields
     
-    @Property String prolog
-    @Property String epilog
+    @Accessors String prolog
+    @Accessors String epilog
     
-    @Property Provider<OutputStream> output
+    @Accessors Provider<OutputStream> output
     
     private var PrintWriter out
     

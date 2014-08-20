@@ -1,12 +1,14 @@
 package net.xrrocha.xrecords.io
 
+import org.eclipse.xtend.lib.annotations.Accessors
+
 abstract class FtpBase {
-    @Property String host
-    @Property int port = 21
-    @Property String user = 'anonymous'
-    @Property String password = 'someone@somewhere.net'
-    @Property String path
-    @Property boolean binary = false
+    @Accessors String host
+    @Accessors int port = 21
+    @Accessors String user = 'anonymous'
+    @Accessors String password = 'someone@somewhere.net'
+    @Accessors String path
+    @Accessors boolean binary = false
     
     private var String location
     

@@ -2,12 +2,13 @@ package net.xrrocha.xrecords.record.jdbc
 
 import java.sql.Connection
 import java.sql.DriverManager
+import net.xrrocha.xrecords.record.Record
 import org.apache.commons.dbcp.BasicDataSource
+import org.eclipse.xtend.lib.annotations.Data
 import org.junit.After
 import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
-import net.xrrocha.xrecords.record.Record
 
 @Data
 class Person {

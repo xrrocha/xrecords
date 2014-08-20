@@ -1,6 +1,7 @@
 package net.xrrocha.xrecords.copier
 
 import java.util.List
+import org.eclipse.xtend.lib.annotations.Accessors
 import org.slf4j.LoggerFactory
 
 interface CopierListener {
@@ -105,7 +106,7 @@ class LoggingCopierListener extends DefaultCopierListener {
 }
 
 class SafeCopierListener extends BaseCopierListener {
-    @Property CopierListener listener
+    @Accessors CopierListener listener
     
     override onOpen(Lifecycle component) {
         try {
@@ -216,7 +217,7 @@ class SafeCopierListener extends BaseCopierListener {
 }
 
 class MultiCopierListener extends BaseCopierListener {
-    @Property List<?extends CopierListener> listeners
+    @Accessors List<?extends CopierListener> listeners
     
     new() {}
     

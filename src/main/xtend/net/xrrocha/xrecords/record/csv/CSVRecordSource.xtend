@@ -4,14 +4,15 @@ import au.com.bytecode.opencsv.CSVReader
 import java.io.Reader
 import java.util.List
 import net.xrrocha.xrecords.copier.Source
+import net.xrrocha.xrecords.field.Field
 import net.xrrocha.xrecords.field.IndexedField
 import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.util.Provider
-import net.xrrocha.xrecords.field.Field
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class CSVRecordSource extends CSVBase implements Source<Record> {
-    @Property Provider<Reader> input
-    @Property List<IndexedField<?extends Object>> fields
+    @Accessors Provider<Reader> input
+    @Accessors List<IndexedField<?extends Object>> fields
     
     private CSVReader reader
     private String[] fieldValues

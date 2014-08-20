@@ -4,13 +4,13 @@ import java.sql.Connection
 import java.sql.PreparedStatement
 import java.util.List
 import javax.sql.DataSource
-import org.junit.Test
 import net.xrrocha.xrecords.record.Record
+import org.junit.Test
 
+import static net.xrrocha.xrecords.record.jdbc.Person.*
 import static org.junit.Assert.*
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
-import static net.xrrocha.xrecords.record.jdbc.Person.*
 
 class JDBCRecordDestinationTest extends JDBCRecordTest {
     @Test

@@ -1,6 +1,7 @@
 package net.xrrocha.xrecords.record
 
 import org.junit.Test
+
 import static org.junit.Assert.*
 
 class RecordTest {
@@ -187,8 +188,11 @@ class RecordTest {
         val record = new Record
         record.setField('one', 1)
         record.setField('two', '2')
+        val recordChars = record.toString.toCharArray.toList.sortInplace
         
         val map = #{ 'one' -> 1, 'two' -> '2'}
-        assertEquals(map.toString, record.toString)
+        val mapChars = map.toString.toCharArray.toList.sortInplace
+        
+        assertEquals(mapChars, recordChars)
     }
 }

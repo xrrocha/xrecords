@@ -1,10 +1,10 @@
 package net.xrrocha.xrecords.field
 
 import java.math.BigDecimal
+import java.util.GregorianCalendar
 import org.junit.Test
 
 import static org.junit.Assert.*
-import java.util.GregorianCalendar
 
 public class ParserTest {
     @Test

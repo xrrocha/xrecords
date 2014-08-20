@@ -3,11 +3,12 @@ package net.xrrocha.xrecords.record.csv
 import au.com.bytecode.opencsv.CSVWriter
 import java.util.List
 import net.xrrocha.xrecords.validation.Validatable
+import org.eclipse.xtend.lib.annotations.Accessors
 
 abstract class CSVBase implements Validatable {
-    @Property char separator = ','
-    @Property boolean headerRecord = false
-    @Property char quote = CSVWriter.NO_QUOTE_CHARACTER
+    @Accessors char separator = ','
+    @Accessors boolean headerRecord = false
+    @Accessors char quote = CSVWriter.NO_QUOTE_CHARACTER
 
     override validate(List<String> errors) {
         if (separator == 0) {

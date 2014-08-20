@@ -4,9 +4,10 @@ import java.sql.ResultSet
 import java.util.List
 import net.xrrocha.xrecords.copier.Source
 import net.xrrocha.xrecords.record.Record
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class JDBCRecordSource extends JDBCBase implements Source<Record> {
-    @Property String sqlText
+    @Accessors String sqlText
     
     private ResultSet resultSet
     

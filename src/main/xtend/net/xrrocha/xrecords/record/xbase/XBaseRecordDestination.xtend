@@ -8,11 +8,12 @@ import net.xrrocha.xrecords.copier.Destination
 import net.xrrocha.xrecords.field.Field
 import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.util.Provider
+import org.eclipse.xtend.lib.annotations.Accessors
 
 // TODO Test XBaseRecordDestination
 class XBaseRecordDestination extends XBase implements Destination<Record> {
-    @Property Provider<OutputStream> output
-    @Property List<Field> fields;
+    @Accessors Provider<OutputStream> output
+    @Accessors List<Field> fields;
     
     private var OutputStream os
     private var DBFWriter writer

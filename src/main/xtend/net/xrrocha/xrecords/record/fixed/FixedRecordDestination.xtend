@@ -5,10 +5,11 @@ import java.util.List
 import net.xrrocha.xrecords.copier.Destination
 import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.util.Provider
+import org.eclipse.xtend.lib.annotations.Accessors
 
 // TODO Test FixedRecordDestination
 class FixedRecordDestination extends FixedBase implements Destination<Record> {
-    @Property Provider<Writer> output
+    @Accessors Provider<Writer> output
     
     private char[] buffer
     private var Writer out

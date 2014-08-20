@@ -5,11 +5,12 @@ import java.util.Map
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
 import net.xrrocha.xrecords.validation.Validatable
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class Script implements Validatable {
-    @Property String script
-    @Property String language = DEFAULT_LANGUAGE
-    @Property Map<String, ?extends Object> environment = newHashMap
+    @Accessors String script
+    @Accessors String language = DEFAULT_LANGUAGE
+    @Accessors Map<String, ?extends Object> environment = newHashMap
     
     // TODO Inject utility object into scripts to deal w/records
     // TODO Add per-language prolog/epilog

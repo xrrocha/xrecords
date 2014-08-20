@@ -1,14 +1,15 @@
 package net.xrrocha.xrecords.record.fixed
 
 import java.util.List
+import net.xrrocha.xrecords.field.Field
 import net.xrrocha.xrecords.field.FixedField
 import net.xrrocha.xrecords.validation.Validatable
-import net.xrrocha.xrecords.field.Field
+import org.eclipse.xtend.lib.annotations.Accessors
 
 abstract class FixedBase implements Validatable {
-    @Property int length
-    @Property boolean trim = true
-    @Property List<FixedField<Object>> fields // FIXME FixedField<?extends Object>
+    @Accessors int length
+    @Accessors boolean trim = true
+    @Accessors List<FixedField<Object>> fields // FIXME FixedField<?extends Object>
     
     override validate(List<String> errors) {
         if (length <= 0) {

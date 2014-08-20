@@ -4,18 +4,19 @@ import java.sql.PreparedStatement
 import java.sql.ResultSetMetaData
 import java.sql.SQLException
 import java.util.List
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import net.xrrocha.xrecords.copier.Destination
 import net.xrrocha.xrecords.record.Record
+import org.eclipse.xtend.lib.annotations.Accessors
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 // TODO Allow for field names to be set from first record
 class JDBCRecordDestination extends JDBCBase implements Destination<Record> {
-    @Property String tableName
-    @Property List<String> fieldNames
+    @Accessors String tableName
+    @Accessors List<String> fieldNames
     
-    @Property int batchSize = 1
-    @Property boolean commitOnBatch = false
+    @Accessors int batchSize = 1
+    @Accessors boolean commitOnBatch = false
     
     private var String sqlText
     private var PreparedStatement statement

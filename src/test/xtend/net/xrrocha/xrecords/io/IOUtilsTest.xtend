@@ -1,9 +1,10 @@
 package net.xrrocha.xrecords.io
 
 import java.io.File
-import org.junit.Test
-import static org.junit.Assert.*
 import java.net.URI
+import org.junit.Test
+
+import static org.junit.Assert.*
 
 class IOUtilsTest {
     @Test

@@ -5,9 +5,10 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.URL
 import net.xrrocha.xrecords.util.Provider
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class LocationInputStreamProvider implements Provider<InputStream> {
-    @Property String location
+    @Accessors String location
     
     new() {}
     new (String location) { this.location = location }
@@ -24,7 +25,7 @@ class FtpOutputStreamProvider extends FtpBase implements Provider<OutputStream> 
 }
 
 class FileLocationOutputStreamProvider implements Provider<OutputStream> {
-    @Property String location
+    @Accessors String location
     
     new() {}
     new (String location) { this.location = location }

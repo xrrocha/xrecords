@@ -3,12 +3,13 @@ package net.xrrocha.xrecords.field
 import java.util.List
 import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.validation.Validatable
+import org.eclipse.xtend.lib.annotations.Accessors
 
 import static extension net.xrrocha.xrecords.util.Extensions.*
 
 // Add suport for array fields
 class Field implements Validatable {
-    @Property String name
+    @Accessors String name
     
     override validate(List<String> errors) {
         if (name == null || name.trim.length == 0) {
@@ -37,7 +38,7 @@ class Field implements Validatable {
 }
 
 class FormattedField<T> extends Field {
-    @Property Parser<T> format
+    @Accessors Parser<T> format
     
     def fromString(String s) {
         format.parse(s)
@@ -62,7 +63,7 @@ class FormattedField<T> extends Field {
 }
 
 class IndexedField<T> extends FormattedField<T> {
-    @Property int index
+    @Accessors int index
     
     def getValueFrom(List<String> list) {
         fromString(list.get(index))
@@ -77,8 +78,8 @@ class IndexedField<T> extends FormattedField<T> {
 }
 
 class FixedField<T> extends FormattedField<T> {
-    @Property int offset
-    @Property int length
+    @Accessors int offset
+    @Accessors int length
     
     def get(char[] chars) {
         fromString(new String(chars, offset, length))

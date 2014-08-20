@@ -2,8 +2,8 @@ package net.xrrocha.xrecords.record.jdbc
 
 import org.junit.Test
 
-import static org.junit.Assert.assertEquals
 import static org.junit.Assert.*
+import static org.junit.Assert.assertEquals
 
 class JDBCRecordSourceTest extends JDBCRecordTest {
     @Test

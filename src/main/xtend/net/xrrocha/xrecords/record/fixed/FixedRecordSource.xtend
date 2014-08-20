@@ -6,10 +6,11 @@ import java.util.List
 import net.xrrocha.xrecords.copier.Source
 import net.xrrocha.xrecords.record.Record
 import net.xrrocha.xrecords.util.Provider
+import org.eclipse.xtend.lib.annotations.Accessors
 
 // Test FixedRecordSource
 class FixedRecordSource extends FixedBase implements Source<Record> {
-    @Property Provider<Reader> input
+    @Accessors Provider<Reader> input
     
     private var Reader in
     private char[] buffer

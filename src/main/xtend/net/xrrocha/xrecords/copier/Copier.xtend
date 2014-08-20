@@ -4,6 +4,7 @@ import java.util.ArrayList
 import java.util.Iterator
 import net.xrrocha.xrecords.validation.Validatable
 import net.xrrocha.xrecords.validation.Validator
+import org.eclipse.xtend.lib.annotations.Accessors
 
 import static net.xrrocha.xrecords.validation.ValidationState.*
 
@@ -30,13 +31,12 @@ interface Destination<E> extends Lifecycle {
 // TODO Add record field renaming transformer
 // TODO Add pre/post hooks to Copier (w/scripting implementation)
 class Copier<E> extends SafeCopierListener {
-    @Property Source<E> source
-    @Property Filter<E> filter
-    @Property Transformer<E> transformer
-    @Property Destination<E> destination
+    @Accessors Source<E> source
+    @Accessors Filter<E> filter
+    @Accessors Transformer<E> transformer
+    @Accessors Destination<E> destination
     
-    @Property boolean stopOnError = true
-    @Property CopierListener listener = new LoggingCopierListener
+    @Accessors boolean stopOnError = true
     
     final def copy() {
         validate()
@@ -164,6 +164,7 @@ class Copier<E> extends SafeCopierListener {
 
     private var Iterable<Lifecycle> components 
     private def lifecycleComponents() {
+        // Not thread-safe, ybw
         if (components == null) {
             components = #[source, filter, transformer, destination].
                 filter [it instanceof Lifecycle].

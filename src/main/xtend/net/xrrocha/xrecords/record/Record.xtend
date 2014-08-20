@@ -1,8 +1,8 @@
 package net.xrrocha.xrecords.record
 
+import java.util.Collections
 import java.util.HashMap
 import java.util.Map
-import java.util.Collections
 
 // TODO Allow for array and nested record fields
 class Record {

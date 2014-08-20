@@ -2,10 +2,11 @@ package net.xrrocha.xrecords.record
 
 import java.util.Map
 import net.xrrocha.xrecords.copier.Transformer
+import org.eclipse.xtend.lib.annotations.Accessors
 
 // TODO Validate and test FieldRenamingTransformer
 class FieldRenamingTransformer implements Transformer<Record> {
-    @Property Map<String, String> renames
+    @Accessors Map<String, String> renames
     
     override transform(Record in) {
         val out = new Record
