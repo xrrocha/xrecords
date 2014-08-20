@@ -11,8 +11,8 @@ limited to):
 - XML
 - DBF (Xbase)
 
-Check the [documentation](doc/intro.md) for an discussion of the framework
-design. 
+Check the [blog entry](http://blog.xrrocha.net/2014/08/building-object-oriented-frameworks.html)
+for an discussion of the framework design. 
 
 ```xrecords``` is a [blackbox](http://en.wikipedia.org/wiki/Extensibility#Black-Box_Extensibility)
 framework and thus can be instantiated declaratively, without programming.
