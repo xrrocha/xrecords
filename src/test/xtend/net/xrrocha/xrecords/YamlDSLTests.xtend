@@ -24,9 +24,9 @@ class YamlDSLTests {
                         { index: 1,  name: gender,    format: !string  }
                     ]
                 
-                filter: !script [gender == "M"]
+                filter: !scriptFilter [gender == "M"]
                 
-                transformer: !script |
+                transformer: !scriptTransform |
                   ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})
                 
                 destination: !databaseDestination

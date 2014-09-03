@@ -1,5 +1,8 @@
-net.xrrocha.xrecords.script.ScriptingCopierComponent:
-  tagName: script
+net.xrrocha.xrecords.script.ScriptingFilter:
+  tagName: scriptFilter
+
+net.xrrocha.xrecords.script.ScriptingTransformer:
+  tagName: scriptTransform
 
 net.xrrocha.xrecords.jdbc.JDBCSource:
   tagName: databaseSource

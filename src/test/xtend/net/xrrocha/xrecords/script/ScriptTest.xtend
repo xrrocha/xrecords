@@ -29,7 +29,7 @@ class ScriptTest {
     
     @Test
     def void matches() {
-        val script = new ScriptingCopierComponent => [
+        val script = new ScriptingFilter => [
             script = 'id > 0'
             language = 'javascript'
         ]
@@ -41,7 +41,7 @@ class ScriptTest {
     
     @Test
     def void transforms() {
-        val script = new ScriptingCopierComponent => [
+        val script = new ScriptingTransformer => [
             script = '({code: id * 2})'
             language = 'javascript'
         ]
