@@ -1,7 +1,7 @@
 package net.xrrocha.xrecords.field
 
 import java.util.GregorianCalendar
-import net.xrrocha.xrecords.record.Record
+import net.xrrocha.xrecords.Record
 import org.junit.Test
 
 import static org.junit.Assert.*

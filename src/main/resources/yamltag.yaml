@@ -1,43 +1,43 @@
 net.xrrocha.xrecords.script.ScriptingCopierComponent:
   tagName: script
 
-net.xrrocha.xrecords.record.jdbc.JDBCRecordSource:
+net.xrrocha.xrecords.jdbc.JDBCSource:
   tagName: databaseSource
 
-net.xrrocha.xrecords.record.jdbc.SQLRecordDestination:
+net.xrrocha.xrecords.jdbc.SQLDestination:
   tagName: sqlInsert
   listProperties:
     fields: net.xrrocha.xrecords.field.FormattedField
 
-net.xrrocha.xrecords.record.jdbc.JDBCRecordDestination:
+net.xrrocha.xrecords.jdbc.JDBCDestination:
   tagName: databaseDestination
 
-net.xrrocha.xrecords.record.csv.CSVRecordSource:
+net.xrrocha.xrecords.csv.CSVSource:
   tagName: csvSource
   listProperties:
     fields: net.xrrocha.xrecords.field.IndexedField
 
-net.xrrocha.xrecords.record.csv.CSVRecordDestination:
+net.xrrocha.xrecords.csv.CSVDestination:
   tagName: csvDestination
   listProperties:
     fields: net.xrrocha.xrecords.field.FormattedField
 
-net.xrrocha.xrecords.record.fixed.FixedRecordSource:
+net.xrrocha.xrecords.fixed.FixedSource:
   tagName: fixedLengthSource
   listProperties:
     fields: net.xrrocha.xrecords.field.FixedField
 
-net.xrrocha.xrecords.record.fixed.FixedRecordDestination:
+net.xrrocha.xrecords.fixed.FixedDestination:
   tagName: fixedLengthDestination
   listProperties:
     fields: net.xrrocha.xrecords.field.FixedField
 
-net.xrrocha.xrecords.record.xbase.XBaseRecordDestination:
+net.xrrocha.xrecords.xbase.XBaseDestination:
   tagName: xbaseDestination
   listProperties:
     fields: net.xrrocha.xrecords.field.Field
 
-net.xrrocha.xrecords.record.xbase.XBaseRecordSource:
+net.xrrocha.xrecords.xbase.XBaseSource:
   tagName: xbaseSource
 
 net.xrrocha.xrecords.field.Field:

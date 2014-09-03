@@ -2,10 +2,9 @@ package net.xrrocha.xrecords
 
 import java.io.File
 import java.io.FileReader
-import net.xrrocha.xrecords.copier.Copier
 import net.xrrocha.yamltag.DefaultYamlFactory
 
-// TODO Add classpath options to Main?
+// TODO Add classpath options to Main
 // TODO Expand yaml content with variables set from CLI (e.g. --myValue=someValue)
 class Main {
     def static void main(String[] args) {

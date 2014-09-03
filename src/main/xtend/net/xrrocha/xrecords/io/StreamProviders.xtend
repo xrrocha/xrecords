@@ -1,5 +1,6 @@
 package net.xrrocha.xrecords.io
 
+import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
@@ -32,5 +33,11 @@ class FileLocationOutputStreamProvider implements Provider<OutputStream> {
     
     override provide() {
         new FileOutputStream(location)
+    }
+}
+
+class ByteArrayOutputStreamProvider implements Provider<OutputStream> {
+    override provide() {
+        new ByteArrayOutputStream
     }
 }

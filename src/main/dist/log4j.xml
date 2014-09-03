@@ -12,11 +12,11 @@
         <level value="info" />
         <appender-ref ref="console" />
     </logger>
-    <logger name="net.xrrocha.xrecords.record.csv">
+    <logger name="net.xrrocha.xrecords.csv">
         <level value="info" />
         <appender-ref ref="console" />
     </logger>
-    <logger name="net.xrrocha.xrecords.record.jdbc">
+    <logger name="net.xrrocha.xrecords.jdbc">
         <level value="info" />
         <appender-ref ref="console" />
     </logger>

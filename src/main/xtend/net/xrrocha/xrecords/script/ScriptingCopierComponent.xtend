@@ -1,13 +1,12 @@
 package net.xrrocha.xrecords.script
 
 import java.util.Map
-import net.xrrocha.xrecords.copier.Filter
-import net.xrrocha.xrecords.copier.Transformer
-import net.xrrocha.xrecords.record.Record
+import net.xrrocha.xrecords.Filter
+import net.xrrocha.xrecords.Transformer
+import net.xrrocha.xrecords.Record
 
-class ScriptingCopierComponent extends Script implements Filter<Record>, Transformer<Record> {
-    new() {
-    }
+class ScriptingCopierComponent extends Script implements Filter, Transformer {
+    new() {}
 
     new(String script) {
         super(script)
@@ -22,7 +21,7 @@ class ScriptingCopierComponent extends Script implements Filter<Record>, Transfo
     }
 
     override matches(Record record) {
-        val result = super.execute(record.toMap)
+        val result = execute(record)
 
         switch (result) {
             Boolean:
@@ -33,7 +32,7 @@ class ScriptingCopierComponent extends Script implements Filter<Record>, Transfo
     }
 
     override transform(Record record) {
-        val result = super.execute(record.toMap)
+        val result = execute(record)
 
         switch (result) {
             Record:
@@ -47,4 +46,10 @@ class ScriptingCopierComponent extends Script implements Filter<Record>, Transfo
         }
     }
 
+    def execute(Record record) {
+        val scriptRecord = new Record => [
+            copyFrom(record)
+        ]
+        super.execute(scriptRecord.toMap)
+    }
 }

@@ -8,6 +8,61 @@ import static org.junit.Assert.*
 
 public class ParserTest {
     @Test
+    def void parsesBoolean() {
+        val parser = new BooleanParser
+        val trueValues = #['true', 'yes', 'on']
+        val falseValues = #['false', 'no', 'off']
+
+        assertTrue(trueValues.forall[parser.parse(it)])    
+        assertTrue(trueValues.forall[parser.parse(it.toUpperCase)])    
+
+        assertTrue(falseValues.forall[!parser.parse(it)])    
+        assertTrue(falseValues.forall[!parser.parse(it.toUpperCase)])    
+
+        assertEquals('true', parser.format(true))    
+        assertEquals('false', parser.format(false))    
+    }
+    
+    @Test
+    def void parsesProvidedBoolean() {
+        val parser = new BooleanParser => [
+            trueRepresentation = 'oui'
+            falseRepresentation = 'non'
+            representations = #{
+                'sí' -> true,
+                'no' -> false,
+                'sim' -> true,
+                'não' -> false,
+                'non' -> false,
+                'yes' -> true
+            }
+        ]
+        val trueValues = #['sí', 'sim', 'yes']
+        val falseValues = #['no', 'não', 'non']
+
+        assertTrue(trueValues.forall[parser.parse(it)])    
+        assertTrue(trueValues.forall[parser.parse(it.toUpperCase)])    
+
+        assertTrue(falseValues.forall[!parser.parse(it)])    
+        assertTrue(falseValues.forall[!parser.parse(it.toUpperCase)])    
+
+        assertEquals('oui', parser.format(true))    
+        assertEquals('non', parser.format(false))    
+    }
+    
+    @Test
+    def void rejectsInvalidBooleans() {
+        val parser = new BooleanParser
+        val values = #['nothing', null]
+        values.forEach[
+            try {
+                parser.parse(it)
+                fail('parse() should have failed')
+            } catch (IllegalArgumentException e) {}
+        ]
+    }
+    
+    @Test
     def void parsesDefaultInteger() {
         val parser = new IntegerParser
         assertEquals(123, parser.parse('0123'))
@@ -18,6 +73,12 @@ public class ParserTest {
         val parser = new IntegerParser('###,###')
         assertEquals(123456, parser.parse('123,456'))
         assertEquals('123,456', parser.format(123456))
+    }
+    @Test
+    def void parsesIntegerWithMultiplier() {
+        val parser = new IntegerParser('###,###', 100)
+        assertEquals(1234, parser.parse('123,456'))
+        assertEquals('12,345,600', parser.format(123456))
     }
 
     @Test
@@ -32,6 +93,12 @@ public class ParserTest {
         assertEquals(123456d, parser.parse('123,456'), 0d)
         assertEquals('123,456', parser.format(123456d))
     }
+    @Test
+    def void parsesDoubleWithMultiplier() {
+        val parser = new DoubleParser('######', 100)
+        assertEquals(1234.56d, parser.parse('123456'), 0d)
+        assertEquals('12345600', parser.format(123456d))
+    }
 
     @Test
     def void parsesDefaultBigDecimal() {
@@ -44,6 +111,12 @@ public class ParserTest {
         val parser = new BigDecimalParser('###,###.##')
         assertEquals(new BigDecimal('123456.78'), parser.parse('123,456.78'))
         assertEquals('123,456.78', parser.format(new BigDecimal('123456.78')))
+    }
+    @Test
+    def void parsesBigDecimalWithMultiplier() {
+        val parser = new BigDecimalParser('######', 100)
+        assertEquals(new BigDecimal('1234.56'), parser.parse('123456'))
+        assertEquals('12345600', parser.format(new BigDecimal('123456')))
     }
 
     @Test

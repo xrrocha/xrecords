@@ -8,15 +8,19 @@
 			<param name="ConversionPattern" value="%-5p %c{1} - %m%n" />
 		</layout>
 	</appender>
-    <logger name="net.xrrocha.xrecords.copier">
+    <logger name="net.xrrocha.xrecords">
         <level value="debug" />
         <appender-ref ref="console" />
     </logger>
-    <logger name="net.xrrocha.xrecords.record.csv">
+    <logger name="net.xrrocha.xrecords.csv">
         <level value="debug" />
         <appender-ref ref="console" />
     </logger>
-    <logger name="net.xrrocha.xrecords.record.jdbc">
+    <logger name="net.xrrocha.xrecords.fixed">
+        <level value="debug" />
+        <appender-ref ref="console" />
+    </logger>
+    <logger name="net.xrrocha.xrecords.jdbc">
         <level value="debug" />
         <appender-ref ref="console" />
     </logger>

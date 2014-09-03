@@ -4,84 +4,106 @@ import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Map
+import org.eclipse.xtend.lib.annotations.Accessors
 
-// TODO Add boolean parser
 interface Parser<T> {
     def T parse(String string)
     def String format(T item)    
 }
 
-class IntegerParser implements Parser<Integer> {
-    val DecimalFormat format
-    
-    new() {
-        this('############')
+class BooleanParser implements Parser<Boolean> {
+    @Accessors String trueRepresentation = 'true'
+    @Accessors String falseRepresentation = 'false'
+    @Accessors Map<String, Boolean> representations = #{
+        'true'  -> true,
+        'false' -> false,
+        'yes'   -> true,
+        'no'    -> false,
+        'on'    -> true,
+        'off'   -> false
     }
     
+    override parse(String string) {
+        try {
+            representations.get(string.toLowerCase).booleanValue
+        } catch (NullPointerException npe) {
+            throw new IllegalArgumentException('''Invalid boolean value: «string»''')
+        }
+    }
+    
+    override format(Boolean item) {
+        if (item) trueRepresentation
+        else falseRepresentation    
+    }
+}
+
+abstract class NumericParser<N extends Number> {
+    protected val DecimalFormat format
+    
+    abstract def void configureFormat(DecimalFormat format)
+    
     new(String pattern) {
-        format = new DecimalFormat(pattern) => [
+        this(pattern, 1)
+    }
+    
+    new(String pattern, int multiplier) {
+        format = new DecimalFormat(pattern)
+        format.multiplier = multiplier
+        configureFormat(format)
+    }
+
+    def N parse(String string) {
+        cast(format.parse(string))
+    }
+    
+    def String format(N value) {
+        format.format(value)
+    }
+    
+    def N cast(Number value) {
+        value as N
+    }
+}
+
+class IntegerParser extends NumericParser<Integer> implements Parser<Integer> {
+    new() { super('##########') }
+    new(String pattern) { super(pattern) }
+    new(String pattern, int multiplier) { super(pattern, multiplier) }
+    
+    override configureFormat(DecimalFormat format) {
+        format => [
             parseIntegerOnly = true
             parseBigDecimal = false
         ]
     }
-    
-    new(String pattern, int multiplier) {
-        this(pattern)
-        format.multiplier = multiplier
-    }
-
-    override Integer parse(String string) {
-        format.parse(string).intValue
-    }
-    
-    override String format(Integer value) {
-        format.format(value)
-    }
+    override cast(Number value) { value.intValue }
 }
 
-class DoubleParser implements Parser<Double> {
-    val DecimalFormat format
+class DoubleParser extends NumericParser<Double> implements Parser<Double> {
+    new() { super('############.##') }
+    new(String pattern) { super(pattern) }
+    new(String pattern, int multiplier) { super(pattern, multiplier) }
     
-    new() {
-        this('############.##')
-    }
-    
-    new(String pattern) {
-        format = new DecimalFormat(pattern) => [
+    override configureFormat(DecimalFormat format) {
+        format => [
             parseIntegerOnly = false
             parseBigDecimal = false
         ]
     }
-
-    override Double parse(String string) {
-        format.parse(string).doubleValue
-    }
-    
-    override String format(Double value) {
-        format.format(value)
-    }
+    override cast(Number value) { value.doubleValue }
 }
 
-class BigDecimalParser implements Parser<BigDecimal> {
-    val DecimalFormat format
+class BigDecimalParser extends NumericParser<BigDecimal> implements Parser<BigDecimal> {
+    new() { super('############.##') }
+    new(String pattern) { super(pattern) }
+    new(String pattern, int multiplier) { super(pattern, multiplier) }
     
-    new() {
-        this('############.##')
-    }
-    
-    new(String pattern) {
-        format = new DecimalFormat(pattern) => [
+    override configureFormat(DecimalFormat format) {
+        format => [
             parseIntegerOnly = false
             parseBigDecimal = true
         ]
-    }
-
-    override BigDecimal parse(String string) {
-        format.parse(string) as BigDecimal
-    }
-    
-    override String format(BigDecimal value) {
-        format.format(value)
     }
 }
 
@@ -106,8 +128,7 @@ class DateParser implements Parser<Date> {
 }
 
 class StringParser implements Parser<String> {
-    new() {
-    }
+    new() {}
     
     new(String pattern) {
     }

@@ -30,14 +30,11 @@ class LocationReaderProvider implements Provider<Reader> {
     new (String location) { this.location = location }
     
     override provide() {
-        val provider = new LocationInputStreamProvider => [
-            location = LocationReaderProvider.this.location
-        ]
+        val provider = new LocationInputStreamProvider(location)
         new InputStreamReader(provider.provide)
     }
 }
 
-// TODO Test providers
 class StringWriterProvider implements Provider<Writer> {
     private var StringWriter stringWriter
     

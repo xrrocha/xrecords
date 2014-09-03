@@ -72,6 +72,31 @@ class FtpOutputStreamProviderTest {
         }
     }
     
+    @Test
+    def void providesFtpWriter() {
+        startServer()
+        
+        val filePath = '/file.txt'
+        val file = new File(userDirectory, filePath)
+        file.delete()
+        file.deleteOnExit()
+        assertFalse(file.exists())
+        
+        try {
+        val provider = new FtpWriterProvider => [
+                host = 'localhost'
+                port = serverPort
+                user = userName
+                password = userPassword
+                path = filePath
+        ]
+        assertNotNull(provider.provide)
+        } finally {
+            file.delete()
+            stopServer()
+        }
+    }
+    
     static def startServer() {
         val userPropertyFile = File.createTempFile('users', '.properties')
         userPropertyFile.deleteOnExit()

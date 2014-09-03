@@ -1,7 +1,7 @@
 package net.xrrocha.xrecords.field
 
 import java.util.List
-import net.xrrocha.xrecords.record.Record
+import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.validation.Validatable
 import org.eclipse.xtend.lib.annotations.Accessors
 
