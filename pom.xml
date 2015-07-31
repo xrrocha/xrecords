@@ -19,8 +19,11 @@
 			<artifactId>javadbf</artifactId>
 			<version>${javadbf.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-csv</artifactId> 
-			<version>1.1</version> </dependency> -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>${commons-csv.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
@@ -82,14 +85,8 @@
 			<version>${commons-dbcp.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-dbcp2</artifactId>
-			<version>${commons-dbcp2.version}</version>
-			<scope>test</scope>
-		</dependency>
-		-->
+		<!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-dbcp2</artifactId> 
+			<version>${commons-dbcp2.version}</version> <scope>test</scope> </dependency> -->
 		<dependency>
 			<groupId>org.apache.ftpserver</groupId>
 			<artifactId>ftpserver-core</artifactId>

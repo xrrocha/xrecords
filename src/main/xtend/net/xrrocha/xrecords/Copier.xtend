@@ -27,6 +27,48 @@ interface Lifecycle {
 
 interface Source extends Iterator<Record>, Lifecycle {}
 
+class DelegatingSource implements Source {
+	final Source source
+	final CopierListener listener
+
+	private var count = 0
+	
+	new(Source source, CopierListener listener) {
+		this.source = source
+		this.listener = listener
+	}
+	
+	override open() {
+		try {
+			source.open()
+			listener.onSourceOpen(source)
+		} catch (Exception e) {
+			listener.onSourceOpenError(source, e)
+		}
+	}
+	
+	override boolean hasNext() {
+		source.hasNext
+	}
+	
+	override next() {
+		count++
+		val record = source.next
+		record
+	}
+	
+	override close(Stats stats) {
+		try {
+			source.close(stats)
+			listener.onSourceClose(source, stats)
+		} catch(Exception e) {
+			listener.onSourceCloseError(source, stats, e)
+		}
+	}
+	
+	def recordsRead() { count }
+}
+
 interface Filter {
     def boolean matches(Record record)
 
@@ -34,6 +76,34 @@ interface Filter {
         override matches(Record record) { true }
     }
 }
+
+class DelegatingFilter implements Filter {
+	final Filter filter
+	final CopierListener listener
+
+	private var count = 0
+	
+	new(Filter filter, CopierListener listener) {
+		this.filter = filter
+		this.listener = listener
+	}
+	
+	override matches(Record record) {
+		try {
+			val matches = filter.matches(record)
+			if (matches) {
+				count++
+			}
+			listener.onFilter(filter, record, matches, count)
+			matches
+		} catch (Exception e) {
+			listener.onFilterError(filter, record, count, e)
+			throw e
+		}
+	}
+	
+	def recordsSkipped() { count }
+} 
 
 interface Transformer {
     def Record transform(Record record)
@@ -43,161 +113,111 @@ interface Transformer {
     }
 }
 
+class DelegatingTransformer implements Transformer {
+	final Transformer transformer
+	final CopierListener listener
+	
+	private var count = 0
+	
+	new(Transformer transformer, CopierListener listener) {
+		this.transformer = transformer
+		this.listener = listener
+	}
+	
+	override def transform(Record record) {
+		count++
+		try {
+			val transformedRecord = transformer.transform(record)
+			listener.onTransform(transformer, record, transformedRecord, count)
+			transformedRecord
+		} catch (Exception e) {
+			listener.onTransformError(transformer, record, count, e)
+			throw e
+		}
+	}
+}
+
 interface Destination extends Lifecycle {
     def void put(Record record)
 }
 
-// TODO Add pre/post hooks to Copier (w/scripting implementation)
-class Copier extends SafeCopierListener {
-    @Accessors Source source
-    @Accessors Filter filter = Filter.nullFilter
-    @Accessors Transformer transformer = Transformer.nullTransformer
-    @Accessors Destination destination
+class DelegatingDestination implements Destination {
+	final Destination destination
+	final CopierListener listener
+	final boolean stopOnError
+	
+	private var count = 0
+	
+	new(Destination destination, CopierListener listener, boolean stopOnError) {
+		this.destination = destination
+		this.listener = listener
+		this.stopOnError = stopOnError
+	}
+	
+	override open() {
+		try {
+			destination.open()
+			listener.onDestinationOpen(destination)
+		} catch (Exception e) {
+			listener.onDestinationOpenError(destination, e)
+			throw e
+		}
+	}	
+	
+	override put(Record record) {
+		count++
+		try {
+			destination.put(record)
+			listener.onPut(destination, record, count)
+		} catch (Exception e) {
+			listener.onPutError(destination, record, count, e)
+			if (stopOnError) {
+				throw e
+			}
+		}
+	}
+	
+	override close(Stats stats) {
+		try {
+			destination.close(stats)
+			listener.onDestinationClose(destination, stats)
+		} catch (Exception e) {
+			listener.onDestinationCloseError(destination, stats, e)
+		}
+	}
+}
 
-    @Accessors boolean stopOnError = true
+// TODO Add pre/post hooks to Copier (w/scripting implementation)
+@Accessors
+class Copier extends SafeCopierListener {
+    Source source
+    Filter filter = Filter.nullFilter
+    Transformer transformer = Transformer.nullTransformer
+    Destination destination
+
+	// TODO Add tally and copy of bad records
+    boolean stopOnError = true
+    
+    val listener = new SafeCopierListener
 
     final def copy() {
         validate()
+        
+        val source = new DelegatingSource(this.source, listener)
+        val filter = new DelegatingFilter(this.filter, listener)
+        val transformer = new DelegatingTransformer(this.transformer, listener)
+        val destination = new DelegatingDestination(this.destination, listener, stopOnError)
 
-        open()
-
-        var recordsRead = 0
-        var recordsSkipped = 0
-
+        #[source, destination].forEach[open]
+        	
         try {
-            while (hasNext(recordsRead)) {
-                try {
-                    val element = next(recordsRead)
-
-                    if (filter(element, recordsRead)) {
-                        val transformedRecord = transform(element, recordsRead)
-                        put(transformedRecord, recordsRead)
-                    } else {
-                        recordsSkipped += 1
-                    }
-                } catch (Exception e) {
-                    if (stopOnError) {
-                        onStop(e, recordsRead)
-                        throw e
-                    }
-                }
-
-                recordsRead = recordsRead + 1
-            }
+	        source.
+	        	filter[filter.matches(it)].
+	        	map[transformer.transform(it)].
+	        	forEach[destination.put(it)]
         } finally {
-            close(recordsRead, recordsSkipped)
-        }
-    }
-
-    private def open() {
-        try {
-            source.open()
-            onSourceOpen(source)
-        } catch (Exception e) {
-            onSourceOpenError(source, e)
-            throw e
-        }
-
-        try {
-            destination.open()
-            onDestinationOpen(destination)
-        } catch (Exception d) {
-            onDestinationOpenError(destination, d)
-            try {
-                source.close(Stats.ZERO_STATS)
-                onSourceClose(source, Stats.ZERO_STATS)
-            } catch (Exception s) {
-                onSourceCloseError(source, Stats.ZERO_STATS, s)
-            }
-            throw d
-        }
-    }
-
-    private def hasNext(int index) {
-        try {
-            source.hasNext
-        } catch (Exception e) {
-            onHasNextError(source, index, e)
-            if (stopOnError) {
-                onStop(e, index)
-            }
-            throw e
-        }
-    }
-
-    private def next(int index) {
-        try {
-            val record = source.next
-            onNext(source, record, index)
-            record
-        } catch (Exception e) {
-            onNextError(source, index, e)
-            throw e
-        }
-    }
-
-    private def filter(Record record, int index) {
-        if (filter == null || filter == Filter.nullFilter) {
-            true
-        } else {
-            try {
-                val matches = filter.matches(record)
-                onFilter(filter, record, matches, index)
-                matches
-            } catch (Exception e) {
-                onFilterError(filter, record, index, e)
-                throw e
-            }
-        }
-    }
-
-    private def transform(Record record, int index) {
-        if (transformer == null || transformer == Transformer.nullTransformer) {
-            record
-        } else {
-            try {
-                val transformedRecord = transformer.transform(record)
-                onTransform(transformer, record, transformedRecord, index)
-                transformedRecord
-            } catch (Exception e) {
-                onTransformError(transformer, record, index, e)
-                throw e
-            }
-        }
-    }
-
-    private def put(Object destinationHandler, Record record, int index) {
-        try {
-            destination.put(record)
-            onPut(destination, record, index)
-        } catch (Exception e) {
-            onPutError(destination, record, index, e)
-            throw e
-        }
-    }
-
-    private def close(int recordsRead, int recordsSkipped) {
-        val stats = new Stats(recordsRead, recordsSkipped)
-        val destinationSuccess = try {
-            destination.close(stats)
-            onDestinationClose(destination, stats)
-            true
-        } catch (Exception e) {
-            onDestinationCloseError(destination, stats, e)
-            false
-        }
-
-        val sourceSuccess = try {
-            source.close(stats)
-            onSourceClose(source, stats)
-            true
-        } catch (Exception e) {
-            onSourceCloseError(source, stats, e)
-            false
-        }
-
-        if (!(destinationSuccess && sourceSuccess)) {
-            throw new IllegalStateException('Error closing source/destination')
+        	val stats = new Stats(source.recordsRead, filter.recordsSkipped)
+        	#[source, destination].forEach[close(stats)]
         }
     }
 

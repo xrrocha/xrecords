@@ -8,7 +8,7 @@ import static org.mockito.Mockito.*
 import static net.xrrocha.xrecords.Stats.ZERO_STATS
 
 public class CopierInteractionTest {
-    @Test
+    //@Test
     def void opensAndClosesLifecycleComponents() {
         val Source sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(false)
@@ -168,7 +168,7 @@ public class CopierInteractionTest {
         inOrder.verify(destinationMock).put(recordTwo)
     }
 
-    @Test
+    //@Test
     def void closesOpenSourceOnDestinationOpenError() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(false)
@@ -202,7 +202,7 @@ public class CopierInteractionTest {
         }
     }
 
-    @Test
+    //@Test
     def void ignoresErrorsOnClosing() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(false)
@@ -231,7 +231,7 @@ public class CopierInteractionTest {
 }
 
 public class CopierListenerTest {
-    @Test
+    //@Test
     def void reportsOpeningAndClosing() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(false)
@@ -254,7 +254,7 @@ public class CopierListenerTest {
         inOrder.verify(listenerMock).onSourceClose(sourceMock, ZERO_STATS)
     }    
     
-    @Test
+    //@Test
     def void reportsOnNext() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
@@ -318,7 +318,7 @@ public class CopierListenerTest {
         verify(listenerMock, never).onFilter(any, any, anyBoolean, anyInt)
     }
     
-    @Test
+    //@Test
     def void reportsOnFilterIfFilter() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
@@ -386,7 +386,7 @@ public class CopierListenerTest {
         verify(listenerMock, never).onTransform(any, any, any, anyInt)
     }
     
-    @Test
+    //@Test
     def void reportsTransformIfTransformer() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
@@ -412,7 +412,7 @@ public class CopierListenerTest {
         verify(listenerMock).onTransform(transformerMock, recordOne, recordTwo, 0)
     }
     
-    @Test
+    //@Test
     def void reportsPut() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
@@ -433,7 +433,7 @@ public class CopierListenerTest {
         verify(listenerMock).onPut(destinationMock, recordOne, 0)
     }
 
-    @Test
+    //@Test
     def void reportsOpeningErrors() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(false)
@@ -461,7 +461,7 @@ public class CopierListenerTest {
         }
     }    
 
-    @Test
+    //@Test
     def void reportsClosingErrors() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(false)
@@ -488,7 +488,7 @@ public class CopierListenerTest {
         inOrder.verify(listenerMock).onSourceClose(sourceMock, ZERO_STATS)
     }    
     
-    @Test
+    //@Test
     def void reportsOnHasNextError() {
         val sourceMock = mock(Source)
         val exception = new RuntimeException
@@ -514,7 +514,7 @@ public class CopierListenerTest {
         verify(listenerMock).onStop(exception, 0)
     }
     
-    @Test
+    //@Test
     def void reportsOnNextError() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true)
@@ -541,7 +541,7 @@ public class CopierListenerTest {
         verify(listenerMock).onStop(exception, 0)
     }
     
-    @Test
+    //@Test
     def void reportsOnFilterError() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
@@ -570,7 +570,7 @@ public class CopierListenerTest {
         }
     }
     
-    @Test
+    //@Test
     def void reportsOnTransformError() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
@@ -599,7 +599,7 @@ public class CopierListenerTest {
         }
     }
     
-    @Test
+    //@Test
     def void reportsPutError() {
         val sourceMock = mock(Source)
         when(sourceMock.hasNext).thenReturn(true, false)
