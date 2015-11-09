@@ -57,7 +57,7 @@ class FormattedFieldTest {
     @Test
     def void parsesWithFormat() {
         val field = new FormattedField<Integer> => [
-            format = new IntegerParser('###,###')
+            parser = new IntegerParser('###,###')
         ]
         assertEquals(12345, field.fromString('12,345'))
         assertEquals('12,345', field.toString(12345))
@@ -68,7 +68,7 @@ class FormattedFieldTest {
         val date = new GregorianCalendar(1955, 3, 18).time
         val field = new FormattedField => [
             name = 'date'
-            format = new DateParser('yyy/MM/dd')
+            parser = new DateParser('yyy/MM/dd')
         ]
         val record = new Record => [
             setField('date', date)
@@ -80,7 +80,7 @@ class FormattedFieldTest {
     def void formatsNullValueFromRecord() {
         val field = new FormattedField => [
             name = 'string'
-            format = new StringParser
+            parser = new StringParser
         ]
         val record = new Record => [
             setField('string', null)
@@ -94,7 +94,7 @@ class IndexedFieldTest {
     def void validatesIndex() {
         val field = new IndexedField => [
             name = 'someName'
-            format = new StringParser
+            parser = new StringParser
             index = -123
         ]
         val errors = newLinkedList
@@ -106,7 +106,7 @@ class IndexedFieldTest {
     def void extractsFieldByIndex() {
         val field = new IndexedField<Integer> => [
             index = 2
-            format = new IntegerParser('###,###')
+            parser = new IntegerParser('###,###')
         ]
         val values = #['Spongebob', '1/1/1980', '1,234']
         assertEquals(1234, field.getValueFrom(values))
@@ -118,7 +118,7 @@ class FixedFieldTest {
     def void validatesOffsetAndLength() {
         val field = new FixedField => [
             name = 'someName'
-            format = new StringParser
+            parser = new StringParser
             offset = -123
             length = 0
         ]
@@ -133,7 +133,7 @@ class FixedFieldTest {
     @Test
     def void getsValueProperly() {
         val field = new FixedField<Integer> => [
-            format = new IntegerParser('###,###')
+            parser = new IntegerParser('###,###')
             offset = 4
             length = 6
         ]
@@ -146,7 +146,7 @@ class FixedFieldTest {
     @Test
     def void putsValueProperly() {
         val field = new FixedField<Integer> => [
-            format = new IntegerParser('###,###')
+            parser = new IntegerParser('###,###')
             offset = 4
             length = 6
         ]
@@ -160,7 +160,7 @@ class FixedFieldTest {
     @Test
     def void rejectsTooLongParsedString() {
         val field = new FixedField<Integer> => [
-            format = new IntegerParser('###,###')
+            parser = new IntegerParser('###,###')
             offset = 4
             length = 6
         ]

@@ -4,7 +4,7 @@
 
     <groupId>net.xrrocha</groupId>
     <artifactId>xrecords</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Tabular Record Conversion Framework - Xtend</name>
 
@@ -21,7 +21,7 @@
         <yamltag.version>1.0.0</yamltag.version>
         <javadbf.version>0.4.0</javadbf.version>
         <opencsv.version>2.3</opencsv.version>
-        <!-- <commons-csv.version>1.1</commons-csv.version> -->
+        <commons-csv.version>1.1</commons-csv.version>
         <pojomatic.version>2.0.1</pojomatic.version>
         <slf4j.version>1.7.12</slf4j.version>
 
@@ -51,13 +51,11 @@
             <artifactId>javadbf</artifactId>
             <version>${javadbf.version}</version>
         </dependency>
-<!--
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>${commons-csv.version}</version>
         </dependency>
--->
         <dependency>
             <groupId>net.sf.opencsv</groupId>
             <artifactId>opencsv</artifactId>

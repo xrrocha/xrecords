@@ -21,25 +21,25 @@ class FixedDestinationTest {
             fields = cast(#[
                 new FixedField => [
                     name = 'code'
-                    format = new IntegerParser('000')
+                    parser = new IntegerParser('000')
                     offset = 0
                     length = 3
                 ],
                 new FixedField => [
                     name = 'desc'
-                    format = new StringParser
+                    parser = new StringParser
                     offset = 3
                     length = 24
                 ],
                 new FixedField => [
                     name = 'qty'
-                    format = new IntegerParser('0000')
+                    parser = new IntegerParser('0000')
                     offset = 27
                     length = 4
                 ],
                 new FixedField => [
                     name = 'price'
-                    format = new DoubleParser('000000', 100)
+                    parser = new DoubleParser('000000', 100)
                     offset = 31
                     length = 6
                 ]

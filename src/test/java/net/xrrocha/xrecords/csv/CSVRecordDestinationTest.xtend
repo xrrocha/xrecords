@@ -36,15 +36,15 @@ class CSVDestinationTest {
             fields = #[
                 new FormattedField<String> => [
                     name = 'name'
-                    format = new StringParser
+                    parser = new StringParser
                 ],
                 new FormattedField<Date> => [
                     name = 'birthdate'
-                    format = new DateParser('dd/MM/yyyy')
+                    parser = new DateParser('dd/MM/yyyy')
                 ],
                 new FormattedField<Integer> => [
                     name = 'count'
-                    format = new IntegerParser('#,###')
+                    parser = new IntegerParser('#,###')
                 ]
             ].cast
         ]
@@ -65,15 +65,15 @@ class CSVDestinationTest {
             fields = #[
                 new FormattedField<String> => [
                     name = 'name'
-                    format = new StringParser
+                    parser = new StringParser
                 ],
                 new FormattedField<Date> => [
                     name = 'birthdate'
-                    format = new DateParser('dd/MM/yyyy')
+                    parser = new DateParser('dd/MM/yyyy')
                 ],
                 new FormattedField<Integer> => [
                     name = 'count'
-                    format = new IntegerParser('#,###')
+                    parser = new IntegerParser('#,###')
                 ]
             ].cast
         ]
@@ -111,15 +111,15 @@ class CSVDestinationTest {
             fields = #[
                 new FormattedField<String> => [
                     name = 'name'
-                    format = new StringParser
+                    parser = new StringParser
                 ],
                 new FormattedField<Date> => [
                     name = 'birthdate'
-                    format = new DateParser('dd/MM/yyyy')
+                    parser = new DateParser('dd/MM/yyyy')
                 ],
                 new FormattedField<Integer> => [
                     name = 'count'
-                    format = new IntegerParser('#,###')
+                    parser = new IntegerParser('#,###')
                 ]
             ].cast
         ]

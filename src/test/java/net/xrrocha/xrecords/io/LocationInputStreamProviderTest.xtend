@@ -9,7 +9,6 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import org.junit.Test
 
-import static net.xrrocha.xrecords.io.LocationInputStreamProviderTest.*
 import static org.junit.Assert.*
 
 class LocationInputStreamProviderTest {

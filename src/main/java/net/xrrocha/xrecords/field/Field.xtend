@@ -36,14 +36,14 @@ class Field implements Validatable {
 }
 
 class FormattedField<T> extends Field {
-    @Accessors Parser<T> format
+    @Accessors Parser<T> parser
     
     def fromString(String s) {
-        format.parse(s)
+        parser.parse(s)
     }
     
     def toString(T t) {
-        format.format(t)
+        parser.format(t)
     }
     
     def formatValueFrom(Record record) {
@@ -54,7 +54,7 @@ class FormattedField<T> extends Field {
     
     override validate(List<String> errors) {
         super.validate(errors)
-        if (format == null) {
+        if (parser == null) {
             errors.add('Missing field format')
         }
     }

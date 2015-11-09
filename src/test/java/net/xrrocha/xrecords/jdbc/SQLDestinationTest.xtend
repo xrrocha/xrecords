@@ -54,15 +54,15 @@ class SQLDestinationTest {
             fields = #[
                 new FormattedField<String> => [
                     name = 'name'
-                    format = new StringParser
+                    parser = new StringParser
                 ],
                 new FormattedField<Integer> => [
                     name = 'count'
-                    format = new IntegerParser
+                    parser = new IntegerParser
                 ],
                 new FormattedField<Date> => [
                     name = 'birthdate'
-                    format = new DateParser('dd-MMM-yyy')
+                    parser = new DateParser('dd-MMM-yyy')
                 ]
             ].map[it as Object].map[it as FormattedField<Object>] // uff!
         ]
@@ -110,15 +110,15 @@ class SQLDestinationTest {
             fields = #[
                 new FormattedField<String> => [
                     name = 'name'
-                    format = new StringParser
+                    parser = new StringParser
                 ],
                 new FormattedField<Integer> => [
                     name = 'count'
-                    format = new IntegerParser
+                    parser = new IntegerParser
                 ],
                 new FormattedField<Date> => [
                     name = 'birthdate'
-                    format = new DateParser('dd-MMM-yyy')
+                    parser = new DateParser('dd-MMM-yyy')
                 ]
             ].map[it as Object].map[it as FormattedField<Object>] // uff!
         ]

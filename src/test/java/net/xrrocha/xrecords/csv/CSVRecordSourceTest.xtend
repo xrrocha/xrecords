@@ -53,17 +53,17 @@ class CSVRecordSourceTest {
                 new IndexedField<String> => [
                     index = 0
                     name = 'name'
-                    format = new StringParser
+                    parser = new StringParser
                 ],
                 new IndexedField<Date> => [
                     index = 1
                     name = 'birthdate'
-                    format = new DateParser('dd/MM/yyyy')
+                    parser = new DateParser('dd/MM/yyyy')
                 ],
                 new IndexedField<Integer> => [
                     index = 2
                     name = 'count'
-                    format = new IntegerParser('#,###')
+                    parser = new IntegerParser('#,###')
                 ]
             ].cast
         ]

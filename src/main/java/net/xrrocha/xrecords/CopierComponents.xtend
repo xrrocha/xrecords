@@ -22,18 +22,18 @@ abstract class AbstractSource<S, R> extends AbstractLifecycle<S> implements Sour
     abstract def Record buildRecord(R representation)
 
     private var R previous = null
-    private var boolean asked = false
+    private var boolean requested = false
 
     final override hasNext() {
-        if (!asked) {
+        if (!requested) {
             previous = next(state)
         }
-        asked = true
+        requested = true
         previous != null
     }
 
     final override next() {
-        asked = false
+        requested = false
         buildRecord(previous)
     }
 
