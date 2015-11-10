@@ -29,21 +29,17 @@ interface Source extends Iterator<Record>, Lifecycle {}
 
 class DelegatingSource implements Source {
 	final Source source
-	final CopierListener listener
 
 	private var count = 0
 	
-	new(Source source, CopierListener listener) {
+	new(Source source) {
 		this.source = source
-		this.listener = listener
 	}
 	
 	override open() {
 		try {
 			source.open()
-			listener.onSourceOpen(source)
 		} catch (Exception e) {
-			listener.onSourceOpenError(source, e)
 		}
 	}
 	
@@ -60,9 +56,7 @@ class DelegatingSource implements Source {
 	override close(Stats stats) {
 		try {
 			source.close(stats)
-			listener.onSourceClose(source, stats)
 		} catch(Exception e) {
-			listener.onSourceCloseError(source, stats, e)
 		}
 	}
 	
@@ -79,13 +73,11 @@ interface Filter {
 
 class DelegatingFilter implements Filter {
 	final Filter filter
-	final CopierListener listener
 
 	private var count = 0
 	
-	new(Filter filter, CopierListener listener) {
+	new(Filter filter) {
 		this.filter = filter
-		this.listener = listener
 	}
 	
 	override matches(Record record) {
@@ -94,10 +86,8 @@ class DelegatingFilter implements Filter {
 			if (matches) {
 				count++
 			}
-			listener.onFilter(filter, record, matches, count)
 			matches
 		} catch (Exception e) {
-			listener.onFilterError(filter, record, count, e)
 			throw e
 		}
 	}
@@ -115,23 +105,19 @@ interface Transformer {
 
 class DelegatingTransformer implements Transformer {
 	final Transformer transformer
-	final CopierListener listener
-	
+
 	private var count = 0
 	
-	new(Transformer transformer, CopierListener listener) {
+	new(Transformer transformer) {
 		this.transformer = transformer
-		this.listener = listener
 	}
 	
 	override def transform(Record record) {
 		count++
 		try {
 			val transformedRecord = transformer.transform(record)
-			listener.onTransform(transformer, record, transformedRecord, count)
 			transformedRecord
 		} catch (Exception e) {
-			listener.onTransformError(transformer, record, count, e)
 			throw e
 		}
 	}
@@ -143,23 +129,19 @@ interface Destination extends Lifecycle {
 
 class DelegatingDestination implements Destination {
 	final Destination destination
-	final CopierListener listener
 	final boolean stopOnError
 	
 	private var count = 0
 	
-	new(Destination destination, CopierListener listener, boolean stopOnError) {
+	new(Destination destination, boolean stopOnError) {
 		this.destination = destination
-		this.listener = listener
 		this.stopOnError = stopOnError
 	}
 	
 	override open() {
 		try {
 			destination.open()
-			listener.onDestinationOpen(destination)
 		} catch (Exception e) {
-			listener.onDestinationOpenError(destination, e)
 			throw e
 		}
 	}	
@@ -168,9 +150,7 @@ class DelegatingDestination implements Destination {
 		count++
 		try {
 			destination.put(record)
-			listener.onPut(destination, record, count)
 		} catch (Exception e) {
-			listener.onPutError(destination, record, count, e)
 			if (stopOnError) {
 				throw e
 			}
@@ -180,16 +160,14 @@ class DelegatingDestination implements Destination {
 	override close(Stats stats) {
 		try {
 			destination.close(stats)
-			listener.onDestinationClose(destination, stats)
 		} catch (Exception e) {
-			listener.onDestinationCloseError(destination, stats, e)
 		}
 	}
 }
 
 // TODO Add pre/post hooks to Copier (w/scripting implementation)
 @Accessors
-class Copier extends SafeCopierListener {
+class Copier {
     Source source
     Filter filter = Filter.nullFilter
     Transformer transformer = Transformer.nullTransformer
@@ -197,16 +175,9 @@ class Copier extends SafeCopierListener {
 
 	// TODO Add tally and copy of bad records
     boolean stopOnError = true
-    
-    val listener = new SafeCopierListener
 
     final def copy() {
         validate()
-        
-        val source = new DelegatingSource(this.source, listener)
-        val filter = new DelegatingFilter(this.filter, listener)
-        val transformer = new DelegatingTransformer(this.transformer, listener)
-        val destination = new DelegatingDestination(this.destination, listener, stopOnError)
 
         #[source, destination].forEach[open]
         	
@@ -216,7 +187,7 @@ class Copier extends SafeCopierListener {
 	        	map[transformer.transform(it)].
 	        	forEach[destination.put(it)]
         } finally {
-        	val stats = new Stats(source.recordsRead, filter.recordsSkipped)
+        	val stats = new Stats(0, 0) //new Stats(source.recordsRead, filter.recordsSkipped)
         	#[source, destination].forEach[close(stats)]
         }
     }
