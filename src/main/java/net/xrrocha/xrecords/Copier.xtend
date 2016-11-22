@@ -8,6 +8,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Data
 
 import static net.xrrocha.xrecords.validation.ValidationState.*
+import org.eclipse.xtend.lib.annotations.Delegate
 
 @Data class Stats {
   public static val ZERO_STATS = new Stats
@@ -51,7 +52,7 @@ interface Lifecycle {
 interface Source extends Iterator<Record>, Lifecycle {}
 
 class DelegatingSource implements Source {
-  final Source source
+  @Delegate Source source
 
   private val count = new AtomicInteger(0)
 
@@ -59,21 +60,10 @@ class DelegatingSource implements Source {
     this.source = source
   }
 
-  override open() {
-    source.open()
-  }
-
-  override boolean hasNext() {
-    source.hasNext
-  }
-
   override next() {
+    val record = source.next
     count.incrementAndGet
-    source.next
-  }
-
-  override close(Stats stats) {
-    source.close(stats)
+    record
   }
 
   def recordsRead() { count.get }
@@ -88,7 +78,7 @@ interface Filter {
 }
 
 class DelegatingFilter implements Filter {
-  final Filter filter
+  @Delegate Filter filter
 
   private var count = 0
 
@@ -97,15 +87,11 @@ class DelegatingFilter implements Filter {
   }
 
   override matches(Record record) {
-    try {
-      val matches = filter.matches(record)
-      if(matches) {
-        count++
-      }
-      matches
-    } catch(Exception e) {
-      throw e
+    val matches = filter.matches(record)
+    if(matches) {
+      count++
     }
+    matches
   }
 
   def recordsSkipped() { count }
@@ -120,7 +106,7 @@ interface Transformer {
 }
 
 class DelegatingTransformer implements Transformer {
-  final Transformer transformer
+  @Delegate Transformer transformer
 
   private val count = new AtomicInteger(0)
 
@@ -130,12 +116,7 @@ class DelegatingTransformer implements Transformer {
 
   override def transform(Record record) {
     count.incrementAndGet
-    try {
-      val transformedRecord = transformer.transform(record)
-      transformedRecord
-    } catch(Exception e) {
-      throw e
-    }
+    transformer.transform(record)
   }
 }
 
@@ -144,39 +125,24 @@ interface Destination extends Lifecycle {
 }
 
 class DelegatingDestination implements Destination {
-  final Destination destination
-  final boolean stopOnError
+  @Delegate Destination destination
+  val boolean stopOnError
 
-  private var count = 0
+  private AtomicInteger count = new AtomicInteger(0)
 
   new(Destination destination, boolean stopOnError) {
     this.destination = destination
     this.stopOnError = stopOnError
   }
 
-  override open() {
-    try {
-      destination.open()
-    } catch(Exception e) {
-      throw e
-    }
-  }
-
   override put(Record record) {
-    count++
+    count.incrementAndGet
     try {
       destination.put(record)
     } catch(Exception e) {
       if(stopOnError) {
         throw e
       }
-    }
-  }
-
-  override close(Stats stats) {
-    try {
-      destination.close(stats)
-    } catch(Exception e) {
     }
   }
 }
