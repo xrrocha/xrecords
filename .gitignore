@@ -7,3 +7,4 @@ stage
 target
 .idea
 *.iml
+xtend-gen/
