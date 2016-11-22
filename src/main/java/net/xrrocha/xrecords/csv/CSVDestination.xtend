@@ -14,44 +14,44 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Delegate
 
 class CSVDestination extends CSVBase implements Destination {
-    @Accessors Provider<Writer> output
-    @Accessors List<FormattedField<?extends Object>> fields
-    
-    @Delegate Destination delegate = new AbstractDestination<CSVWriter> {
-        override doOpen() {
-            val writer = new CSVWriter(output.provide, separator, quote)
-            
-             if (headerRecord) {
-                 val String[] headers = newArrayOfSize(fields.size)
-                 (0 ..< fields.size).forEach [ i |
-                     headers.set(i, fields.get(i).name)
-                 ]
-                 writer.writeNext(headers);
-             }
-             
-             writer
-        }
-        
-        override doPut(CSVWriter writer, Record record) {
-            val String[] recordValues = newArrayOfSize(fields.size)
-            
-            (0 ..< fields.size).forEach [ i |
-                recordValues.set(i, fields.get(i).formatValueFrom(record))
-            ]
-    
-            writer.writeNext(recordValues)
-        }
-        
-        override doClose(CSVWriter writer, Stats stats) {
-            writer.close()
-        }
+  @Accessors Provider<Writer> output
+  @Accessors List<FormattedField<?extends Object>> fields
+
+  @Delegate Destination delegate = new AbstractDestination<CSVWriter> {
+    override doOpen() {
+      val writer = new CSVWriter(output.provide, separator, quote)
+
+      if(headerRecord) {
+        val String[] headers = newArrayOfSize(fields.size)
+        (0 ..< fields.size).forEach [ i |
+          headers.set(i, fields.get(i).name)
+        ]
+        writer.writeNext(headers);
+      }
+
+      writer
     }
 
-    override validate(List<String> errors) {
-        super.validate(errors)
-        if (output == null) {
-            errors.add('Missing output')
-        }
-        Field.validateFields(fields, errors)
+    override doPut(CSVWriter writer, Record record) {
+      val String[] recordValues = newArrayOfSize(fields.size)
+
+      (0 ..< fields.size).forEach [ i |
+        recordValues.set(i, fields.get(i).formatValueFrom(record))
+      ]
+
+      writer.writeNext(recordValues)
     }
+
+    override doClose(CSVWriter writer, Stats stats) {
+      writer.close()
+    }
+  }
+
+  override validate(List<String> errors) {
+    super.validate(errors)
+    if(output == null) {
+      errors.add('Missing output')
+    }
+    Field.validateFields(fields, errors)
+  }
 }

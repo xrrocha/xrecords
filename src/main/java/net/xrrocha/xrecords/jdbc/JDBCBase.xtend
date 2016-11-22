@@ -7,11 +7,11 @@ import org.eclipse.xtend.lib.annotations.Accessors
 
 // Add suport for array fields jdbc
 abstract class JDBCBase implements Validatable {
-    @Accessors DataSource dataSource
-    
-    override def validate(List<String> errors) {
-        if (dataSource == null) {
-            errors.add('Missing data source')
-        }
+  @Accessors DataSource dataSource
+
+  override def validate(List<String> errors) {
+    if(dataSource == null) {
+      errors.add('Missing data source')
     }
+  }
 }

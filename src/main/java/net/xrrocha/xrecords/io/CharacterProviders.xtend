@@ -13,54 +13,57 @@ import net.xrrocha.xrecords.util.Provider
 import org.eclipse.xtend.lib.annotations.Accessors
 
 class StringReaderProvider implements Provider<Reader> {
-    @Accessors String content
-    
-    new() {}
-    new(String content) { this.content = content }
-    
-    override provide() {
-        new StringReader(content)
-    }
+  @Accessors String content
+
+  new() {
+  }
+  new(String content) { this.content = content }
+
+  override provide() {
+    new StringReader(content)
+  }
 }
 
 class LocationReaderProvider implements Provider<Reader> {
-    @Accessors String location
-    
-    new() {}
-    new (String location) { this.location = location }
-    
-    override provide() {
-        val provider = new LocationInputStreamProvider(location)
-        new InputStreamReader(provider.provide)
-    }
+  @Accessors String location
+
+  new() {
+  }
+  new (String location) { this.location = location }
+
+  override provide() {
+    val provider = new LocationInputStreamProvider(location)
+    new InputStreamReader(provider.provide)
+  }
 }
 
 class StringWriterProvider implements Provider<Writer> {
-    private var StringWriter stringWriter
-    
-    override provide() {
-        stringWriter = new StringWriter
-        stringWriter
-    }
-    
-    override toString() {
-        stringWriter.toString
-    }
+  private var StringWriter stringWriter
+
+  override provide() {
+    stringWriter = new StringWriter
+    stringWriter
+  }
+
+  override toString() {
+    stringWriter.toString
+  }
 }
 
 class FileLocationWriterProvider implements Provider<Writer> {
-    @Accessors String location
-    
-    new() {}
-    new (String location) { this.location = location }
-    
-    override provide() {
-        new FileWriter(new File(location))
-    }
+  @Accessors String location
+
+  new() {
+  }
+  new (String location) { this.location = location }
+
+  override provide() {
+    new FileWriter(new File(location))
+  }
 }
 
 class FtpWriterProvider extends FtpBase implements Provider<Writer> {
-    override provide() {
-        new OutputStreamWriter(new URL(location).openConnection.outputStream)
-    }
+  override provide() {
+    new OutputStreamWriter(new URL(location).openConnection.outputStream)
+  }
 }

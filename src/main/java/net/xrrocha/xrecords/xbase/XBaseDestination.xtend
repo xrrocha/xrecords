@@ -9,62 +9,63 @@ import net.xrrocha.xrecords.Destination
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.util.Provider
+import net.xrrocha.xrecords.xbase.XBaseDestination.DBFWriterState
 import org.eclipse.xtend.lib.annotations.Accessors
-import org.eclipse.xtend.lib.annotations.Delegate
 import org.eclipse.xtend.lib.annotations.Data
+import org.eclipse.xtend.lib.annotations.Delegate
 
 // This XBase impl only supports double
 // TODO Add file support to XBaseDestination
 class XBaseDestination extends XBase implements Destination {
-    @Accessors Provider<OutputStream> output
-    @Accessors DBFField[] dbfFields
+  @Accessors Provider<OutputStream> output
+  @Accessors DBFField[] dbfFields
 
-    @Data static class DBFWriterState {
-        protected val OutputStream os
-        protected val DBFWriter writer
-        
-        def addRecord(Object[] fieldValues) {
-            writer.addRecord(fieldValues)
-        }
-        
-        def close() {
-            writer.write(os)
-            os.flush()
-            os.close()
-        }
+  @Data static class DBFWriterState {
+    protected val OutputStream os
+    protected val DBFWriter writer
+
+    def addRecord(Object[] fieldValues) {
+      writer.addRecord(fieldValues)
     }
 
-    @Delegate Destination delegate = new AbstractDestination<DBFWriterState>() {
-        override doOpen() {
-            val os = output.provide
-            val writer = new DBFWriter => [
-                fields = dbfFields
-            ]
-            
-            new DBFWriterState(os, writer)
-        }
+    def close() {
+      writer.write(os)
+      os.flush()
+      os.close()
+    }
+  }
 
-        override doPut(DBFWriterState writer, Record record) {
-            val Object[] fieldValues = newArrayOfSize(dbfFields.length)
+  @Delegate Destination delegate = new AbstractDestination<DBFWriterState>() {
+    override doOpen() {
+      val os = output.provide
+      val writer = new DBFWriter => [
+        fields = dbfFields
+      ]
 
-            for (i : 0 ..< dbfFields.length) {
-                val fieldName = dbfFields.get(i).name
-                if (record.hasField(fieldName)) {
-                    fieldValues.set(i, record.getField(fieldName))
-                }
-            }
-
-            writer.addRecord(fieldValues)
-        }
-
-        override doClose(DBFWriterState writer, Stats stats) {
-            writer.close()
-        }
+      new DBFWriterState(os, writer)
     }
 
-    override validate(List<String> errors) {
-        if (output == null) {
-            errors.add('Missing output provider for XBase record destination')
+    override doPut(DBFWriterState writer, Record record) {
+      val Object[] fieldValues = newArrayOfSize(dbfFields.length)
+
+      for(i : 0 ..< dbfFields.length) {
+        val fieldName = dbfFields.get(i).name
+        if(record.hasField(fieldName)) {
+          fieldValues.set(i, record.getField(fieldName))
         }
+      }
+
+      writer.addRecord(fieldValues)
     }
+
+    override doClose(DBFWriterState writer, Stats stats) {
+      writer.close()
+    }
+  }
+
+  override validate(List<String> errors) {
+    if(output == null) {
+      errors.add('Missing output provider for XBase record destination')
+    }
+  }
 }
