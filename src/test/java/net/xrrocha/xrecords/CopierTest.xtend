@@ -19,7 +19,7 @@ public class CopierInteractionTest {
 
     val destinationMock = mock(Destination)
 
-    val copier = new Copier => [
+    new Copier => [
       val copier = new Copier => [
         source = sourceMock
         filter = filterMock
