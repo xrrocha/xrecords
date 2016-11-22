@@ -10,6 +10,8 @@ import org.eclipse.xtend.lib.annotations.Data
 import static net.xrrocha.xrecords.validation.ValidationState.*
 
 @Data class Stats {
+  public static val ZERO_STATS = new Stats
+
   AtomicInteger recordsRead
   AtomicInteger recordsSkipped
 
@@ -27,7 +29,13 @@ import static net.xrrocha.xrecords.validation.ValidationState.*
     this.recordsSkipped = recordsSkipped
   }
 
-  public static val ZERO_STATS = new Stats
+  public def incrRecordsRead() {
+    recordsRead.incrementAndGet
+  }
+
+  public def incrRecordsSkipped() {
+    recordsSkipped.incrementAndGet
+  }
 
   override toString() {
     '''recordsRead: «recordsRead», recordsSkipped: «recordsSkipped»'''
@@ -45,17 +53,14 @@ interface Source extends Iterator<Record>, Lifecycle {}
 class DelegatingSource implements Source {
   final Source source
 
-  private var count = 0
+  private val count = new AtomicInteger(0)
 
   new(Source source) {
     this.source = source
   }
 
   override open() {
-    try {
-      source.open()
-    } catch(Exception e) {
-    }
+    source.open()
   }
 
   override boolean hasNext() {
@@ -63,19 +68,15 @@ class DelegatingSource implements Source {
   }
 
   override next() {
-    count++
-    val record = source.next
-    record
+    count.incrementAndGet
+    source.next
   }
 
   override close(Stats stats) {
-    try {
-      source.close(stats)
-    } catch(Exception e) {
-    }
+    source.close(stats)
   }
 
-  def recordsRead() { count }
+  def recordsRead() { count.get }
 }
 
 interface Filter {
