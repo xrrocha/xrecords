@@ -16,8 +16,8 @@ transformer: !scriptTransform |
   ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})
 
 destination: !databaseDestination
-    tableName:  PERSON
+     tableName:  PERSON
     fieldNames: [NAME, GENDER]
     dataSource: !!org.hsqldb.jdbc.JDBCDataSource
-        url:    jdbc:hsqldb:file:hsqldb/example;hsqldb;shutdown=true
-        user:   sa
+           url: jdbc:hsqldb:file:hsqldb/example;hsqldb;shutdown=true
+          user: sa
