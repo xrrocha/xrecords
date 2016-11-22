@@ -37,8 +37,8 @@ abstract class FtpBase {
     }
 
     val binaryFragment =
-      if(binary) ";type=i"
-      else ""
+      if(binary) ';type=i'
+      else ''
 
     '''ftp://«credentialsFragment»«host»«portFragment»«pathFragment»«binaryFragment»'''
   }

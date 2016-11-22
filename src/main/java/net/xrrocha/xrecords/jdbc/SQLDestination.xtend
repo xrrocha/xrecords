@@ -33,7 +33,7 @@ class SQLDestination extends AbstractDestination<PrintWriter> implements Validat
     val fieldValues = fields.map [ field |
       val objectValue = record.getField(field.name)
       if(objectValue == null) {
-        "NULL"
+        'NULL'
       } else {
         if(objectValue instanceof Number) {
           objectValue.toString

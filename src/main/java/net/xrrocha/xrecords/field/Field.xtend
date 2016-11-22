@@ -48,7 +48,7 @@ class FormattedField<T> extends Field {
 
   def formatValueFrom(Record record) {
     val value = record.getField(name) as T
-    if(value == null) ""
+    if(value == null) ''
     else toString(value)
   }
 

@@ -129,7 +129,7 @@ class JDBCDestination extends JDBCBase implements Destination {
   static def String buildPreparedInsert(String tableName, List<String> fieldNames) {
     '''
         INSERT INTO "«tableName»"(«fieldNames.map['''"«it»"'''].join(', ')»)
-            VALUES(«(0 ..< fieldNames.size).map['?'].join(', ')»)
-        '''
+        VALUES(«(0 ..< fieldNames.size).map['?'].join(', ')»)
+    '''
   }
 }

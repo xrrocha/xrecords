@@ -19,7 +19,7 @@ class StringReaderProviderTest {
 
   @Test
   def void providesLocationReader() {
-    val file = File.createTempFile("temp", ".tmp")
+    val file = File.createTempFile('temp', '.tmp')
     file.deleteOnExit()
 
     val provider = new LocationInputStreamProvider => [
@@ -30,7 +30,7 @@ class StringReaderProviderTest {
 
   @Test
   def void providesReaderLocationReader() {
-    val file = File.createTempFile("temp", ".tmp")
+    val file = File.createTempFile('temp', '.tmp')
     file.deleteOnExit()
 
     val provider = new LocationReaderProvider => [
@@ -49,7 +49,7 @@ class StringReaderProviderTest {
 
   @Test
   def void providesFileLocation() {
-    val file = File.createTempFile("temp", ".tmp")
+    val file = File.createTempFile('temp', '.tmp')
     file.deleteOnExit()
 
     val provider = new FileLocationWriterProvider => [

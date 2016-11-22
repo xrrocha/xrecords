@@ -23,10 +23,10 @@ class YamlDSLTests {
                         { index: 1,  name: gender,    format: !string  }
                     ]
                 
-                filter: !scriptFilter [gender == "M"]
+                filter: !scriptFilter [gender == 'M']
                 
                 transformer: !scriptTransform |
-                  ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})
+                  ({ID: id, NAME: (firstName + ' ' + lastName).toString(), GENDER: gender})
                 
                 destination: !databaseDestination
                     tableName:  PERSON
@@ -77,12 +77,12 @@ class YamlDSLTests {
 
     assertEquals(2, records.size)
 
-    assertEquals(1, records.get(0).getField("ID"))
-    assertEquals('John Doe', records.get(0).getField("NAME"))
-    assertEquals('M', records.get(0).getField("GENDER"))
+    assertEquals(1, records.get(0).getField('ID'))
+    assertEquals('John Doe', records.get(0).getField('NAME'))
+    assertEquals('M', records.get(0).getField('GENDER'))
 
-    assertEquals(3, records.get(1).getField("ID"))
-    assertEquals('Alexio Flako', records.get(1).getField("NAME"))
-    assertEquals('M', records.get(1).getField("GENDER"))
+    assertEquals(3, records.get(1).getField('ID'))
+    assertEquals('Alexio Flako', records.get(1).getField('NAME'))
+    assertEquals('M', records.get(1).getField('GENDER'))
   }
 }
