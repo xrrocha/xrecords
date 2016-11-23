@@ -4,6 +4,9 @@ net.xrrocha.xrecords.script.ScriptingFilter:
 net.xrrocha.xrecords.script.ScriptingTransformer:
   tagName: scriptTransform
 
+net.xrrocha.xrecords.script.CopierScript:
+  tagName: script
+
 net.xrrocha.xrecords.jdbc.JDBCSource:
   tagName: databaseSource
 

@@ -37,6 +37,7 @@
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
         <maven-assembly-plugin.version>3.0.0</maven-assembly-plugin.version>
+        <shade.version>2.4.3</shade.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
     </properties>
 
