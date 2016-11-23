@@ -15,7 +15,7 @@ class Script implements Validatable {
   // TODO Inject utility object into scripts to deal w/records
   // TODO Add per-language prolog/epilog
 
-  public static val DEFAULT_LANGUAGE = 'javascript'
+  public static val DEFAULT_LANGUAGE = 'nashorn'
 
   private static val factory = new ScriptEngineManager()
 
