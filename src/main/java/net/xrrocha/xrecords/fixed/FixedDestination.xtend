@@ -6,7 +6,6 @@ import java.util.List
 import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Destination
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.util.Provider
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Data
@@ -44,7 +43,7 @@ class FixedDestination extends FixedBase implements Destination {
       writer.write()
     }
 
-    override doClose(WriterBuffer writer, Stats stats) {
+    override doClose(WriterBuffer writer) {
       writer.close()
     }
   }

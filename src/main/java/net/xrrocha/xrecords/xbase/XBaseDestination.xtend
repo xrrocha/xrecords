@@ -7,7 +7,6 @@ import java.util.List
 import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Destination
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.util.Provider
 import net.xrrocha.xrecords.xbase.XBaseDestination.DBFWriterState
 import org.eclipse.xtend.lib.annotations.Accessors
@@ -58,7 +57,7 @@ class XBaseDestination extends XBase implements Destination {
       writer.addRecord(fieldValues)
     }
 
-    override doClose(DBFWriterState writer, Stats stats) {
+    override doClose(DBFWriterState writer) {
       writer.close()
     }
   }

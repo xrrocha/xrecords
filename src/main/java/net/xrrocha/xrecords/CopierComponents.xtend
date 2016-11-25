@@ -5,14 +5,14 @@ abstract class AbstractLifecycle<S> implements Lifecycle {
 
   protected abstract def S doOpen()
 
-  protected abstract def void doClose(S state, Stats stats)
+  protected abstract def void doClose(S state)
 
   final override open() {
     state = doOpen()
   }
 
-  final override close(Stats stats) {
-    doClose(state, stats)
+  final override close() {
+    doClose(state)
   }
 }
 

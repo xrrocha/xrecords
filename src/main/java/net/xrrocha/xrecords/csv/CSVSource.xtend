@@ -6,7 +6,6 @@ import java.util.List
 import net.xrrocha.xrecords.AbstractSource
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.Source
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.field.Field
 import net.xrrocha.xrecords.field.IndexedField
 import net.xrrocha.xrecords.util.Provider
@@ -38,7 +37,7 @@ class CSVSource extends CSVBase implements Source {
       record
     }
 
-    override doClose(CSVReader reader, Stats stats) {
+    override doClose(CSVReader reader) {
       reader.close()
     }
   }

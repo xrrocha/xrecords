@@ -2,7 +2,6 @@ package net.xrrocha.xrecords.fixed
 
 import java.util.List
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.field.DoubleParser
 import net.xrrocha.xrecords.field.FixedField
 import net.xrrocha.xrecords.field.IntegerParser
@@ -84,7 +83,7 @@ class FixedSourceTest {
 
     source.open()
     val actualRecords = source.toList
-    source.close(new Stats(expectedRecords.size, expectedRecords.size))
+    source.close()
 
     assertEquals(expectedRecords, actualRecords)
   }

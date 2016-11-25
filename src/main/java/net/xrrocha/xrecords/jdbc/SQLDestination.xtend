@@ -6,7 +6,6 @@ import java.io.PrintWriter
 import java.util.List
 import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.field.FormattedField
 import net.xrrocha.xrecords.util.Provider
 import net.xrrocha.xrecords.validation.Validatable
@@ -21,8 +20,10 @@ class SQLDestination extends AbstractDestination<PrintWriter> implements Validat
 
   @Accessors Provider<OutputStream> output
 
+  PrintWriter out
+
   override doOpen() {
-    val out = new PrintWriter(new OutputStreamWriter(output.provide()), true)
+    out = new PrintWriter(new OutputStreamWriter(output.provide()), true)
     if(prolog != null) {
       out.println(prolog)
     }
@@ -52,7 +53,7 @@ class SQLDestination extends AbstractDestination<PrintWriter> implements Validat
     out.println(sqlText)
   }
 
-  override doClose(PrintWriter out, Stats stats) {
+  override doClose(PrintWriter ou) {
     if(epilog != null) {
       out.println(epilog)
     }

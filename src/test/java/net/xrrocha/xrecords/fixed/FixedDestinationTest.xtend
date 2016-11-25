@@ -2,7 +2,6 @@ package net.xrrocha.xrecords.fixed
 
 import java.util.List
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.field.DoubleParser
 import net.xrrocha.xrecords.field.FixedField
 import net.xrrocha.xrecords.field.IntegerParser
@@ -76,7 +75,7 @@ class FixedDestinationTest {
 
     destination.open()
     records.forEach[destination.put(it)]
-    destination.close(new Stats(records.size, records.size))
+    destination.close()
 
     val expectedRecords = '''
             123Bolts x 10              0012000245

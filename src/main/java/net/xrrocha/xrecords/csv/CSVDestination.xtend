@@ -6,7 +6,6 @@ import java.util.List
 import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Destination
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.field.Field
 import net.xrrocha.xrecords.field.FormattedField
 import net.xrrocha.xrecords.util.Provider
@@ -42,7 +41,7 @@ class CSVDestination extends CSVBase implements Destination {
       writer.writeNext(recordValues)
     }
 
-    override doClose(CSVWriter writer, Stats stats) {
+    override doClose(CSVWriter writer) {
       writer.close()
     }
   }

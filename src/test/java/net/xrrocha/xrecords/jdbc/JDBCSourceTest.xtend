@@ -1,6 +1,5 @@
 package net.xrrocha.xrecords.jdbc
 
-import net.xrrocha.xrecords.Stats
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -46,7 +45,7 @@ class JDBCSourceTest extends JDBCRecordTest {
 
     source.open()
     val records = IteratorExtensions.toList(source.map[it])
-    source.close(new Stats(records.size, records.size))
+    source.close()
 
     val expectedRecords = people.map[toRecord]
 

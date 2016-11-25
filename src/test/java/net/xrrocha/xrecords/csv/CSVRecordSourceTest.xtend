@@ -6,7 +6,6 @@ import java.util.ArrayList
 import java.util.Date
 import java.util.GregorianCalendar
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.field.DateParser
 import net.xrrocha.xrecords.field.IndexedField
 import net.xrrocha.xrecords.field.IntegerParser
@@ -73,7 +72,7 @@ class CSVRecordSourceTest {
       records.add(record)
       records
     ]
-    source.close(new Stats(actualRecords.size, actualRecords.size))
+    source.close()
 
     val expectedRecords = #[
       new Record => [

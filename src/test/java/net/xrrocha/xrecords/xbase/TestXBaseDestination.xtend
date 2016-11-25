@@ -6,7 +6,6 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.util.Provider
 import org.junit.Test
 
@@ -55,7 +54,7 @@ class TestXBaseDestination {
 
     destination.open()
     records.forEach[destination.put(it)]
-    destination.close(new Stats(records.size, records.size))
+    destination.close()
 
     val dbfReader = new DBFReader(new ByteArrayInputStream(baos.toByteArray))
     val fieldNames = #['id', 'name', 'gender']

@@ -6,7 +6,6 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.util.Provider
 import org.junit.Test
 
@@ -74,6 +73,6 @@ class TestXBaseSource {
       assertEquals(record, sourceRecord)
     ]
     assertFalse(source.hasNext)
-    source.close(new Stats(records.size, records.size))
+    source.close()
   }
 }

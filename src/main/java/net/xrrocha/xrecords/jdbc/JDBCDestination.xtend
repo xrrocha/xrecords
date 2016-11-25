@@ -6,12 +6,12 @@ import java.util.List
 import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Destination
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.jdbc.JDBCDestination.JDBCDestinationState
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Delegate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.concurrent.atomic.AtomicInteger
 
 // TODO Allow for field names to be set from first record
 class JDBCDestination extends JDBCBase implements Destination {
@@ -38,6 +38,9 @@ class JDBCDestination extends JDBCBase implements Destination {
   }
 
   @Delegate Destination delegate = new AbstractDestination<JDBCDestinationState>() {
+
+    val AtomicInteger recordsRead = new AtomicInteger(0);
+
     override doOpen() {
       val connection = dataSource.connection
       new JDBCDestinationState(connection.prepareStatement(preparedInsert))
@@ -80,11 +83,11 @@ class JDBCDestination extends JDBCBase implements Destination {
       }
     }
 
-    override doClose(JDBCDestinationState state, Stats stats) {
+    override doClose(JDBCDestinationState state) {
       val statement = state.statement
       val connection = state.statement.connection
 
-      if(stats.recordsRead.get % batchSize != 0) {
+      if(recordsRead.incrementAndGet % batchSize != 0) {
         statement.executeBatch()
       }
 

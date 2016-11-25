@@ -2,7 +2,6 @@ package net.xrrocha.xrecords
 
 import org.junit.Test
 
-import static net.xrrocha.xrecords.Stats.ZERO_STATS
 import static org.junit.Assert.*
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
@@ -32,8 +31,8 @@ public class CopierInteractionTest {
       inOrder.verify(sourceMock).open()
       inOrder.verify(destinationMock).open()
       inOrder.verify(sourceMock).hasNext
-      inOrder.verify(destinationMock).close(ZERO_STATS)
-      inOrder.verify(sourceMock).close(ZERO_STATS)
+      inOrder.verify(destinationMock).close()
+      inOrder.verify(sourceMock).close()
 
       verify(filterMock, never).matches(any)
       verify(transformerMock, never).transform(any)
@@ -84,7 +83,6 @@ public class CopierInteractionTest {
     val copier = new Copier => [
       source = sourceMock
       destination = destinationMock
-      stopOnError = false
     ]
     copier.copy()
     verify(destinationMock).put(recordOne)
@@ -198,9 +196,9 @@ public class CopierInteractionTest {
       order.verify(sourceMock).open()
       order.verify(destinationMock).open()
 
-      order.verify(sourceMock).close(ZERO_STATS)
+      order.verify(sourceMock).close()
 
-      verify(destinationMock, never).close(any)
+      verify(destinationMock, never).close()
     }
   }
 
@@ -208,10 +206,10 @@ public class CopierInteractionTest {
   def void ignoresErrorsOnClosing() {
     val sourceMock = mock(Source)
     when(sourceMock.hasNext).thenReturn(false)
-    doThrow(new RuntimeException).when(sourceMock).close(ZERO_STATS)
+    doThrow(new RuntimeException).when(sourceMock).close()
 
     val destinationMock = mock(Destination)
-    doThrow(new RuntimeException).when(destinationMock).close(ZERO_STATS)
+    doThrow(new RuntimeException).when(destinationMock).close()
 
     val copier = new Copier => [
       source = sourceMock
@@ -228,7 +226,7 @@ public class CopierInteractionTest {
     order.verify(sourceMock).open()
     order.verify(destinationMock).open()
 
-    order.verify(destinationMock).close(ZERO_STATS)
-    order.verify(sourceMock).close(ZERO_STATS)
+    order.verify(destinationMock).close()
+    order.verify(sourceMock).close()
   }
 }

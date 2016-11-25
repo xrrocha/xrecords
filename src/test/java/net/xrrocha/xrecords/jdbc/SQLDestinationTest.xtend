@@ -5,7 +5,6 @@ import java.io.OutputStream
 import java.util.Date
 import java.util.GregorianCalendar
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.field.DateParser
 import net.xrrocha.xrecords.field.FormattedField
 import net.xrrocha.xrecords.field.IntegerParser
@@ -68,11 +67,11 @@ class SQLDestinationTest {
     ]
 
     destination.open()
-    val count = records.fold(0) [ index, record |
+    records.fold(0) [ index, record |
       destination.put(record)
       index + 1
     ]
-    destination.close(new Stats(count, count))
+    destination.close()
 
     val expectedString = '''
             INSERT INTO "person"("name", "count", "birthdate")
@@ -124,7 +123,7 @@ class SQLDestinationTest {
     ]
 
     destination.open()
-    destination.close(Stats.ZERO_STATS)
+    destination.close()
 
     val expectedString = normalize(outputProlog + outputEpilog)
 

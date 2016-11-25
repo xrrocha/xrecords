@@ -3,7 +3,6 @@ package net.xrrocha.xrecords.csv
 import java.util.Date
 import java.util.GregorianCalendar
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import net.xrrocha.xrecords.field.DateParser
 import net.xrrocha.xrecords.field.FormattedField
 import net.xrrocha.xrecords.field.IntegerParser
@@ -125,11 +124,11 @@ class CSVDestinationTest {
     ]
 
     destination.open()
-    val count = records.fold(0) [ index, record |
+    records.fold(0) [ index, record |
       destination.put(record)
       index + 1
     ]
-    destination.close(new Stats(count, count))
+    destination.close()
 
     val expectedOutput = '''
             "name","birthdate","count"

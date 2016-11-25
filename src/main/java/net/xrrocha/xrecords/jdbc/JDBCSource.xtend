@@ -5,7 +5,6 @@ import java.util.List
 import net.xrrocha.xrecords.AbstractSource
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.Source
-import net.xrrocha.xrecords.Stats
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Delegate
 
@@ -36,7 +35,7 @@ class JDBCSource extends JDBCBase implements Source {
       record
     }
 
-    override doClose(ResultSet resultSet, Stats stats) {
+    override doClose(ResultSet resultSet) {
       val statement = resultSet.statement
       val connection = statement.connection
       resultSet.close()

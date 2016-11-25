@@ -5,7 +5,6 @@ import java.sql.PreparedStatement
 import java.util.List
 import javax.sql.DataSource
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Stats
 import org.junit.Test
 
 import static net.xrrocha.xrecords.jdbc.Person.*
@@ -120,7 +119,7 @@ class JDBCDestinationTest extends JDBCRecordTest {
       destination.put(record)
       index + 1
     ]
-    destination.close(new Stats(count, count))
+    destination.close()
     count
   }
 
