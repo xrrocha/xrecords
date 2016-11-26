@@ -49,24 +49,45 @@ import java.util.Map
 */
 class Record {
 
+  /**
+   * The underlying `Map` containing field names and values.
+  */
   val fields = new HashMap<String, Object>()
 
+  /**
+   * Populate a new `Record` from a `Map`. Null keys are silently ignored
+   *
+   * @param map The `String`-to-`Object` source map
+  */
   static def fromMap(Map<String, ?extends Object> map) {
     val record = new Record
-    map.keySet.forEach [ fieldName |
-      record.setField(fieldName, map.get(fieldName))
-    ]
+    map.keySet.
+      filter[ key | key != null ].
+      forEach [ key | record.setField(key, map.get(key)) ]
     record
   }
 
+  /*
+   * Return an immutable wrapper of the underlying `Map`
+  */
   def toMap() {
     Collections.unmodifiableMap(fields)
   }
 
+  /*
+   * Determine whether this `Record` contains a value with the given `name`.
+   * @param name The field name whose occurence is to be ascertained
+  */
   def hasField(String name) {
     fields.containsKey(name)
   }
 
+  /**
+   * Set the field associated with `name` to the given `value`.
+   * @param name The field name
+   * @param value The field value
+   * @throws `NullPointerExxception` if the `name` is null or blank
+  */
   def void setField(String name, Object value) {
     if(name == null)
       throw new NullPointerException('Record field name cannot be null')
@@ -75,7 +96,15 @@ class Record {
 
     fields.put(name, value)
   }
-
+/**
+ * Return the `value` associated with the given `name`.
+ *
+ * `Name` must exist already in this `Record`.
+ *
+ * @param name T%he name of the field to retrie3ve
+ *
+ * @throws IllegalArgumentException if the field `name` is not alreqady present
+*/
   def getField(String name) {
     if(fields.containsKey(name)) {
       fields.get(name)
@@ -84,6 +113,14 @@ class Record {
     }
   }
 
+  /*
+   * Removes a field given its `name`.
+   *
+   * @param name The name of the field to be removed
+   *
+   * @throws IllegalArgumentException if the given `name` does not occur in this
+   * `Record`
+  */
   def removeField(String name) {
     if(fields.containsKey(name)) {
       fields.remove(name)
@@ -92,22 +129,47 @@ class Record {
     }
   }
 
+  /*
+   * Remove all fields in this `Record` at once.
+  */
   def clear() {
     fields.clear()
   }
 
+  /*
+   * Return all field names in this `Record` (in no particular order).
+  */
   def fieldNames() {
     fields.keySet
   }
 
+  /*
+   * Copy all fields in this `Record` onto the `other` one, possibly overwriting
+   * equally named fields as well as adding new ones.
+   *
+   * @param other The other `Record` to put fields onto
+   *
+  */
   def copyTo(Record other) {
     fields.keySet.forEach[other.setField(it, getField(it))]
   }
 
+  /*
+   * Copy all fields in the other `Record` onto this `Record`, possibly
+   * overwriting equally named fields as well as adding new ones.
+   *
+   * @param other The other `Record` to draw fields from
+   *
+  */
   def copyFrom(Record other) {
     other.copyTo(this)
   }
 
+  /*
+   * Compare this `Record` with another one field-by-field
+   *
+   * @param other The other `Record` to compare against.
+  */
   override boolean equals(Object other) {
     if(!(other instanceof Record && other != null)) {
       false
@@ -116,10 +178,17 @@ class Record {
     }
   }
 
+  /*
+   * Project hashCode() of underlying map
+  */
   override int hashCode() {
     fields.hashCode()
   }
 
+
+  /*
+   * Project toString() of underlying map
+  */
   override toString() {
     fields.toString
   }

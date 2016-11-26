@@ -13,7 +13,7 @@ import net.xrrocha.yamltag.DefaultYamlFactory
  * filename of the Yaml configuration used to instantiate a [`Copier`](Copier
  * .html). A `Copier` has:
  *
- * - A [`Source`](Source.html) emiting [`Record`](Record.html)
+ * - A [`Source`](Source.html) emiting [`Record`](Record.html)s
  * - An optional [`Filter`](Filter.html) used to selectively skip `Record`s
  * - An optional [`Transformer`](Transformer.html) used to enrich the incoming
  * `Record` and
@@ -55,6 +55,13 @@ import net.xrrocha.yamltag.DefaultYamlFactory
  */
 class Main {
 
+  /**
+    *`main` method that reads a Yaml file containing the instantiation of a
+    *`Copier`.
+    *
+    * @param args The command-line arguments. The first element must point to
+    * a Yaml file containing a `Copier` configuration
+   */
   def static void main(String... args) {
 
     if(args.length < 1) {
@@ -69,11 +76,15 @@ class Main {
     }
 
     val reader = new FileReader(file)
+
+    // Use yamltag to enable xrecord framework class Yaml tag aliases
     val yamlFactory = new DefaultYamlFactory
     val yaml = yamlFactory.newYaml
 
+    // Yaml loads a ready-made Copier
     val copier = yaml.loadAs(reader, Copier)
 
+    // Copy in accordance to opaque configuration
     copier.copy()
   }
 
