@@ -84,7 +84,7 @@ class Main {
     // Yaml loads a ready-made Copier
     val copier = yaml.loadAs(reader, Copier)
 
-    // Copy in accordance to opaque configuration
+    // Copy in accordance to given configuration
     copier.copy()
   }
 

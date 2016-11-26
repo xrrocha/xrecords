@@ -13,19 +13,11 @@ import java.util.Map
  *
  * A *scalar value* can be:
  *
- * - A [`String`](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)
-   value containing a free-form string or the string
- * representation of a `value type` such as a [`Date`]
- * (https://docs.oracle.com/javase/8/docs/api/java/util/Date.html)
- * or a [`BigDecimal`]
- * (https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html).
- * - A *primitive value* such as numeric type wrappers ([`Integer`]
- * (https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html),
- * [`Double`](https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html),
- * etc.)
- * or
- * [`Boolean`](https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html)
- * values (`true`, `false`)
+ * - A `String` value containing either a free-form string or the string
+ * representation of a `value type` such as a `java.util.Date` or a
+ * `java.math.BigDecimal`.
+ * - Values of primitive types such as numeric type wrappers (`Integer`,
+ * `Double`, etc.) or `Boolean` values (`true`, `false`)
  *
  * `Record` field values are all "flat": they must be representable as a
  * `String` and cannot nest. Thus, a `Record` cannot contain another `Record`
@@ -205,7 +197,7 @@ class Record {
   /*
    * Project toString() of underlying map
    *
-   * @The nunderlying map's string representation
+   * @return The nunderlying map's string representation
   */
   override toString() {
     fields.toString

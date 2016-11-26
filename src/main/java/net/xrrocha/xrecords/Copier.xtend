@@ -72,7 +72,7 @@ interface Destination extends Lifecycle {
  * - An optional `Filter` selecting which `Record`s to include in copying
  * - An optional `Transformer`modyfying incoming `Record`s prior to their
  * consumption
- * - A `Destination` to which selected `Record`s are sent for consumption
+ * - A `Destination` where selected `Record`s are sent for consumption
 */
 @Accessors
 class Copier {
@@ -108,9 +108,9 @@ class Copier {
 
     try {
       source. // Pull each record from source
-        filter[filter.matches(it)]. // Verify record is eligible for consumption
-        map[transformer.transform(it)]. // Modify record prior to consumption
-        forEach[destination.put(it)] // Put each record into destination
+      filter[filter.matches(it)]. // Verify record is eligible for consumption
+      map[transformer.transform(it)]. // Modify record prior to consumption
+      forEach[destination.put(it)] // Put each record into destination
     } finally {
       // Make sure source and destination are closed, even in the face of errors
       #[source, destination].forEach[close]
