@@ -1,7 +1,8 @@
-package net.xrrocha.xrecords.util
+package net.xrrocha.xrecords.test
 
 import java.util.List
 import net.xrrocha.xrecords.Record
+import net.xrrocha.xrecords.util.FieldRenamingTransformer
 import org.junit.Test
 
 import static org.junit.Assert.*
