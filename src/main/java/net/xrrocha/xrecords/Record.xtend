@@ -58,17 +58,21 @@ class Record {
    * Populate a new `Record` from a `Map`. Null keys are silently ignored
    *
    * @param map The `String`-to-`Object` source map
+   *
+   * @return The new `Record`
   */
   static def fromMap(Map<String, ?extends Object> map) {
     val record = new Record
     map.keySet.
-      filter[ key | key != null ].
-      forEach [ key | record.setField(key, map.get(key)) ]
+    filter[ key | key != null ].
+    forEach [ key | record.setField(key, map.get(key)) ]
     record
   }
 
   /*
    * Return an immutable wrapper of the underlying `Map`
+   *
+   * @return The immutable copy of the underlying `Map`
   */
   def toMap() {
     Collections.unmodifiableMap(fields)
@@ -76,7 +80,10 @@ class Record {
 
   /*
    * Determine whether this `Record` contains a value with the given `name`.
+   *
    * @param name The field name whose occurence is to be ascertained
+   *
+   * @return Whether the given `name` corresponds to a field in this `Record`
   */
   def hasField(String name) {
     fields.containsKey(name)
@@ -96,15 +103,18 @@ class Record {
 
     fields.put(name, value)
   }
-/**
- * Return the `value` associated with the given `name`.
- *
- * `Name` must exist already in this `Record`.
- *
- * @param name T%he name of the field to retrie3ve
- *
- * @throws IllegalArgumentException if the field `name` is not alreqady present
-*/
+
+  /**
+   * Return the `value` associated with the given `name`.
+   *
+   * `Name` must exist already in this `Record`.
+   *
+   * @param name T%he name of the field to retrieve
+   *
+   * @return The field value asssociated with the given `name`
+   *
+   * @throws IllegalArgumentException if the field `name` is not alreqady present
+  */
   def getField(String name) {
     if(fields.containsKey(name)) {
       fields.get(name)
@@ -138,6 +148,8 @@ class Record {
 
   /*
    * Return all field names in this `Record` (in no particular order).
+   *
+   * @return The set of this `Record`'s field names.
   */
   def fieldNames() {
     fields.keySet
@@ -169,6 +181,8 @@ class Record {
    * Compare this `Record` with another one field-by-field
    *
    * @param other The other `Record` to compare against.
+   *
+   * @return Wether this `Record` corresponds, field-by-field, with the `other`
   */
   override boolean equals(Object other) {
     if(!(other instanceof Record && other != null)) {
@@ -179,7 +193,9 @@ class Record {
   }
 
   /*
-   * Project hashCode() of underlying map
+   * Project hashCode() of underlying map.
+   *
+   * @return The underlying map's hash code
   */
   override int hashCode() {
     fields.hashCode()
@@ -188,6 +204,8 @@ class Record {
 
   /*
    * Project toString() of underlying map
+   *
+   * @The nunderlying map's string representation
   */
   override toString() {
     fields.toString
