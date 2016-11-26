@@ -26,11 +26,11 @@ class JDBCSource extends JDBCBase implements Source {
       val metaData = resultSet.metaData
       val columnCount = metaData.columnCount
 
-      val record = new Record
+      val record = new Record()
 
-      for(i : 0 ..< columnCount) {
-        record.setField(metaData.getColumnLabel(i + 1), resultSet.getObject(i + 1))
-      }
+      (1.. columnCount).forEach[ i |
+        record.setField(metaData.getColumnLabel(i), resultSet.getObject(i))
+      ]
 
       record
     }
