@@ -1,23 +1,28 @@
-source: !csvSource
-    input: !fixedInput |
-        1,M,1/1/1980,xJohn,,Doe
-        2,F,2/2/1990,Janet,,Doe
-        3,M,3/3/2000,Alexio,,Flako
-    fields: [
-        { index: 0,  name: id,        parser: !integer },
-        { index: 3,  name: firstName, parser: !string  },
-        { index: 5,  name: lastName,  parser: !string  },
-        { index: 1,  name: gender,    parser: !string  }
-    ]
-
-filter: !script [gender == "M"]
-
-transformer: !script |
-  ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})
-
-destination: !databaseDestination
-    tableName: PERSON
-    fieldNames: [NAME, GENDER]
-    dataSource: !!org.hsqldb.jdbc.JDBCDataSource
-      url: jdbc:hsqldb:file:hsqldb/example;hsqldb;shutdown=true
-      user: sa
+ *#
+ *# copier configuration to dump comma-separated records onto a relational
+ *# database table.
+ *#
+ *
+ *source: !csvSource # comma-separated source
+ *    input: !fixedInput | # inline example data (rather than taken from a file)
+ *        1,M,1/1/1980,John,,Doe
+ *        2,F,2/2/1990,Janet,,Doe
+ *        3,M,3/3/2000,Alexio,,Flako
+ *    fields: [ # reordered field definitions, each with data type parser
+ *        { index: 0,  name: id,        parser: !integer },
+ *        { index: 3,  name: firstName, parser: !string  },
+ *        { index: 5,  name: lastName,  parser: !string  },
+ *        { index: 1,  name: gender,    parser: !string  }
+ *    ]
+ *
+ *filter: !script [gender == "M"] # selection predicate in javascript (nashorn)
+ *
+ *transformer: !script | # javascript expression returning augmented record
+ *  ({ID: id, NAME: (firstName + " " + lastName).toString(), GENDER: gender})
+ *
+ *destination: !databaseDestination # jdbc destination: insert records in table
+ *    tableName: PERSON
+ *    fieldNames: [NAME, GENDER]
+ *    dataSource: !!org.hsqldb.jdbc.JDBCDataSource
+ *      url: jdbc:hsqldb:file:hsqldb/example;hsqldb;shutdown=true
+ *      user: sa
