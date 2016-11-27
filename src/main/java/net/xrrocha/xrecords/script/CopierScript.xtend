@@ -1,9 +1,9 @@
 package net.xrrocha.xrecords.script
 
-import net.xrrocha.xrecords.Filter
-import net.xrrocha.xrecords.Transformer
-import net.xrrocha.xrecords.Record
 import java.util.Map
+import net.xrrocha.xrecords.Filter
+import net.xrrocha.xrecords.Record
+import net.xrrocha.xrecords.Transformer
 
 class CopierScript extends RecordScript implements Filter, Transformer {
 

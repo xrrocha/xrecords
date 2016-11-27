@@ -1,8 +1,6 @@
-package net.xrrocha.xrecords.util
+package net.xrrocha.xrecords
 
 import java.util.Map
-import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.Transformer
 import org.eclipse.xtend.lib.annotations.Accessors
 
 /**

@@ -1,6 +1,9 @@
 net.xrrocha.xrecords.script.ScriptingFilter:
   tagName: scriptFilter
 
+net.xrrocha.xrecords.util.FieldRenamingTransformer:
+  tagName: fieldRenamer
+
 net.xrrocha.xrecords.script.ScriptingTransformer:
   tagName: scriptTransform
 

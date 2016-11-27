@@ -10,7 +10,6 @@ import net.xrrocha.xrecords.field.StringParser
 import net.xrrocha.xrecords.io.StringWriterProvider
 import org.junit.Test
 
-import static org.junit.Assert.*
 import static org.junit.Assert.assertEquals
 
 import static extension net.xrrocha.xrecords.util.Extensions.cast
