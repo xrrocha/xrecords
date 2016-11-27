@@ -21,6 +21,19 @@ class FieldRenamingTransformer implements Transformer {
   */
   @Accessors boolean preserveOthers = true
 
+  /**
+   * Empty constructor. `preserveOthers` flags defaults to `true`.
+   */
+  new() {
+  }
+
+  /**
+   * Constructor specifying `preserveOthers` flag.
+   */
+  new(boolean preserveOthers) {
+    this.preserveOthers = preserveOthers
+  }
+
 
   /**
    * Transform a `Record` into another according the `renames` mapping.
