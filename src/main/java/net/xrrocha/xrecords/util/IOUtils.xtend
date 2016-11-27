@@ -1,4 +1,4 @@
-package net.xrrocha.xrecords.io
+package net.xrrocha.xrecords.util
 
 import java.io.File
 import java.net.URI

@@ -5,6 +5,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URL
+import net.xrrocha.xrecords.util.IOUtils
 import net.xrrocha.xrecords.util.Provider
 import org.eclipse.xtend.lib.annotations.Accessors
 
