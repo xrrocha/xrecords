@@ -6,7 +6,6 @@ import java.util.List
 import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Destination
 import net.xrrocha.xrecords.Record
-import net.xrrocha.xrecords.field.Field
 import net.xrrocha.xrecords.field.FormattedField
 import net.xrrocha.xrecords.util.Provider
 import org.eclipse.xtend.lib.annotations.Accessors
@@ -44,13 +43,5 @@ class CSVDestination extends CSVBase implements Destination {
     override doClose(CSVWriter writer) {
       writer.close()
     }
-  }
-
-  override validate(List<String> errors) {
-    super.validate(errors)
-    if(output == null) {
-      errors.add('Missing output')
-    }
-    Field.validateFields(fields, errors)
   }
 }

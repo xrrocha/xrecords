@@ -2,7 +2,6 @@ package net.xrrocha.xrecords.xbase
 
 import com.linuxense.javadbf.DBFReader
 import java.io.InputStream
-import java.util.List
 import net.xrrocha.xrecords.AbstractSource
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.Source
@@ -53,12 +52,6 @@ class XBaseSource extends XBase implements Source {
 
     override doClose(XBaseSourceState reader) {
       reader.close()
-    }
-  }
-
-  override validate(List<String> errors) {
-    if(input == null) {
-      errors.add('Missing input provider for XBase record source')
     }
   }
 }

@@ -1,6 +1,5 @@
 package net.xrrocha.xrecords.fixed
 
-import java.util.List
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.field.DoubleParser
 import net.xrrocha.xrecords.field.FixedField
@@ -86,22 +85,5 @@ class FixedSourceTest {
     source.close()
 
     assertEquals(expectedRecords, actualRecords)
-  }
-
-  @Test
-  def void validatesProperly() {
-    val destination = new FixedSource => [
-      length = -1
-      fields = null
-      input = null
-    ]
-
-    val List<String> errors = newLinkedList
-    destination.validate(errors)
-
-    assertEquals(errors.size, 3)
-    assertTrue(errors.get(0).contains('Invalid fixed record length'))
-    assertTrue(errors.get(1).contains('Missing fields'))
-    assertTrue(errors.get(2).contains('Missing input provider'))
   }
 }

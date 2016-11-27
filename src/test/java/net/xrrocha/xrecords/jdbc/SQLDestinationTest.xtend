@@ -15,17 +15,6 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 class SQLDestinationTest {
-  @Test
-  def void validatesAll() {
-    val source = new SQLDestination => [
-      tableName = null
-      fields = null
-      output = null
-    ]
-    val errors = newLinkedList
-    source.validate(errors)
-    assertTrue(errors.size == 3)
-  }
 
   @Test
   def void generatesInsertStatements() {

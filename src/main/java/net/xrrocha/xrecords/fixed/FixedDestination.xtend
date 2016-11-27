@@ -2,7 +2,6 @@ package net.xrrocha.xrecords.fixed
 
 import java.io.Writer
 import java.util.Arrays
-import java.util.List
 import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Destination
 import net.xrrocha.xrecords.Record
@@ -45,13 +44,6 @@ class FixedDestination extends FixedBase implements Destination {
 
     override doClose(WriterBuffer writer) {
       writer.close()
-    }
-  }
-
-  override validate(List<String> errors) {
-    super.validate(errors)
-    if(output == null) {
-      errors.add('Missing output provider')
     }
   }
 }

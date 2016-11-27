@@ -1,13 +1,11 @@
 package net.xrrocha.xrecords.util
 
-import java.util.List
 import java.util.Map
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.Transformer
-import net.xrrocha.xrecords.validation.Validatable
 import org.eclipse.xtend.lib.annotations.Accessors
 
-class FieldRenamingTransformer implements Transformer, Validatable {
+class FieldRenamingTransformer implements Transformer {
   @Accessors Map<String, String> renames
   @Accessors boolean preserveOthers = true
 
@@ -27,11 +25,5 @@ class FieldRenamingTransformer implements Transformer, Validatable {
     ]
 
     out
-  }
-
-  override validate(List<String> errors) {
-    if(renames == null) {
-      errors.add('Missing renames')
-    }
   }
 }

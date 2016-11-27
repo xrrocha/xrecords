@@ -8,10 +8,9 @@ import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.field.FormattedField
 import net.xrrocha.xrecords.util.Provider
-import net.xrrocha.xrecords.validation.Validatable
 import org.eclipse.xtend.lib.annotations.Accessors
 
-class SQLDestination extends AbstractDestination<PrintWriter> implements Validatable {
+class SQLDestination extends AbstractDestination<PrintWriter> {
   @Accessors String tableName
   @Accessors List<FormattedField<Object>> fields
 
@@ -66,27 +65,5 @@ class SQLDestination extends AbstractDestination<PrintWriter> implements Validat
 
   def escape(String string) {
     string.replace("'", "''")
-  }
-
-  override validate(List<String> errors) {
-    if(tableName == null || tableName.trim.length == 0) {
-      errors.add('Missing table name')
-    }
-
-    if(output == null) {
-      errors.add('Missing output')
-    }
-
-    if(fields == null) {
-      errors.add('Missing fields')
-    } else {
-      for(i : 0 ..< fields.size) {
-        if(fields.get(i) == null) {
-          errors.add('''Missing field «i»''')
-        } else {
-          fields.get(i).validate(errors)
-        }
-      }
-    }
   }
 }

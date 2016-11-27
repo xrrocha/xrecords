@@ -6,7 +6,6 @@ import java.util.List
 import net.xrrocha.xrecords.AbstractSource
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.Source
-import net.xrrocha.xrecords.field.Field
 import net.xrrocha.xrecords.field.IndexedField
 import net.xrrocha.xrecords.util.Provider
 import org.eclipse.xtend.lib.annotations.Accessors
@@ -40,13 +39,5 @@ class CSVSource extends CSVBase implements Source {
     override doClose(CSVReader reader) {
       reader.close()
     }
-  }
-
-  override validate(List<String> errors) {
-    super.validate(errors)
-    if(input == null) {
-      errors.add('Missing input')
-    }
-    Field.validateFields(fields, errors)
   }
 }

@@ -18,15 +18,6 @@ import static org.junit.Assert.*
 import static extension net.xrrocha.xrecords.util.Extensions.cast
 
 class CSVRecordSourceTest {
-  @Test
-  def void validatesAll() {
-    val destination = new CSVSource => [
-      separator = '\u0000'
-    ]
-    val errors = newLinkedList
-    destination.validate(errors)
-    assertTrue(errors.size == 3) // separator, provider, fields
-  }
 
   @Test
   def void readsCsvRecords() {

@@ -1,27 +1,10 @@
 package net.xrrocha.xrecords.fixed
 
 import java.util.List
-import net.xrrocha.xrecords.field.Field
 import net.xrrocha.xrecords.field.FixedField
-import net.xrrocha.xrecords.validation.Validatable
 import org.eclipse.xtend.lib.annotations.Accessors
 
-abstract class FixedBase implements Validatable {
+abstract class FixedBase {
   @Accessors int length
   @Accessors List<FixedField<Object>> fields
-
-  override validate(List<String> errors) {
-    if(length <= 0) {
-      errors.add('''Invalid fixed record length: «length»''')
-    }
-
-    Field.validateFields(fields, errors)
-
-    if(fields != null) {
-      val overflowFields = fields.filter[offset + length > FixedBase.this.length].map[name]
-      if(overflowFields.size > 0) {
-        errors.add('''Field(s) exceed fixed length: «overflowFields»''')
-      }
-    }
-  }
 }

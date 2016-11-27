@@ -1,7 +1,6 @@
 package net.xrrocha.xrecords.jdbc
 
 import java.sql.ResultSet
-import java.util.List
 import net.xrrocha.xrecords.AbstractSource
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.Source
@@ -41,13 +40,6 @@ class JDBCSource extends JDBCBase implements Source {
       resultSet.close()
       statement.close()
       connection.close()
-    }
-  }
-
-  override validate(List<String> errors) {
-    super.validate(errors)
-    if(sqlText == null || sqlText.trim.length == 0) {
-      errors.add('Missing sql text for JDBC source')
     }
   }
 

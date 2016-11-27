@@ -16,15 +16,6 @@ import static org.junit.Assert.assertEquals
 import static extension net.xrrocha.xrecords.util.Extensions.cast
 
 class CSVDestinationTest {
-  @Test
-  def void validatesAll() {
-    val destination = new CSVDestination => [
-      separator = '\u0000'
-    ]
-    val errors = newLinkedList
-    destination.validate(errors)
-    assertTrue(errors.size == 3) // separator,, provider, fields
-  }
 
   @Test
   def void prependsFieldNames() {

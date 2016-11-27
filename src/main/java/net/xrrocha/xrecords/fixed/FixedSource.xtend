@@ -2,7 +2,6 @@ package net.xrrocha.xrecords.fixed
 
 import java.io.IOException
 import java.io.Reader
-import java.util.List
 import net.xrrocha.xrecords.AbstractSource
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.Source
@@ -53,13 +52,6 @@ class FixedSource extends FixedBase implements Source {
 
     override doClose(ReaderBuffer reader) {
       reader.close()
-    }
-  }
-
-  override validate(List<String> errors) {
-    super.validate(errors)
-    if(input == null) {
-      errors.add('Missing input provider')
     }
   }
 }

@@ -3,6 +3,7 @@ package net.xrrocha.xrecords.jdbc
 import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.util.List
+import java.util.concurrent.atomic.AtomicInteger
 import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Destination
 import net.xrrocha.xrecords.Record
@@ -11,7 +12,6 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Delegate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.concurrent.atomic.AtomicInteger
 
 // TODO Allow for field names to be set from first record
 class JDBCDestination extends JDBCBase implements Destination {
@@ -97,29 +97,6 @@ class JDBCDestination extends JDBCBase implements Destination {
       connection.close()
     }
   }
-
-  override def validate(List<String> errors) {
-    super.validate(errors)
-
-    if(tableName == null || tableName.trim.length == 0) {
-      errors.add('Missing table name')
-    }
-
-    if(fieldNames == null) {
-      errors.add('Missing field names')
-    } else {
-      for(i: 0 ..< fieldNames.size) {
-        if(fieldNames.get(i) == null || fieldNames.get(i).trim.length == 0) {
-          errors.add('''Missing field name «i»''')
-        }
-      }
-    }
-
-    if(batchSize <= 0) {
-      errors.add('Batch size cannot be negative or zero')
-    }
-  }
-
 
   private var String _preparedInsert
   private def getPreparedInsert() {

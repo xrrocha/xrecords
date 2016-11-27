@@ -13,18 +13,6 @@ import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
 class JDBCDestinationTest extends JDBCRecordTest {
-  @Test
-  def void validatesAll() {
-    val destination = new JDBCDestination => [
-      dataSource = null
-      tableName = null
-      fieldNames = null
-      batchSize = 0
-    ]
-    val errors = newLinkedList
-    destination.validate(errors)
-    assertTrue(errors.size == 4)
-  }
 
   @Test
   def void populatesTable() {

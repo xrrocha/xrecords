@@ -3,7 +3,6 @@ package net.xrrocha.xrecords.xbase
 import com.linuxense.javadbf.DBFField
 import com.linuxense.javadbf.DBFWriter
 import java.io.OutputStream
-import java.util.List
 import net.xrrocha.xrecords.AbstractDestination
 import net.xrrocha.xrecords.Destination
 import net.xrrocha.xrecords.Record
@@ -59,12 +58,6 @@ class XBaseDestination extends XBase implements Destination {
 
     override doClose(DBFWriterState writer) {
       writer.close()
-    }
-  }
-
-  override validate(List<String> errors) {
-    if(output == null) {
-      errors.add('Missing output provider for XBase record destination')
     }
   }
 }

@@ -1,6 +1,5 @@
 package net.xrrocha.xrecords.test
 
-import java.util.List
 import net.xrrocha.xrecords.Record
 import net.xrrocha.xrecords.util.FieldRenamingTransformer
 import org.junit.Test
@@ -46,16 +45,5 @@ class FieldRenamingTransformerTest {
 
     val outputRecord = transformer.transform(inputRecord)
     assertEquals(# {'uno', 'dos'}, outputRecord.fieldNames)
-  }
-
-  @Test
-  def void validatesRenames() {
-    val transformer = new FieldRenamingTransformer => [
-      renames = null
-    ]
-    val List<String> errors = newLinkedList
-    transformer.validate(errors)
-    assertEquals(1, errors.size)
-    assertTrue(errors.get(0).contains('Missing renames'))
   }
 }

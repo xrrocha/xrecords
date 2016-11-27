@@ -1,8 +1,6 @@
 package net.xrrocha.xrecords.xbase
 
-import net.xrrocha.xrecords.validation.Validatable
-
-abstract class XBase implements Validatable {
+abstract class XBase {
   private static val BYTES = 'CNDLD'.bytes
 
   public static val CHARACTER = BYTES.get(0)

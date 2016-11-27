@@ -1,13 +1,11 @@
 package net.xrrocha.xrecords.script
 
-import java.util.List
 import java.util.Map
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
-import net.xrrocha.xrecords.validation.Validatable
 import org.eclipse.xtend.lib.annotations.Accessors
 
-class Script implements Validatable {
+class Script {
   @Accessors String script
   @Accessors String language = DEFAULT_LANGUAGE
   @Accessors Map<String, ?extends Object> environment = newHashMap
@@ -76,17 +74,5 @@ class Script implements Validatable {
     }
 
     engine
-  }
-
-  override validate(List<String> errors) {
-    if(script == null) {
-      errors.add('Missing script')
-    }
-
-    try {
-      getEngine
-    } catch(Exception e) {
-      errors.add(e.message)
-    }
   }
 }
