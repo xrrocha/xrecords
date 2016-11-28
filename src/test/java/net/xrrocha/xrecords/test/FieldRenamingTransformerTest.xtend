@@ -4,6 +4,7 @@ import net.xrrocha.xrecords.Record
 import org.junit.Test
 
 import static org.junit.Assert.*
+import net.xrrocha.xrecords.FieldRenamingTransformer
 
 class FieldRenamingTransformerTest {
   @Test
