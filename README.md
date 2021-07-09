@@ -11,7 +11,7 @@ limited to):
 - XML
 - DBF (Xbase)
 
-Check the [blog entry](http://blog.xrrocha.net/2014/08/building-object-oriented-frameworks-1.html)
+Check the [blog entry](https://blog.xrrocha.net/post/object-oriented-frameworks-1/)
 for an discussion of the framework design. 
 
 ```xrecords``` is a [blackbox](http://en.wikipedia.org/wiki/Extensibility#Black-Box_Extensibility)
